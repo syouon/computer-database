@@ -11,4 +11,5 @@ public abstract class DatabaseConnection {
 	protected final String passwd = "qwerty1234";
 	
 	public abstract Services connect();
+	public abstract void deconnect();
 }

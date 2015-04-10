@@ -13,6 +13,7 @@ import services.Services;
 public final class MySQLConnection extends DatabaseConnection {
 
 	private static final MySQLConnection conn = new MySQLConnection();
+	private Connection connection;
 	
 	private MySQLConnection() {}
 	
@@ -22,7 +23,6 @@ public final class MySQLConnection extends DatabaseConnection {
 	
 	@Override
 	public Services connect() {
-		Connection connection = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(
@@ -34,6 +34,15 @@ public final class MySQLConnection extends DatabaseConnection {
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			return null;
+		}
+	}
+	
+	@Override
+	public void deconnect() {
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }
