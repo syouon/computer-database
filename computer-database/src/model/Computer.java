@@ -4,19 +4,19 @@ import java.util.Date;
 
 public class Computer {
 
+	private long id;
 	private String name;
 	private Date introductionDate;
 	private Date discontinuationDate;
 	private Company manufacturer;
 	
-	public Computer(String name,
-			Date introduced,
-			Date discontinued,
-			Company manufacturer) {
+	public Computer(long id, String name) {
+		this.id = id;
 		this.name = name;
-		this.introductionDate = introduced;
-		this.discontinuationDate = discontinued;
-		this.manufacturer = manufacturer;
+	}
+
+	public long getId() {
+		return id;
 	}
 	
 	public String getName() {
@@ -33,10 +33,6 @@ public class Computer {
 	
 	public Company getManufacturer() {
 		return manufacturer;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	public void setIntroductionDate(Date introduced) {
