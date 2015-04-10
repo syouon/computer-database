@@ -17,6 +17,23 @@ public final class MySQLServices extends Services {
 		super(conn);
 	}
 	
+	private void closeResultSetAndStatement(
+			Statement statement, ResultSet result) {
+		
+		try {
+			if (result != null) {
+				result.close();
+			}
+			
+			if (statement != null) {
+				statement.close();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public List<Computer> listComputers() {
 		Statement statement = null;
@@ -32,29 +49,33 @@ public final class MySQLServices extends Services {
 			return Mapper.toComputerList(result);
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			return null;
-		} finally { // fermeture du result et du statement
 			
-			try {
-				if (result != null) {
-					result.close();
-				}
-				
-				if (statement != null) {
-					statement.close();
-				}
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		} finally { // fermeture du result et du statement
+			closeResultSetAndStatement(statement, result);
 		}
 	}
 
 	@Override
 	public List<Company> listCompanies() {
-		// TODO Auto-generated method stub
-		return null;
+		Statement statement = null;
+		ResultSet result = null;
+		
+		try {
+			statement = conn.createStatement();
+			result = statement.executeQuery(
+					"SELECT " + DatabaseNaming.COMPANY_NAME +
+					"," + DatabaseNaming.COMPANY_ID +
+					" FROM " + DatabaseNaming.COMPANY_TABLE +
+					" ORDER BY " + DatabaseNaming.COMPANY_NAME + ";");
+			return Mapper.toCompanyList(result);
+			
+		} catch (SQLException e) {
+			return null;
+			
+		} finally {
+			closeResultSetAndStatement(statement, result);
+		}
 	}
 
 	@Override

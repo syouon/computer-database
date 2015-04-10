@@ -5,10 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Company;
 import model.Computer;
 import database.DatabaseNaming;
 
-/* Cette classe fait le lien entre le modele objet et
+/* Fait le lien entre le modele objet et
  * les resultats obtenus par une requete
  */
 public class Mapper {
@@ -25,5 +26,19 @@ public class Mapper {
 		}
 		
 		return computers;
+	}
+	
+	public static List<Company> toCompanyList(ResultSet result)
+			throws SQLException {
+		List<Company> companies = new ArrayList<>();
+		
+		while (result.next()) {
+			long id = result.getLong(DatabaseNaming.COMPANY_ID);
+			String name = result.getString(DatabaseNaming.COMPANY_NAME);
+			Company company = new Company(id, name);
+			companies.add(company);
+		}
+		
+		return companies;
 	}
 }
