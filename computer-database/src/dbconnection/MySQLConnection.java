@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import services.MySQLServices;
+import services.Services;
+
 /* Connexion a la base de donnee MySQL
  * Cette classe est representee par un pattern Singleton
  */
@@ -18,7 +21,7 @@ public final class MySQLConnection extends DatabaseConnection {
 	}
 	
 	@Override
-	public Connection connect() {
+	public Services connect() {
 		Connection connection = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -27,7 +30,7 @@ public final class MySQLConnection extends DatabaseConnection {
 					user,
 					passwd);
 			
-			return connection;
+			return new MySQLServices(connection);
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			return null;
