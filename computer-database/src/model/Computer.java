@@ -27,7 +27,7 @@ public class Computer {
 		return introductionDate;
 	}
 	
-	public Date getDiscontinutionDate() {
+	public Date getDiscontinuationDate() {
 		return discontinuationDate;
 	}
 	
@@ -39,7 +39,7 @@ public class Computer {
 		introductionDate = introduced;
 	}
 	
-	public void getDiscontinutionDate(Date discontinued) {
+	public void setDiscontinuationDate(Date discontinued) {
 		discontinuationDate = discontinued;
 	}
 	
