@@ -2,6 +2,7 @@ package ui;
 
 import java.sql.Date;
 
+import model.Company;
 import services.Services;
 
 /* Un choix represente une entree du menu, une des options
@@ -33,6 +34,16 @@ public abstract class Choice {
 		return input;
 	}
 
+	protected Company askForCompany() {
+		System.out.print("> Choose a company name: ");
+		String input = Menu.getScanner().nextLine();
+		if (input.equals("")) {
+			return null;
+		}
+
+		return new Company(input);
+	}
+	
 	protected Date askForIntroductionDate() {
 
 		while (true) {

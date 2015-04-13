@@ -11,7 +11,7 @@ import services.Services;
 /* Connexion a la base de donnee MySQL
  * Cette classe est representee par un pattern Singleton
  */
-public final class MySQLConnection extends DatabaseConnection {
+public class MySQLConnection extends DatabaseConnection {
 
 	private static final MySQLConnection conn = new MySQLConnection();
 	private Connection connection;

@@ -8,6 +8,7 @@ import ui.ListComputersChoice;
 import ui.Menu;
 import ui.QuitChoice;
 import ui.ShowDetailsChoice;
+import ui.UpdateCompanyChoice;
 import ui.UpdateDiscontinuationChoice;
 import ui.UpdateIntroductionChoice;
 import dbconnection.DatabaseConnection;
@@ -33,6 +34,7 @@ public class Main {
 		menu.addChoice(new AddComputerChoice(services));
 		menu.addChoice(new UpdateIntroductionChoice(services));
 		menu.addChoice(new UpdateDiscontinuationChoice(services));
+		menu.addChoice(new UpdateCompanyChoice(services));
 		menu.addChoice(new DeleteComputerChoice(services));
 		menu.loop();
 

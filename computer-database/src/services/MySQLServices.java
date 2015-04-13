@@ -61,7 +61,7 @@ public final class MySQLServices extends Services {
 		} catch (SQLException e) {
 			return null;
 
-		} finally { // fermeture du result et du statement
+		} finally {
 			closeResultSetAndStatement(statement, result);
 		}
 	}
@@ -95,8 +95,10 @@ public final class MySQLServices extends Services {
 			statement = conn.createStatement();
 
 			if (companyIsNotNull(id)) {
-				// on joint les deux tables pour recuperer le nom de
-				// l'entreprise
+				/*
+				 * On joint les deux tables pour recuperer le nom de
+				 * l'entreprise
+				 */
 				result = statement.executeQuery("SELECT * FROM "
 						+ COMPUTER_TABLE + " as c1 JOIN " + COMPANY_TABLE
 						+ " as c2 WHERE c1." + COMPUTER_ID + "=" + id
@@ -137,7 +139,7 @@ public final class MySQLServices extends Services {
 		}
 
 		try {
-			if (companyId == null) {
+			if (companyId == null) { // si company n'existe pas
 				statement = conn.prepareStatement("INSERT INTO "
 						+ COMPUTER_TABLE + "(" + COMPUTER_NAME + ","
 						+ COMPUTER_INTRODUCED + "," + COMPUTER_DISCONTINUED
@@ -193,8 +195,8 @@ public final class MySQLServices extends Services {
 
 		try {
 			statement = conn.prepareStatement("UPDATE " + COMPUTER_TABLE
-					+ " SET " + COMPUTER_DISCONTINUED + "=? WHERE " + COMPUTER_ID
-					+ "=?;");
+					+ " SET " + COMPUTER_DISCONTINUED + "=? WHERE "
+					+ COMPUTER_ID + "=?;");
 			statement.setTimestamp(1, time);
 			statement.setLong(2, id);
 			statement.executeUpdate();
@@ -208,8 +210,24 @@ public final class MySQLServices extends Services {
 
 	@Override
 	public boolean updateCompany(long id, Company company) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!companyExists(company)) {
+			return false;
+		}
+
+		Statement statement = null;
+		try {
+			statement = conn.createStatement();
+			statement.executeUpdate("UPDATE " + COMPUTER_TABLE + " SET "
+					+ COMPUTER_COMPANYID + "=" + company.getId() + " WHERE "
+					+ COMPUTER_ID + "=" + id + ";");
+
+			return true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		} finally {
+			closeResultSetAndStatement(statement, null);
+		}
 	}
 
 	@Override
@@ -271,7 +289,7 @@ public final class MySQLServices extends Services {
 			return false;
 
 		} catch (SQLException e) {
-			System.out.println("Company test failed");
+			System.out.println("Company existence test failed");
 			return false;
 		}
 	}

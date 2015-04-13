@@ -34,16 +34,6 @@ public class AddComputerChoice extends Choice {
 		return Menu.getScanner().nextLine();
 	}
 
-	private Company askForCompany() {
-		System.out.print("> Choose a company name: ");
-		String input = Menu.getScanner().nextLine();
-		if (input.equals("")) {
-			return null;
-		}
-
-		return new Company(input);
-	}
-
 	@Override
 	public String toString() {
 		return "add a computer";
