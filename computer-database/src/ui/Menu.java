@@ -22,13 +22,13 @@ public class Menu {
 		choices.add(choice);
 	}
 
-	public void print() {
+	private void print() {
 		for (int i = 0; i < choices.size(); i++) {
 			System.out.println(i + ") " + choices.get(i));
 		}
 	}
 
-	public Choice getUserChoice() {
+	private Choice getUserChoice() {
 		int input = -1;
 
 		while (input < 0 || input >= choices.size()) {
@@ -42,5 +42,14 @@ public class Menu {
 		}
 
 		return choices.get(input);
+	}
+
+	public void loop() {
+		Choice choice = null;
+		do {
+			print();
+			choice = getUserChoice();
+			choice.execute();
+		} while (!(choice instanceof QuitChoice));
 	}
 }
