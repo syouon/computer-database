@@ -95,7 +95,8 @@ public final class MySQLServices extends Services {
 			statement = conn.createStatement();
 
 			if (companyIsNotNull(id)) {
-				// on joint les deux tables pour recuperer le nom de l'entreprise
+				// on joint les deux tables pour recuperer le nom de
+				// l'entreprise
 				result = statement.executeQuery("SELECT * FROM "
 						+ COMPUTER_TABLE + " as c1 JOIN " + COMPANY_TABLE
 						+ " as c2 WHERE c1." + COMPUTER_ID + "=" + id
@@ -166,7 +167,33 @@ public final class MySQLServices extends Services {
 	}
 
 	@Override
-	public boolean updateComputer(long id) {
+	public boolean updateIntroductionDate(long id, Date introduced) {
+		PreparedStatement statement = null;
+		Timestamp time = new Timestamp(introduced.getTime());
+
+		try {
+			statement = conn.prepareStatement("UPDATE " + COMPUTER_TABLE
+					+ " SET " + COMPUTER_INTRODUCED + "=? WHERE " + COMPUTER_ID
+					+ "=?;");
+			statement.setTimestamp(1, time);
+			statement.setLong(2, id);
+			statement.executeUpdate();
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+
+	@Override
+	public boolean updateDiscontinuationDate(long id, Date discontinued) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateCompany(long id, Company company) {
 		// TODO Auto-generated method stub
 		return false;
 	}

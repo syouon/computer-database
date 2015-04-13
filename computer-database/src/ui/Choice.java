@@ -1,5 +1,7 @@
 package ui;
 
+import java.sql.Date;
+
 import services.Services;
 
 /* Un choix represente une entree du menu, une des options
@@ -31,5 +33,43 @@ public abstract class Choice {
 		return input;
 	}
 
+	protected Date askForIntroductionDate() {
+
+		while (true) {
+			System.out.print("> Introduced in: ");
+			try {
+				String input = Menu.getScanner().nextLine();
+				if (input.equals("")) {
+					return null;
+				}
+
+				return Date.valueOf(input);
+
+			} catch (IllegalArgumentException e) {
+				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");
+				continue;
+			}
+		}
+	}
+
+	protected Date askForDiscontinuationDate() {
+
+		while (true) {
+			System.out.print("> discontinued in: ");
+			try {
+				String input = Menu.getScanner().nextLine();
+				if (input.equals("")) {
+					return null;
+				}
+
+				return Date.valueOf(input);
+
+			} catch (IllegalArgumentException e) {
+				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");
+				continue;
+			}
+		}
+	}
+	
 	public abstract void execute();
 }
