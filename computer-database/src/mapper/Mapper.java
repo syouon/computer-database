@@ -66,14 +66,18 @@ public class Mapper {
 					.getTimestamp(COMPUTER_INTRODUCED));
 			Date discontinued = timestampToDate(result
 					.getTimestamp(COMPUTER_DISCONTINUED));
-			long companyId = result.getLong("c1." + COMPANY_ID);
-			String companyName = result.getString("c2." + COMPANY_NAME);
-			Company manufacturer = new Company(companyId, companyName);
-
 			computer = new Computer(id, name);
+
+			try {
+				long companyId = result.getLong("c2." + COMPANY_ID);
+				String companyName = result.getString("c2." + COMPANY_NAME);
+				Company manufacturer = new Company(companyId, companyName);
+				computer.setManufacturer(manufacturer);
+
+			} catch (SQLException e) {} // erreur non dangereuse
+
 			computer.setIntroductionDate(introduced);
 			computer.setDiscontinuationDate(discontinued);
-			computer.setManufacturer(manufacturer);
 		}
 
 		return computer;

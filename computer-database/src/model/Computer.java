@@ -10,6 +10,10 @@ public class Computer {
 	private Date discontinuationDate;
 	private Company manufacturer;
 
+	public Computer(String name) {
+		this.name = name;
+	}
+
 	public Computer(long id, String name) {
 		this.id = id;
 		this.name = name;
