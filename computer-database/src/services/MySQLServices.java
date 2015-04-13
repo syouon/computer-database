@@ -76,8 +76,22 @@ public final class MySQLServices extends Services {
 
 	@Override
 	public void showComputerDetails(long id) {
-		// TODO Auto-generated method stub
+		Statement statement = null;
+		ResultSet result = null;
 
+		try {
+			statement = conn.createStatement();
+			result = statement.executeQuery("SELECT * FROM " + COMPUTER_TABLE
+					+ " as c1 JOIN " + COMPANY_TABLE + " as c2 WHERE c1."
+					+ COMPUTER_ID + "=" + id + " AND c1." + COMPUTER_COMPANYID
+					+ "=c2." + COMPANY_ID + ";");
+			System.out.println(Mapper.toComputer(result));
+
+		} catch (SQLException e) {
+			return;
+		} finally {
+			closeResultSetAndStatement(statement, result);
+		}
 	}
 
 	@Override

@@ -16,6 +16,7 @@ public interface DatabaseNaming {
 	public static final String COMPUTER_NAME = "name";
 	public static final String COMPUTER_INTRODUCED = "introduced";
 	public static final String COMPUTER_DISCONTINUED = "discontinued";
+	public static final String COMPUTER_COMPANYID = "company_id";
 
 	// Attributs de la table Company
 	public static final String COMPANY_ID = "id";

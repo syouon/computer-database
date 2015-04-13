@@ -16,23 +16,6 @@ public class DeleteComputerChoice extends Choice {
 		}
 	}
 
-	private long askForComputerId() {
-		long input = -1;
-
-		while (true) {
-			System.out.print("> Choose a computer id: ");
-			try {
-				input = Long.parseLong(Menu.getScanner().nextLine());
-				break;
-			} catch (NumberFormatException e) {
-				System.out.println("O_o");
-				continue;
-			}
-		}
-
-		return input;
-	}
-
 	@Override
 	public String toString() {
 		return "delete a computer";

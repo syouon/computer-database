@@ -14,5 +14,22 @@ public abstract class Choice {
 		this.services = services;
 	}
 
+	protected long askForComputerId() {
+		long input = -1;
+
+		while (true) {
+			System.out.print("> Choose a computer id: ");
+			try {
+				input = Long.parseLong(Menu.getScanner().nextLine());
+				break;
+			} catch (NumberFormatException e) {
+				System.out.println("O_o");
+				continue;
+			}
+		}
+
+		return input;
+	}
+
 	public abstract void execute();
 }
