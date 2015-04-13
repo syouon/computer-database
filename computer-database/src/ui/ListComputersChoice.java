@@ -1,5 +1,8 @@
 package ui;
 
+import java.util.List;
+
+import model.Computer;
 import services.Services;
 
 public class ListComputersChoice extends Choice {
@@ -10,7 +13,13 @@ public class ListComputersChoice extends Choice {
 
 	@Override
 	public void execute() {
-		services.listComputers();
+		printResult(services.listComputers());
+	}
+
+	private void printResult(List<Computer> computers) {
+		for (Computer computer : computers) {
+			System.out.println(computer);
+		}
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public final class MySQLServices extends Services {
 	public List<Company> listCompanies() {
 		Statement statement = null;
 		ResultSet result = null;
-		
+
 		try {
 			statement = conn.createStatement();
 			result = statement.executeQuery(
@@ -69,10 +69,10 @@ public final class MySQLServices extends Services {
 					" FROM " + DatabaseNaming.COMPANY_TABLE +
 					" ORDER BY " + DatabaseNaming.COMPANY_NAME + ";");
 			return Mapper.toCompanyList(result);
-			
+
 		} catch (SQLException e) {
 			return null;
-			
+
 		} finally {
 			closeResultSetAndStatement(statement, result);
 		}
