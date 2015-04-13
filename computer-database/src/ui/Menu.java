@@ -7,9 +7,15 @@ import java.util.Scanner;
 public class Menu {
 
 	private List<Choice> choices;
+	private static Scanner scanner;
 
 	public Menu() {
 		choices = new ArrayList<>();
+		scanner = new Scanner(System.in);
+	}
+
+	public static Scanner getScanner() {
+		return scanner;
 	}
 
 	public void addChoice(Choice choice) {
@@ -24,7 +30,6 @@ public class Menu {
 
 	public Choice getUserChoice() {
 		int input = -1;
-		Scanner scanner = new Scanner(System.in);
 
 		while (input < 0 || input >= choices.size()) {
 			System.out.print("> ");
@@ -36,7 +41,6 @@ public class Menu {
 			}
 		}
 
-		scanner.close();
 		return choices.get(input);
 	}
 }

@@ -48,7 +48,7 @@ public class Computer {
 	}
 	
 	public String toString() {
-		String display = name;
+		String display = "n°" + id + ") " + name;
 		
 		if (introductionDate != null) {
 			display += ", introduced in " + introductionDate;
