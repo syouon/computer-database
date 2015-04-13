@@ -188,8 +188,22 @@ public final class MySQLServices extends Services {
 
 	@Override
 	public boolean updateDiscontinuationDate(long id, Date discontinued) {
-		// TODO Auto-generated method stub
-		return false;
+		PreparedStatement statement = null;
+		Timestamp time = new Timestamp(discontinued.getTime());
+
+		try {
+			statement = conn.prepareStatement("UPDATE " + COMPUTER_TABLE
+					+ " SET " + COMPUTER_DISCONTINUED + "=? WHERE " + COMPUTER_ID
+					+ "=?;");
+			statement.setTimestamp(1, time);
+			statement.setLong(2, id);
+			statement.executeUpdate();
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
 	}
 
 	@Override
