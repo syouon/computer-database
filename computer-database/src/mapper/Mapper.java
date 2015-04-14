@@ -1,11 +1,11 @@
 package mapper;
 
-import static database.DatabaseNaming.COMPANY_ID;
-import static database.DatabaseNaming.COMPANY_NAME;
-import static database.DatabaseNaming.COMPUTER_DISCONTINUED;
-import static database.DatabaseNaming.COMPUTER_ID;
-import static database.DatabaseNaming.COMPUTER_INTRODUCED;
-import static database.DatabaseNaming.COMPUTER_NAME;
+import static dao.DatabaseNaming.COMPANY_ID;
+import static dao.DatabaseNaming.COMPANY_NAME;
+import static dao.DatabaseNaming.COMPUTER_DISCONTINUED;
+import static dao.DatabaseNaming.COMPUTER_ID;
+import static dao.DatabaseNaming.COMPUTER_INTRODUCED;
+import static dao.DatabaseNaming.COMPUTER_NAME;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +27,7 @@ public class Mapper {
 
 	/**
 	 * To computer list.
-	 *
+	 * 
 	 * @param result
 	 *            the result
 	 * @return the list
@@ -50,7 +50,7 @@ public class Mapper {
 
 	/**
 	 * To company list.
-	 *
+	 * 
 	 * @param result
 	 *            the result
 	 * @return the list
@@ -73,7 +73,7 @@ public class Mapper {
 
 	/**
 	 * To computer.
-	 *
+	 * 
 	 * @param result
 	 *            the result
 	 * @return the computer
@@ -101,7 +101,7 @@ public class Mapper {
 				long companyId = result.getLong("c2." + COMPANY_ID);
 				String companyName = result.getString("c2." + COMPANY_NAME);
 				Company manufacturer = new Company(companyId, companyName);
-				computer.setManufacturer(manufacturer);
+				computer.setCompany(manufacturer);
 
 			} catch (SQLException e) {
 			} // erreur non dangereuse
@@ -114,10 +114,10 @@ public class Mapper {
 	}
 
 	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {
-		return time.toLocalDateTime();
+		return (time == null) ? null : time.toLocalDateTime();
 	}
 
 	public static Timestamp localDateTimeToTimestamp(LocalDateTime time) {
-		return Timestamp.valueOf(time);
+		return (time == null) ? null : Timestamp.valueOf(time);
 	}
 }

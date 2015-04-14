@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 import model.Company;
-import services.Services;
+import service.Services;
 
 /* Un choix represente une entree du menu, une des options
  * offertes a l'utilisateur.
@@ -16,22 +16,9 @@ import services.Services;
  */
 public abstract class Choice {
 
-	/** The services. */
-	protected Services services;
-
-	/**
-	 * Instantiates a new choice.
-	 *
-	 * @param services
-	 *            the services
-	 */
-	public Choice(Services services) {
-		this.services = services;
-	}
-
 	/**
 	 * Ask for computer id.
-	 *
+	 * 
 	 * @return the long
 	 */
 	protected long askForComputerId() {
@@ -54,7 +41,7 @@ public abstract class Choice {
 
 	/**
 	 * Ask for company.
-	 *
+	 * 
 	 * @return the company
 	 */
 	protected Company askForCompany() {
@@ -69,7 +56,7 @@ public abstract class Choice {
 
 	/**
 	 * Ask for introduction date.
-	 *
+	 * 
 	 * @return the date
 	 */
 	protected LocalDateTime askForIntroductionDate() {
@@ -82,7 +69,8 @@ public abstract class Choice {
 					return null;
 				}
 
-				return LocalDateTime.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
+				return LocalDateTime.parse(input,
+						DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (IllegalArgumentException e) {
 				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");
@@ -93,7 +81,7 @@ public abstract class Choice {
 
 	/**
 	 * Ask for discontinuation date.
-	 *
+	 * 
 	 * @return the date
 	 */
 	protected LocalDateTime askForDiscontinuationDate() {
@@ -106,7 +94,8 @@ public abstract class Choice {
 					return null;
 				}
 
-				return LocalDateTime.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
+				return LocalDateTime.parse(input,
+						DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (IllegalArgumentException e) {
 				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");

@@ -116,8 +116,8 @@ public class Computer {
 	 * @param manufacturer
 	 *            the new manufacturer
 	 */
-	public void setManufacturer(Company manufacturer) {
-		this.company = manufacturer;
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 	/*

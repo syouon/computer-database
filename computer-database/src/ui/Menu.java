@@ -26,7 +26,7 @@ public class Menu {
 
 	/**
 	 * Gets the scanner.
-	 *
+	 * 
 	 * @return the scanner
 	 */
 	public static Scanner getScanner() {
@@ -35,7 +35,7 @@ public class Menu {
 
 	/**
 	 * Adds the choice.
-	 *
+	 * 
 	 * @param choice
 	 *            the choice
 	 */
@@ -54,7 +54,7 @@ public class Menu {
 
 	/**
 	 * Gets the user choice.
-	 *
+	 * 
 	 * @return the user choice
 	 */
 	private Choice getUserChoice() {

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static database.DatabaseNaming.*;
+import static dao.DatabaseNaming.*;
 
 public enum ConnectionFactory {
 	INSTANCE;
@@ -44,7 +44,7 @@ public enum ConnectionFactory {
 		return INSTANCE;
 	}
 	
-	public static void closeResultSetAndStatement(Statement statement,
+	public void closeResultSetAndStatement(Statement statement,
 			ResultSet result) {
 
 		try {

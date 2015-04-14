@@ -11,8 +11,10 @@ public interface CompanyDAO {
 
 	/**
 	 * Find all.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public List<Company> findAll();
+
+	public boolean exists(Company company);
 }

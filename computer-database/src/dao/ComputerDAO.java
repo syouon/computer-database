@@ -25,7 +25,7 @@ public interface ComputerDAO {
 	 *            the computer
 	 * @return true, if successful
 	 */
-	public boolean delete(Computer computer);
+	public boolean delete(long id);
 
 	/**
 	 * Update.

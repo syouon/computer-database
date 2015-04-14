@@ -4,22 +4,13 @@ import java.time.LocalDateTime;
 
 import model.Company;
 import model.Computer;
-import services.Services;
+import service.ComputerService;
+import service.Services;
 
 /**
  * The Class AddComputerChoice.
  */
 public class AddComputerChoice extends Choice {
-
-	/**
-	 * Instantiates a new adds the computer choice.
-	 *
-	 * @param services
-	 *            the services
-	 */
-	public AddComputerChoice(Services services) {
-		super(services);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -36,16 +27,16 @@ public class AddComputerChoice extends Choice {
 		Computer computer = new Computer(name);
 		computer.setIntroductionDate(introduced);
 		computer.setDiscontinuationDate(discontinued);
-		computer.setManufacturer(manufacturer);
+		computer.setCompany(manufacturer);
 
-		if (!services.addComputer(computer)) {
-			System.out.println("Operation failed");
+		if (!ComputerService.getInstance().addComputer(computer)) {
+			System.out.println("Addition failed");
 		}
 	}
 
 	/**
 	 * Ask for computer name.
-	 *
+	 * 
 	 * @return the string
 	 */
 	private String askForComputerName() {

@@ -3,22 +3,12 @@ package ui;
 import java.util.List;
 
 import model.Company;
-import services.Services;
+import service.CompanyService;
 
 /**
  * The Class ListCompaniesChoice.
  */
 public class ListCompaniesChoice extends Choice {
-
-	/**
-	 * Instantiates a new list companies choice.
-	 *
-	 * @param services
-	 *            the services
-	 */
-	public ListCompaniesChoice(Services services) {
-		super(services);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -27,12 +17,12 @@ public class ListCompaniesChoice extends Choice {
 	 */
 	@Override
 	public void execute() {
-		printResult(services.listCompanies());
+		printResult(CompanyService.getInstance().listCompanies());
 	}
 
 	/**
 	 * Prints the result.
-	 *
+	 * 
 	 * @param companies
 	 *            the companies
 	 */

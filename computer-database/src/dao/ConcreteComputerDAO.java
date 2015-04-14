@@ -1,14 +1,14 @@
 package dao;
 
-import static database.DatabaseNaming.COMPANY_ID;
-import static database.DatabaseNaming.COMPANY_NAME;
-import static database.DatabaseNaming.COMPANY_TABLE;
-import static database.DatabaseNaming.COMPUTER_COMPANYID;
-import static database.DatabaseNaming.COMPUTER_DISCONTINUED;
-import static database.DatabaseNaming.COMPUTER_ID;
-import static database.DatabaseNaming.COMPUTER_INTRODUCED;
-import static database.DatabaseNaming.COMPUTER_NAME;
-import static database.DatabaseNaming.COMPUTER_TABLE;
+import static dao.DatabaseNaming.COMPANY_ID;
+import static dao.DatabaseNaming.COMPANY_NAME;
+import static dao.DatabaseNaming.COMPANY_TABLE;
+import static dao.DatabaseNaming.COMPUTER_COMPANYID;
+import static dao.DatabaseNaming.COMPUTER_DISCONTINUED;
+import static dao.DatabaseNaming.COMPUTER_ID;
+import static dao.DatabaseNaming.COMPUTER_INTRODUCED;
+import static dao.DatabaseNaming.COMPUTER_NAME;
+import static dao.DatabaseNaming.COMPUTER_TABLE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,9 +21,14 @@ import java.util.List;
 import mapper.Mapper;
 import model.Company;
 import model.Computer;
-import util.Utils;
+import util.ConnectionFactory;
 
-public class ConcreteComputerDAO implements ComputerDAO {
+public enum ConcreteComputerDAO implements ComputerDAO {
+	INSTANCE;
+
+	public static ComputerDAO getInstance() {
+		return INSTANCE;
+	}
 
 	@Override
 	public boolean create(Computer computer) {
@@ -33,15 +38,15 @@ public class ConcreteComputerDAO implements ComputerDAO {
 		LocalDateTime introductionDate = computer.getIntroductionDate();
 		LocalDateTime discontinuationDate = computer.getDiscontinuationDate();
 
-		Timestamp introduced = (introductionDate != null) ? (
-				Mapper.localDateTimeToTimestamp(introductionDate)) : null;
-		Timestamp discontinued = (discontinuationDate != null) ? (
-				Mapper.localDateTimeToTimestamp(discontinuationDate)) : null;
+		Timestamp introduced = (introductionDate != null) ? (Mapper
+				.localDateTimeToTimestamp(introductionDate)) : null;
+		Timestamp discontinued = (discontinuationDate != null) ? (Mapper
+				.localDateTimeToTimestamp(discontinuationDate)) : null;
 
 		// Verification de l'existence de company
 		Company company = computer.getCompany();
 		Long companyId = null;
-		if (company != null && companyExists(company)) {
+		if (company != null && ConcreteCompanyDAO.getInstance().exists(company)) {
 			companyId = company.getId();
 		}
 
@@ -69,20 +74,21 @@ public class ConcreteComputerDAO implements ComputerDAO {
 		} catch (SQLException e) {
 			throw new DAOException();
 		} finally {
-			Utils.closeResultSetAndStatement(statement, null);
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, null);
 			ConnectionFactory.getInstance().closeConnection(conn);
 		}
 	}
 
 	@Override
-	public boolean delete(Computer computer) {
+	public boolean delete(long id) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 
 		try {
 			statement = conn.prepareStatement("DELETE FROM " + COMPUTER_TABLE
 					+ " WHERE " + COMPUTER_ID + "=?;");
-			statement.setLong(1, computer.getId());
+			statement.setLong(1, id);
 			statement.executeUpdate();
 			return true;
 
@@ -90,7 +96,8 @@ public class ConcreteComputerDAO implements ComputerDAO {
 			throw new DAOException();
 
 		} finally {
-			Utils.closeResultSetAndStatement(statement, null);
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, null);
 			ConnectionFactory.getInstance().closeConnection(conn);
 		}
 	}
@@ -116,7 +123,9 @@ public class ConcreteComputerDAO implements ComputerDAO {
 			dateStatement.executeUpdate();
 
 			// Mise a jour de la company seulement si elle existe
-			if (computer != null && companyExists(computer.getCompany())) {
+			if (computer.getCompany() != null
+					&& ConcreteCompanyDAO.getInstance().exists(
+							computer.getCompany())) {
 				companyStatement = conn.prepareStatement("UPDATE "
 						+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
 						+ "=? WHERE " + COMPUTER_ID + "=?;");
@@ -130,8 +139,10 @@ public class ConcreteComputerDAO implements ComputerDAO {
 		} catch (SQLException e) {
 			throw new DAOException();
 		} finally {
-			Utils.closeResultSetAndStatement(companyStatement, null);
-			Utils.closeResultSetAndStatement(dateStatement, null);
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					companyStatement, null);
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					dateStatement, null);
 			ConnectionFactory.getInstance().closeConnection(conn);
 		}
 	}
@@ -157,7 +168,8 @@ public class ConcreteComputerDAO implements ComputerDAO {
 		} catch (SQLException e) {
 			throw new DAOException();
 		} finally {
-			Utils.closeResultSetAndStatement(statement, result);
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
 			ConnectionFactory.getInstance().closeConnection(conn);
 		}
 	}
@@ -178,34 +190,8 @@ public class ConcreteComputerDAO implements ComputerDAO {
 		} catch (SQLException e) {
 			throw new DAOException();
 		} finally {
-			Utils.closeResultSetAndStatement(statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
-		}
-	}
-
-	private boolean companyExists(Company company) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
-
-		try { // On suppose que le champs id n'est pas renseigne
-			statement = conn.prepareStatement("SELECT * FROM " + COMPANY_TABLE
-					+ " WHERE " + COMPANY_NAME + " LIKE '?';");
-			statement.setString(1, company.getName());
-			result = statement.executeQuery();
-
-			if (result.next()) {
-				long id = result.getLong(COMPANY_ID);
-				company.setId(id);
-				return true;
-			}
-
-			return false;
-
-		} catch (SQLException e) {
-			throw new DAOException();
-		} finally {
-			Utils.closeResultSetAndStatement(statement, result);
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
 			ConnectionFactory.getInstance().closeConnection(conn);
 		}
 	}

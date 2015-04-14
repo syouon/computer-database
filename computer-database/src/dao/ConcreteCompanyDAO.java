@@ -1,8 +1,8 @@
 package dao;
 
-import static database.DatabaseNaming.COMPANY_ID;
-import static database.DatabaseNaming.COMPANY_NAME;
-import static database.DatabaseNaming.COMPANY_TABLE;
+import static dao.DatabaseNaming.COMPANY_ID;
+import static dao.DatabaseNaming.COMPANY_NAME;
+import static dao.DatabaseNaming.COMPANY_TABLE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,10 +12,13 @@ import java.util.List;
 
 import mapper.Mapper;
 import model.Company;
-import dao.ConnectionFactory;
-import util.Utils;
 
-public class ConcreteCompanyDAO implements CompanyDAO {
+public enum ConcreteCompanyDAO implements CompanyDAO {
+	INSTANCE;
+
+	public static ConcreteCompanyDAO getInstance() {
+		return INSTANCE;
+	}
 
 	@Override
 	public List<Company> findAll() {
@@ -33,7 +36,37 @@ public class ConcreteCompanyDAO implements CompanyDAO {
 		} catch (SQLException e) {
 			throw new DAOException();
 		} finally {
-			Utils.closeResultSetAndStatement(statement, result);
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
+	public boolean exists(Company company) {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try { // On suppose que le champs id n'est pas renseigne
+			statement = conn.prepareStatement("SELECT * FROM " + COMPANY_TABLE
+					+ " WHERE " + COMPANY_NAME + " LIKE '?';");
+			statement.setString(1, company.getName());
+			result = statement.executeQuery();
+
+			if (result.next()) {
+				long id = result.getLong(COMPANY_ID);
+				company.setId(id);
+				return true;
+			}
+
+			return false;
+
+		} catch (SQLException e) {
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
 			ConnectionFactory.getInstance().closeConnection(conn);
 		}
 	}

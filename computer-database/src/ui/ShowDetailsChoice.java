@@ -1,21 +1,11 @@
 package ui;
 
-import services.Services;
+import service.ComputerService;
 
 /**
  * The Class ShowDetailsChoice.
  */
 public class ShowDetailsChoice extends Choice {
-
-	/**
-	 * Instantiates a new show details choice.
-	 *
-	 * @param services
-	 *            the services
-	 */
-	public ShowDetailsChoice(Services services) {
-		super(services);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -25,7 +15,8 @@ public class ShowDetailsChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		services.showComputerDetails(id);
+		System.out.println(ComputerService.getInstance()
+				.showComputerDetails(id));
 	}
 
 	/*

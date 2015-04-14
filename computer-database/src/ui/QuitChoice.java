@@ -5,13 +5,6 @@ package ui;
  */
 public class QuitChoice extends Choice {
 
-	/**
-	 * Instantiates a new quit choice.
-	 */
-	public QuitChoice() {
-		super(null);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

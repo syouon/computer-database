@@ -1,21 +1,11 @@
 package ui;
 
-import services.Services;
+import service.ComputerService;
 
 /**
  * The Class DeleteComputerChoice.
  */
 public class DeleteComputerChoice extends Choice {
-
-	/**
-	 * Instantiates a new delete computer choice.
-	 *
-	 * @param services
-	 *            the services
-	 */
-	public DeleteComputerChoice(Services services) {
-		super(services);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -25,7 +15,7 @@ public class DeleteComputerChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		if (!services.deleteComputer(id)) {
+		if (!ComputerService.getInstance().deleteComputer(id)) {
 			System.out.println("Delete failed!");
 		}
 	}
