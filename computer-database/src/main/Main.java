@@ -1,6 +1,7 @@
 package main;
 
-import services.Services;
+import services.CompanyService;
+import services.ComputerService;
 import ui.AddComputerChoice;
 import ui.DeleteComputerChoice;
 import ui.ListCompaniesChoice;
@@ -11,21 +12,14 @@ import ui.ShowDetailsChoice;
 import ui.UpdateCompanyChoice;
 import ui.UpdateDiscontinuationChoice;
 import ui.UpdateIntroductionChoice;
-import dbconnection.DatabaseConnection;
-import dbconnection.MySQLConnection;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		DatabaseConnection conn = MySQLConnection.getInstance();
-		Services services = conn.connect();
-
-		if (services == null) {
-			System.out.println("Connection failed!");
-			return;
-		}
-
+		ComputerService computerService = ComputerService.getInstance();
+		CompanyService companyService = CompanyService.getInstance()
+		
 		Menu menu = new Menu();
 		menu.addChoice(new QuitChoice());
 		menu.addChoice(new ListComputersChoice(services));
@@ -37,8 +31,6 @@ public class Main {
 		menu.addChoice(new UpdateCompanyChoice(services));
 		menu.addChoice(new DeleteComputerChoice(services));
 		menu.loop();
-
-		conn.deconnect();
 	}
 
 }
