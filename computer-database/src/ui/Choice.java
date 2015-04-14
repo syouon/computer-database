@@ -1,6 +1,7 @@
 package ui;
 
 import java.sql.Date;
+import java.util.regex.Pattern;
 
 import model.Company;
 import services.Services;
@@ -18,20 +19,21 @@ public abstract class Choice {
 	}
 
 	protected long askForComputerId() {
-		long input = -1;
+		long id = -1;
 
 		while (true) {
 			System.out.print("> Choose a computer id: ");
-			try {
-				input = Long.parseLong(Menu.getScanner().nextLine());
+			String input = Menu.getScanner().nextLine();
+			boolean match = Pattern.matches("\\d*", input);	
+			if (match) {
+				id = Long.parseLong(input);
 				break;
-			} catch (NumberFormatException e) {
-				System.out.println("O_o");
-				continue;
 			}
+			
+			System.out.println("O_o");
 		}
 
-		return input;
+		return id;
 	}
 
 	protected Company askForCompany() {
@@ -66,7 +68,7 @@ public abstract class Choice {
 	protected Date askForDiscontinuationDate() {
 
 		while (true) {
-			System.out.print("> discontinued in: ");
+			System.out.print("> Discontinued in: ");
 			try {
 				String input = Menu.getScanner().nextLine();
 				if (input.equals("")) {

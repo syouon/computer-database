@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Menu {
 
@@ -29,19 +30,24 @@ public class Menu {
 	}
 
 	private Choice getUserChoice() {
-		int input = -1;
+		int choice = -1;
 
-		while (input < 0 || input >= choices.size()) {
+		while (true) {
 			System.out.print("> ");
-			try {
-				input = Integer.parseInt(scanner.nextLine());
-			} catch (NumberFormatException e) {
-				System.out.println("O_o");
-				continue;
+			String input = scanner.nextLine();
+			boolean match = Pattern.matches("\\d*", input);
+			
+			if (match) {
+				choice = Integer.parseInt(input);
+				if (choice >= 0 && choice < choices.size()) {
+					break;
+				}
 			}
+
+			System.out.println("O_o");			
 		}
 
-		return choices.get(input);
+		return choices.get(choice);
 	}
 
 	public void loop() {
