@@ -1,6 +1,6 @@
 package ui;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import services.Services;
 
@@ -27,7 +27,7 @@ public class UpdateIntroductionChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		Date introduced = askForIntroductionDate();
+		LocalDateTime introduced = askForIntroductionDate();
 		if (!services.updateIntroductionDate(id, introduced)) {
 			System.out.println("Update failed");
 		}

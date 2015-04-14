@@ -1,6 +1,6 @@
 package model;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 /**
  * The Class Computer.
@@ -14,10 +14,10 @@ public class Computer {
 	private String name;
 
 	/** The introduction date. */
-	private Date introductionDate;
+	private LocalDateTime introductionDate;
 
 	/** The discontinuation date. */
-	private Date discontinuationDate;
+	private LocalDateTime discontinuationDate;
 
 	/** The manufacturer. */
 	private Company company;
@@ -68,7 +68,7 @@ public class Computer {
 	 *
 	 * @return the introduction date
 	 */
-	public Date getIntroductionDate() {
+	public LocalDateTime getIntroductionDate() {
 		return introductionDate;
 	}
 
@@ -77,7 +77,7 @@ public class Computer {
 	 *
 	 * @return the discontinuation date
 	 */
-	public Date getDiscontinuationDate() {
+	public LocalDateTime getDiscontinuationDate() {
 		return discontinuationDate;
 	}
 
@@ -96,7 +96,7 @@ public class Computer {
 	 * @param introduced
 	 *            the new introduction date
 	 */
-	public void setIntroductionDate(Date introduced) {
+	public void setIntroductionDate(LocalDateTime introduced) {
 		introductionDate = introduced;
 	}
 
@@ -106,7 +106,7 @@ public class Computer {
 	 * @param discontinued
 	 *            the new discontinuation date
 	 */
-	public void setDiscontinuationDate(Date discontinued) {
+	public void setDiscontinuationDate(LocalDateTime discontinued) {
 		discontinuationDate = discontinued;
 	}
 

@@ -1,6 +1,6 @@
 package ui;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import model.Company;
 import model.Computer;
@@ -29,8 +29,8 @@ public class AddComputerChoice extends Choice {
 	@Override
 	public void execute() {
 		String name = askForComputerName();
-		Date introduced = askForIntroductionDate();
-		Date discontinued = askForDiscontinuationDate();
+		LocalDateTime introduced = askForIntroductionDate();
+		LocalDateTime discontinued = askForDiscontinuationDate();
 		Company manufacturer = askForCompany();
 
 		Computer computer = new Computer(name);

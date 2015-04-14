@@ -2,7 +2,9 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import static database.DatabaseNaming.*;
 
@@ -40,5 +42,22 @@ public enum ConnectionFactory {
 
 	public static ConnectionFactory getInstance() {
 		return INSTANCE;
+	}
+	
+	public static void closeResultSetAndStatement(Statement statement,
+			ResultSet result) {
+
+		try {
+			if (result != null) {
+				result.close();
+			}
+
+			if (statement != null) {
+				statement.close();
+			}
+
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
 	}
 }

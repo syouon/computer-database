@@ -1,6 +1,6 @@
 package ui;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import services.Services;
 
@@ -27,7 +27,7 @@ public class UpdateDiscontinuationChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		Date discontinued = askForDiscontinuationDate();
+		LocalDateTime discontinued = askForDiscontinuationDate();
 		if (!services.updateDiscontinuationDate(id, discontinued)) {
 			System.out.println("Update failed");
 		}

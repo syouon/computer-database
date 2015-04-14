@@ -1,6 +1,7 @@
 package ui;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 import model.Company;
@@ -71,7 +72,7 @@ public abstract class Choice {
 	 *
 	 * @return the date
 	 */
-	protected Date askForIntroductionDate() {
+	protected LocalDateTime askForIntroductionDate() {
 
 		while (true) {
 			System.out.print("> Introduced in: ");
@@ -81,7 +82,7 @@ public abstract class Choice {
 					return null;
 				}
 
-				return Date.valueOf(input);
+				return LocalDateTime.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (IllegalArgumentException e) {
 				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");
@@ -95,7 +96,7 @@ public abstract class Choice {
 	 *
 	 * @return the date
 	 */
-	protected Date askForDiscontinuationDate() {
+	protected LocalDateTime askForDiscontinuationDate() {
 
 		while (true) {
 			System.out.print("> Discontinued in: ");
@@ -105,7 +106,7 @@ public abstract class Choice {
 					return null;
 				}
 
-				return Date.valueOf(input);
+				return LocalDateTime.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (IllegalArgumentException e) {
 				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");

@@ -11,11 +11,11 @@ import static database.DatabaseNaming.COMPUTER_NAME;
 import static database.DatabaseNaming.COMPUTER_TABLE;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import mapper.Mapper;
@@ -30,13 +30,13 @@ public class ConcreteComputerDAO implements ComputerDAO {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 
-		Date introductionDate = computer.getIntroductionDate();
-		Date discontinuationDate = computer.getDiscontinuationDate();
+		LocalDateTime introductionDate = computer.getIntroductionDate();
+		LocalDateTime discontinuationDate = computer.getDiscontinuationDate();
 
-		Timestamp introduced = (introductionDate != null) ? (new Timestamp(
-				introductionDate.getTime())) : null;
-		Timestamp discontinued = (discontinuationDate != null) ? (new Timestamp(
-				discontinuationDate.getTime())) : null;
+		Timestamp introduced = (introductionDate != null) ? (
+				Mapper.localDateTimeToTimestamp(introductionDate)) : null;
+		Timestamp discontinued = (discontinuationDate != null) ? (
+				Mapper.localDateTimeToTimestamp(discontinuationDate)) : null;
 
 		// Verification de l'existence de company
 		Company company = computer.getCompany();

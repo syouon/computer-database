@@ -7,10 +7,10 @@ import static database.DatabaseNaming.COMPUTER_ID;
 import static database.DatabaseNaming.COMPUTER_INTRODUCED;
 import static database.DatabaseNaming.COMPUTER_NAME;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,21 +72,6 @@ public class Mapper {
 	}
 
 	/**
-	 * Timestamp to date.
-	 *
-	 * @param time
-	 *            the time
-	 * @return the date
-	 */
-	private static Date timestampToDate(Timestamp time) {
-		if (time == null) {
-			return null;
-		}
-
-		return new Date(time.getTime());
-	}
-
-	/**
 	 * To computer.
 	 *
 	 * @param result
@@ -101,9 +86,9 @@ public class Mapper {
 		while (result.next()) {
 			long id = result.getLong(COMPUTER_ID);
 			String name = result.getString(COMPUTER_NAME);
-			Date introduced = timestampToDate(result
+			LocalDateTime introduced = timestampToLocalDateTime(result
 					.getTimestamp(COMPUTER_INTRODUCED));
-			Date discontinued = timestampToDate(result
+			LocalDateTime discontinued = timestampToLocalDateTime(result
 					.getTimestamp(COMPUTER_DISCONTINUED));
 			computer = new Computer(id, name);
 
@@ -126,5 +111,13 @@ public class Mapper {
 		}
 
 		return computer;
+	}
+
+	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {
+		return time.toLocalDateTime();
+	}
+
+	public static Timestamp localDateTimeToTimestamp(LocalDateTime time) {
+		return Timestamp.valueOf(time);
 	}
 }
