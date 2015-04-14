@@ -6,12 +6,23 @@ import model.Company;
 import model.Computer;
 import services.Services;
 
+/**
+ * The Class AddComputerChoice.
+ */
 public class AddComputerChoice extends Choice {
 
+	/**
+	 * Instantiates a new adds the computer choice.
+	 *
+	 * @param services the services
+	 */
 	public AddComputerChoice(Services services) {
 		super(services);
 	}
 
+	/* (non-Javadoc)
+	 * @see ui.Choice#execute()
+	 */
 	@Override
 	public void execute() {
 		String name = askForComputerName();
@@ -29,11 +40,19 @@ public class AddComputerChoice extends Choice {
 		}
 	}
 
+	/**
+	 * Ask for computer name.
+	 *
+	 * @return the string
+	 */
 	private String askForComputerName() {
 		System.out.print("> Choose a computer name: ");
 		return Menu.getScanner().nextLine();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "add a computer";

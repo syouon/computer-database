@@ -20,8 +20,18 @@ import model.Computer;
 /* Fait le lien entre le modele objet et
  * les resultats obtenus par une requete
  */
+/**
+ * The Class Mapper.
+ */
 public class Mapper {
 
+	/**
+	 * To computer list.
+	 *
+	 * @param result the result
+	 * @return the list
+	 * @throws SQLException the SQL exception
+	 */
 	public static List<Computer> toComputerList(ResultSet result)
 			throws SQLException {
 		List<Computer> computers = new ArrayList<>();
@@ -36,6 +46,13 @@ public class Mapper {
 		return computers;
 	}
 
+	/**
+	 * To company list.
+	 *
+	 * @param result the result
+	 * @return the list
+	 * @throws SQLException the SQL exception
+	 */
 	public static List<Company> toCompanyList(ResultSet result)
 			throws SQLException {
 		List<Company> companies = new ArrayList<>();
@@ -50,6 +67,12 @@ public class Mapper {
 		return companies;
 	}
 
+	/**
+	 * Timestamp to date.
+	 *
+	 * @param time the time
+	 * @return the date
+	 */
 	private static Date timestampToDate(Timestamp time) {
 		if (time == null) {
 			return null;
@@ -58,6 +81,13 @@ public class Mapper {
 		return new Date(time.getTime());
 	}
 
+	/**
+	 * To computer.
+	 *
+	 * @param result the result
+	 * @return the computer
+	 * @throws SQLException the SQL exception
+	 */
 	public static Computer toComputer(ResultSet result) throws SQLException {
 		Computer computer = null;
 

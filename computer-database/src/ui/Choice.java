@@ -10,14 +10,28 @@ import services.Services;
  * offertes a l'utilisateur.
  * A un choix est associe son service correspondant.
  */
+/**
+ * The Class Choice.
+ */
 public abstract class Choice {
 
+	/** The services. */
 	protected Services services;
 
+	/**
+	 * Instantiates a new choice.
+	 *
+	 * @param services the services
+	 */
 	public Choice(Services services) {
 		this.services = services;
 	}
 
+	/**
+	 * Ask for computer id.
+	 *
+	 * @return the long
+	 */
 	protected long askForComputerId() {
 		long id = -1;
 
@@ -36,6 +50,11 @@ public abstract class Choice {
 		return id;
 	}
 
+	/**
+	 * Ask for company.
+	 *
+	 * @return the company
+	 */
 	protected Company askForCompany() {
 		System.out.print("> Choose a company name: ");
 		String input = Menu.getScanner().nextLine();
@@ -46,6 +65,11 @@ public abstract class Choice {
 		return new Company(input);
 	}
 	
+	/**
+	 * Ask for introduction date.
+	 *
+	 * @return the date
+	 */
 	protected Date askForIntroductionDate() {
 
 		while (true) {
@@ -65,6 +89,11 @@ public abstract class Choice {
 		}
 	}
 
+	/**
+	 * Ask for discontinuation date.
+	 *
+	 * @return the date
+	 */
 	protected Date askForDiscontinuationDate() {
 
 		while (true) {
@@ -84,5 +113,8 @@ public abstract class Choice {
 		}
 	}
 	
+	/**
+	 * Execute.
+	 */
 	public abstract void execute();
 }

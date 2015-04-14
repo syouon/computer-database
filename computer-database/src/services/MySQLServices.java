@@ -23,12 +23,26 @@ import mapper.Mapper;
 import model.Company;
 import model.Computer;
 
+/**
+ * The Class MySQLServices.
+ */
 public final class MySQLServices extends Services {
 
+	/**
+	 * Instantiates a new my sql services.
+	 *
+	 * @param conn the conn
+	 */
 	public MySQLServices(Connection conn) {
 		super(conn);
 	}
 
+	/**
+	 * Close result set and statement.
+	 *
+	 * @param statement the statement
+	 * @param result the result
+	 */
 	private void closeResultSetAndStatement(Statement statement,
 			ResultSet result) {
 
@@ -46,6 +60,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#listComputers()
+	 */
 	@Override
 	public List<Computer> listComputers() {
 		Statement statement = null;
@@ -66,6 +83,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#listCompanies()
+	 */
 	@Override
 	public List<Company> listCompanies() {
 		Statement statement = null;
@@ -86,6 +106,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#showComputerDetails(long)
+	 */
 	@Override
 	public void showComputerDetails(long id) {
 		Statement statement = null;
@@ -119,6 +142,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#addComputer(model.Computer)
+	 */
 	@Override
 	public boolean addComputer(Computer computer) {
 		PreparedStatement statement = null;
@@ -168,6 +194,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#updateIntroductionDate(long, java.sql.Date)
+	 */
 	@Override
 	public boolean updateIntroductionDate(long id, Date introduced) {
 		PreparedStatement statement = null;
@@ -188,6 +217,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#updateDiscontinuationDate(long, java.sql.Date)
+	 */
 	@Override
 	public boolean updateDiscontinuationDate(long id, Date discontinued) {
 		PreparedStatement statement = null;
@@ -208,6 +240,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#updateCompany(long, model.Company)
+	 */
 	@Override
 	public boolean updateCompany(long id, Company company) {
 		if (!companyExists(company)) {
@@ -230,6 +265,9 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see services.Services#deleteComputer(long)
+	 */
 	@Override
 	public boolean deleteComputer(long id) {
 		Statement statement = null;
@@ -248,6 +286,12 @@ public final class MySQLServices extends Services {
 		}
 	}
 
+	/**
+	 * Company is not null.
+	 *
+	 * @param id the id
+	 * @return true, if successful
+	 */
 	private boolean companyIsNotNull(long id) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -270,6 +314,12 @@ public final class MySQLServices extends Services {
 		return false;
 	}
 
+	/**
+	 * Company exists.
+	 *
+	 * @param company the company
+	 * @return true, if successful
+	 */
 	private boolean companyExists(Company company) {
 		Statement statement = null;
 		ResultSet result = null;
