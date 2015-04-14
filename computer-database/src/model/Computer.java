@@ -9,23 +9,24 @@ public class Computer {
 
 	/** The id. */
 	private long id;
-	
+
 	/** The name. */
 	private String name;
-	
+
 	/** The introduction date. */
 	private Date introductionDate;
-	
+
 	/** The discontinuation date. */
 	private Date discontinuationDate;
-	
+
 	/** The manufacturer. */
-	private Company manufacturer;
+	private Company company;
 
 	/**
 	 * Instantiates a new computer.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 */
 	public Computer(String name) {
 		this.name = name;
@@ -34,8 +35,10 @@ public class Computer {
 	/**
 	 * Instantiates a new computer.
 	 *
-	 * @param id the id
-	 * @param name the name
+	 * @param id
+	 *            the id
+	 * @param name
+	 *            the name
 	 */
 	public Computer(long id, String name) {
 		this.id = id;
@@ -83,14 +86,15 @@ public class Computer {
 	 *
 	 * @return the manufacturer
 	 */
-	public Company getManufacturer() {
-		return manufacturer;
+	public Company getCompany() {
+		return company;
 	}
 
 	/**
 	 * Sets the introduction date.
 	 *
-	 * @param introduced the new introduction date
+	 * @param introduced
+	 *            the new introduction date
 	 */
 	public void setIntroductionDate(Date introduced) {
 		introductionDate = introduced;
@@ -99,7 +103,8 @@ public class Computer {
 	/**
 	 * Sets the discontinuation date.
 	 *
-	 * @param discontinued the new discontinuation date
+	 * @param discontinued
+	 *            the new discontinuation date
 	 */
 	public void setDiscontinuationDate(Date discontinued) {
 		discontinuationDate = discontinued;
@@ -108,13 +113,16 @@ public class Computer {
 	/**
 	 * Sets the manufacturer.
 	 *
-	 * @param manufacturer the new manufacturer
+	 * @param manufacturer
+	 *            the new manufacturer
 	 */
 	public void setManufacturer(Company manufacturer) {
-		this.manufacturer = manufacturer;
+		this.company = manufacturer;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -128,8 +136,8 @@ public class Computer {
 			display += ", discontinued in " + discontinuationDate;
 		}
 
-		if (manufacturer != null) {
-			display += ", by " + manufacturer;
+		if (company != null) {
+			display += ", by " + company;
 		}
 
 		return display;

@@ -12,13 +12,16 @@ public class UpdateIntroductionChoice extends Choice {
 	/**
 	 * Instantiates a new update introduction choice.
 	 *
-	 * @param services the services
+	 * @param services
+	 *            the services
 	 */
 	public UpdateIntroductionChoice(Services services) {
 		super(services);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ui.Choice#execute()
 	 */
 	@Override
@@ -30,7 +33,9 @@ public class UpdateIntroductionChoice extends Choice {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

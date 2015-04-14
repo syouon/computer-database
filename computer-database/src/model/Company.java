@@ -7,14 +7,15 @@ public class Company {
 
 	/** The id. */
 	private long id;
-	
+
 	/** The name. */
 	private String name;
 
 	/**
 	 * Instantiates a new company.
 	 *
-	 * @param name the name
+	 * @param name
+	 *            the name
 	 */
 	public Company(String name) {
 		this.name = name;
@@ -23,8 +24,10 @@ public class Company {
 	/**
 	 * Instantiates a new company.
 	 *
-	 * @param id the id
-	 * @param name the name
+	 * @param id
+	 *            the id
+	 * @param name
+	 *            the name
 	 */
 	public Company(long id, String name) {
 		this.name = name;
@@ -43,7 +46,8 @@ public class Company {
 	/**
 	 * Sets the id.
 	 *
-	 * @param id the new id
+	 * @param id
+	 *            the new id
 	 */
 	public void setId(long id) {
 		this.id = id;
@@ -61,13 +65,16 @@ public class Company {
 	/**
 	 * Sets the name.
 	 *
-	 * @param name the new name
+	 * @param name
+	 *            the new name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

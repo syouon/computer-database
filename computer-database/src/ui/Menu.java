@@ -12,7 +12,7 @@ public class Menu {
 
 	/** The choices. */
 	private List<Choice> choices;
-	
+
 	/** The scanner. */
 	private static Scanner scanner;
 
@@ -36,7 +36,8 @@ public class Menu {
 	/**
 	 * Adds the choice.
 	 *
-	 * @param choice the choice
+	 * @param choice
+	 *            the choice
 	 */
 	public void addChoice(Choice choice) {
 		choices.add(choice);
@@ -63,7 +64,7 @@ public class Menu {
 			System.out.print("> ");
 			String input = scanner.nextLine();
 			boolean match = Pattern.matches("\\d*", input);
-			
+
 			if (match) {
 				choice = Integer.parseInt(input);
 				if (choice >= 0 && choice < choices.size()) {
@@ -71,7 +72,7 @@ public class Menu {
 				}
 			}
 
-			System.out.println("O_o");			
+			System.out.println("O_o");
 		}
 
 		return choices.get(choice);

@@ -10,13 +10,16 @@ public class ShowDetailsChoice extends Choice {
 	/**
 	 * Instantiates a new show details choice.
 	 *
-	 * @param services the services
+	 * @param services
+	 *            the services
 	 */
 	public ShowDetailsChoice(Services services) {
 		super(services);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ui.Choice#execute()
 	 */
 	@Override
@@ -25,7 +28,9 @@ public class ShowDetailsChoice extends Choice {
 		services.showComputerDetails(id);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

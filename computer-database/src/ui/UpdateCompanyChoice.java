@@ -11,13 +11,16 @@ public class UpdateCompanyChoice extends Choice {
 	/**
 	 * Instantiates a new update company choice.
 	 *
-	 * @param services the services
+	 * @param services
+	 *            the services
 	 */
 	public UpdateCompanyChoice(Services services) {
 		super(services);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ui.Choice#execute()
 	 */
 	@Override
@@ -29,7 +32,9 @@ public class UpdateCompanyChoice extends Choice {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

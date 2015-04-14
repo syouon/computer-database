@@ -12,14 +12,18 @@ public class QuitChoice extends Choice {
 		super(null);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ui.Choice#execute()
 	 */
 	@Override
 	public void execute() {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

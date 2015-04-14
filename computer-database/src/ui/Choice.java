@@ -21,7 +21,8 @@ public abstract class Choice {
 	/**
 	 * Instantiates a new choice.
 	 *
-	 * @param services the services
+	 * @param services
+	 *            the services
 	 */
 	public Choice(Services services) {
 		this.services = services;
@@ -38,12 +39,12 @@ public abstract class Choice {
 		while (true) {
 			System.out.print("> Choose a computer id: ");
 			String input = Menu.getScanner().nextLine();
-			boolean match = Pattern.matches("\\d*", input);	
+			boolean match = Pattern.matches("\\d*", input);
 			if (match) {
 				id = Long.parseLong(input);
 				break;
 			}
-			
+
 			System.out.println("O_o");
 		}
 
@@ -64,7 +65,7 @@ public abstract class Choice {
 
 		return new Company(input);
 	}
-	
+
 	/**
 	 * Ask for introduction date.
 	 *
@@ -112,7 +113,7 @@ public abstract class Choice {
 			}
 		}
 	}
-	
+
 	/**
 	 * Execute.
 	 */

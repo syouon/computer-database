@@ -7,6 +7,11 @@ package database;
  * The Interface DatabaseNaming.
  */
 public interface DatabaseNaming {
+	
+	// Information de connexion
+	public static final String USER = "admincdb";
+	public static final String PASSWD = "qwerty1234";
+	
 	// Nom de la base de donnee
 	/** The Constant DATABASE_NAME. */
 	public static final String DATABASE_NAME = "computer-database-db";

@@ -13,13 +13,16 @@ public class ListComputersChoice extends Choice {
 	/**
 	 * Instantiates a new list computers choice.
 	 *
-	 * @param services the services
+	 * @param services
+	 *            the services
 	 */
 	public ListComputersChoice(Services services) {
 		super(services);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ui.Choice#execute()
 	 */
 	@Override
@@ -30,7 +33,8 @@ public class ListComputersChoice extends Choice {
 	/**
 	 * Prints the result.
 	 *
-	 * @param computers the computers
+	 * @param computers
+	 *            the computers
 	 */
 	private void printResult(List<Computer> computers) {
 		for (Computer computer : computers) {
@@ -38,7 +42,9 @@ public class ListComputersChoice extends Choice {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

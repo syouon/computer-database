@@ -28,9 +28,11 @@ public class Mapper {
 	/**
 	 * To computer list.
 	 *
-	 * @param result the result
+	 * @param result
+	 *            the result
 	 * @return the list
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static List<Computer> toComputerList(ResultSet result)
 			throws SQLException {
@@ -49,9 +51,11 @@ public class Mapper {
 	/**
 	 * To company list.
 	 *
-	 * @param result the result
+	 * @param result
+	 *            the result
 	 * @return the list
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static List<Company> toCompanyList(ResultSet result)
 			throws SQLException {
@@ -70,7 +74,8 @@ public class Mapper {
 	/**
 	 * Timestamp to date.
 	 *
-	 * @param time the time
+	 * @param time
+	 *            the time
 	 * @return the date
 	 */
 	private static Date timestampToDate(Timestamp time) {
@@ -84,9 +89,11 @@ public class Mapper {
 	/**
 	 * To computer.
 	 *
-	 * @param result the result
+	 * @param result
+	 *            the result
 	 * @return the computer
-	 * @throws SQLException the SQL exception
+	 * @throws SQLException
+	 *             the SQL exception
 	 */
 	public static Computer toComputer(ResultSet result) throws SQLException {
 		Computer computer = null;
@@ -100,9 +107,10 @@ public class Mapper {
 					.getTimestamp(COMPUTER_DISCONTINUED));
 			computer = new Computer(id, name);
 
-			/* le bloc try catch empeche juste d'executer toutes ses
-			 * instructions lorsque la jointure entre les deux tables
-			 * n'a pas ete faites (sans jointure pas d'alias c2)
+			/*
+			 * le bloc try catch empeche juste d'executer toutes ses
+			 * instructions lorsque la jointure entre les deux tables n'a pas
+			 * ete faites (sans jointure pas d'alias c2)
 			 */
 			try {
 				long companyId = result.getLong("c2." + COMPANY_ID);
@@ -110,7 +118,8 @@ public class Mapper {
 				Company manufacturer = new Company(companyId, companyName);
 				computer.setManufacturer(manufacturer);
 
-			} catch (SQLException e) {} // erreur non dangereuse
+			} catch (SQLException e) {
+			} // erreur non dangereuse
 
 			computer.setIntroductionDate(introduced);
 			computer.setDiscontinuationDate(discontinued);

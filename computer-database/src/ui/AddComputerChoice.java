@@ -14,13 +14,16 @@ public class AddComputerChoice extends Choice {
 	/**
 	 * Instantiates a new adds the computer choice.
 	 *
-	 * @param services the services
+	 * @param services
+	 *            the services
 	 */
 	public AddComputerChoice(Services services) {
 		super(services);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ui.Choice#execute()
 	 */
 	@Override
@@ -50,7 +53,9 @@ public class AddComputerChoice extends Choice {
 		return Menu.getScanner().nextLine();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

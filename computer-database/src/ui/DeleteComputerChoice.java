@@ -10,13 +10,16 @@ public class DeleteComputerChoice extends Choice {
 	/**
 	 * Instantiates a new delete computer choice.
 	 *
-	 * @param services the services
+	 * @param services
+	 *            the services
 	 */
 	public DeleteComputerChoice(Services services) {
 		super(services);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ui.Choice#execute()
 	 */
 	@Override
@@ -27,7 +30,9 @@ public class DeleteComputerChoice extends Choice {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
