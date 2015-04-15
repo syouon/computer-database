@@ -89,6 +89,10 @@ public class Computer {
 	public Company getCompany() {
 		return company;
 	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	/**
 	 * Sets the introduction date.
