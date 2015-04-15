@@ -23,5 +23,4 @@ public class Main {
 		menu.addChoice(new DeleteComputerChoice());
 		menu.loop();
 	}
-
 }

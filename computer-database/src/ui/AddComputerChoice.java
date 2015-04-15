@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import model.Company;
 import model.Computer;
 import service.ComputerService;
-import service.Services;
 
 /**
  * The Class AddComputerChoice.
@@ -22,12 +21,12 @@ public class AddComputerChoice extends Choice {
 		String name = askForComputerName();
 		LocalDateTime introduced = askForIntroductionDate();
 		LocalDateTime discontinued = askForDiscontinuationDate();
-		Company manufacturer = askForCompany();
+		Company company = askForCompany();
 
 		Computer computer = new Computer(name);
 		computer.setIntroductionDate(introduced);
 		computer.setDiscontinuationDate(discontinued);
-		computer.setCompany(manufacturer);
+		computer.setCompany(company);
 
 		if (!ComputerService.getInstance().addComputer(computer)) {
 			System.out.println("Addition failed");

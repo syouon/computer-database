@@ -2,10 +2,10 @@ package ui;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 import model.Company;
-import service.Services;
 
 /* Un choix represente une entree du menu, une des options
  * offertes a l'utilisateur.
@@ -70,10 +70,11 @@ public abstract class Choice {
 				}
 
 				return LocalDateTime.parse(input,
-						DateTimeFormatter.ISO_LOCAL_DATE);
+						DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-			} catch (IllegalArgumentException e) {
-				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");
+			} catch (DateTimeParseException e) {
+				System.out
+						.println("Bad format (should be YYYY-MM-DDTHH:mm:ss)");
 				continue;
 			}
 		}
@@ -95,10 +96,11 @@ public abstract class Choice {
 				}
 
 				return LocalDateTime.parse(input,
-						DateTimeFormatter.ISO_LOCAL_DATE);
+						DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-			} catch (IllegalArgumentException e) {
-				System.out.println("Bad format (should be yyyy-[m]m-[d]d)");
+			} catch (DateTimeParseException e) {
+				System.out
+						.println("Bad format (should be YYYY-MM-DDTHH:mm:ss)");
 				continue;
 			}
 		}

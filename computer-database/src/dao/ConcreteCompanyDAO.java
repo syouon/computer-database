@@ -50,7 +50,7 @@ public enum ConcreteCompanyDAO implements CompanyDAO {
 
 		try { // On suppose que le champs id n'est pas renseigne
 			statement = conn.prepareStatement("SELECT * FROM " + COMPANY_TABLE
-					+ " WHERE " + COMPANY_NAME + " LIKE '?';");
+					+ " WHERE " + COMPANY_NAME + " LIKE ?;");
 			statement.setString(1, company.getName());
 			result = statement.executeQuery();
 
@@ -63,6 +63,7 @@ public enum ConcreteCompanyDAO implements CompanyDAO {
 			return false;
 
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(

@@ -21,7 +21,6 @@ import java.util.List;
 import mapper.Mapper;
 import model.Company;
 import model.Computer;
-import util.ConnectionFactory;
 
 public enum ConcreteComputerDAO implements ComputerDAO {
 	INSTANCE;
@@ -104,9 +103,12 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 
 	@Override
 	public boolean update(Computer computer) {
+		return updateDate(computer) && updateCompany(computer);
+	}
+
+	private boolean updateDate(Computer computer) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement dateStatement = null;
-		PreparedStatement companyStatement = null;
 
 		try {
 			// Mise a jour des dates
@@ -120,29 +122,47 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 			dateStatement.setTimestamp(2,
 					Mapper.localDateTimeToTimestamp(computer
 							.getDiscontinuationDate()));
+			dateStatement.setLong(3, computer.getId());
 			dateStatement.executeUpdate();
 
-			// Mise a jour de la company seulement si elle existe
-			if (computer.getCompany() != null
-					&& ConcreteCompanyDAO.getInstance().exists(
-							computer.getCompany())) {
-				companyStatement = conn.prepareStatement("UPDATE "
-						+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
-						+ "=? WHERE " + COMPUTER_ID + "=?;");
-				companyStatement.setLong(1, computer.getCompany().getId());
-				companyStatement.setLong(2, computer.getId());
-				companyStatement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					dateStatement, null);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	private boolean updateCompany(Computer computer) {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement companyStatement = null;
+
+		try {
+			if (computer.getCompany() != null) {
+				if (ConcreteCompanyDAO.getInstance().exists(
+						computer.getCompany())) {
+					companyStatement = conn.prepareStatement("UPDATE "
+							+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
+							+ "=? WHERE " + COMPUTER_ID + "=?;");
+					companyStatement.setLong(1, computer.getCompany().getId());
+					companyStatement.setLong(2, computer.getId());
+					companyStatement.executeUpdate();
+					return true;
+				}
+
+				return false;
 			}
 
 			return true;
-
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					companyStatement, null);
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					dateStatement, null);
 			ConnectionFactory.getInstance().closeConnection(conn);
 		}
 	}
@@ -158,14 +178,15 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
 					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
 					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-					+ COMPUTER_TABLE + " as c LEFT OUTER JOIN " + COMPANY_TABLE
-					+ " as co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
+					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
+					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
 					+ " WHERE c." + COMPUTER_ID + "=?;");
 			statement.setLong(1, id);
 			result = statement.executeQuery();
 			return Mapper.toComputer(result);
 
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(

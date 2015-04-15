@@ -24,7 +24,7 @@ public class UpdateComputerChoice extends Choice {
 			computer.setCompany(company);
 		}
 
-		if (ComputerService.getInstance().updateComputer(computer)) {
+		if (!ComputerService.getInstance().updateComputer(computer)) {
 			System.out.println("Update failed");
 		}
 	}
