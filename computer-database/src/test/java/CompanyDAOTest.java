@@ -47,6 +47,14 @@ public class CompanyDAOTest {
 	}
 
 	@Test
+	public void testFind() {
+		List<Company> companies = ConcreteCompanyDAO.getInstance().findAll();
+		
+		Company company = ConcreteCompanyDAO.getInstance().find(companies.get(0).getId());
+		assertEquals("Should be equal", company, companies.get(0));
+	}
+	
+	@Test
 	public void testFindAll() {
 		List<Company> company = ConcreteCompanyDAO.getInstance().findAll();
 
