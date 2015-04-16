@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="model.Computer, java.util.List"%>
+<%@ page import="servlet.ComputerDTO, java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -80,9 +80,9 @@
 	                        <td>
 	                            <a href="editComputer.html" onclick="">${computer.name}</a>
 	                        </td>
-	                        <td>${computer.getIntroductionDate() == null ? null : computer.getIntroductionDate().toLocalDate()}</td>
-	                        <td>${computer.getDiscontinuationDate() == null ? null : computer.getDiscontinuationDate().toLocalDate()}</td>
-	                        <td>${computer.getCompany().getName()}</td>
+	                        <td>${computer.introduced}</td>
+	                        <td>${computer.discontinued}</td>
+	                        <td>${computer.companyName}</td>
 	                    </tr>
 					</c:forEach>
 				</tbody>

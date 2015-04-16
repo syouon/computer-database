@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import mapper.Mapper;
 import model.Computer;
 import service.ComputerService;
 
@@ -33,11 +35,16 @@ public class DashboardServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		List<ComputerDTO> dtos = new ArrayList<>();
 		List<Computer> computers = ComputerService.getInstance()
 				.listComputers();
+		// conversion des computers vers leur DTO
+		for (Computer c : computers) {
+			dtos.add(Mapper.toComputerDTO(c));
+		}
 
 		request.setAttribute("computersNumber", computers.size());
-		request.setAttribute("computers", computers);
+		request.setAttribute("computers", dtos);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
 				.forward(request, response);
 	}
