@@ -89,7 +89,7 @@ public class Computer {
 	public Company getCompany() {
 		return company;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -133,11 +133,11 @@ public class Computer {
 		String display = "n°" + id + ") " + name;
 
 		if (introductionDate != null) {
-			display += ", introduced in " + introductionDate;
+			display += ", introduced in " + introductionDate.toLocalDate();
 		}
 
 		if (discontinuationDate != null) {
-			display += ", discontinued in " + discontinuationDate;
+			display += ", discontinued in " + discontinuationDate.toLocalDate();
 		}
 
 		if (company != null) {

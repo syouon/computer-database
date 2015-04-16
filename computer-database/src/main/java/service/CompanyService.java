@@ -12,6 +12,10 @@ public enum CompanyService {
 		return ConcreteCompanyDAO.getInstance().findAll(start, range);
 	}
 
+	public List<Company> listCompanies() {
+		return ConcreteCompanyDAO.getInstance().findAll();
+	}
+
 	public static CompanyService getInstance() {
 		return INSTANCE;
 	}

@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.ConcreteCompanyDAO;
 import model.Company;
 import model.Computer;
 
@@ -42,7 +43,16 @@ public class Mapper {
 		while (result.next()) {
 			long id = result.getLong(COMPUTER_ID);
 			String name = result.getString(COMPUTER_NAME);
+			LocalDateTime introduced = Mapper.timestampToLocalDateTime(result
+					.getTimestamp(COMPUTER_INTRODUCED));
+			LocalDateTime discontinued = Mapper.timestampToLocalDateTime(result
+					.getTimestamp(COMPUTER_DISCONTINUED));
+			long company_id = result.getLong(COMPUTER_COMPANYID);
+			Company company = ConcreteCompanyDAO.getInstance().find(company_id);
 			Computer computer = new Computer(id, name);
+			computer.setIntroductionDate(introduced);
+			computer.setDiscontinuationDate(discontinued);
+			computer.setCompany(company);
 			computers.add(computer);
 		}
 
@@ -105,6 +115,18 @@ public class Mapper {
 		}
 
 		return computer;
+	}
+
+	public static Company toCompany(ResultSet result) throws SQLException {
+		Company company = null;
+
+		if (result.next()) {
+			long id = result.getLong(COMPANY_ID);
+			String name = result.getString(COMPANY_NAME);
+			company = new Company(id, name);
+		}
+
+		return company;
 	}
 
 	public static LocalDateTime timestampToLocalDateTime(Timestamp time) {

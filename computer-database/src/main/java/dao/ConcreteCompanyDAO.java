@@ -21,6 +21,28 @@ public enum ConcreteCompanyDAO implements CompanyDAO {
 	}
 
 	@Override
+	public Company find(long id) {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try {
+			statement = conn.prepareStatement("SELECT * FROM " + COMPANY_TABLE
+					+ " WHERE " + COMPANY_ID + "=?;");
+			statement.setLong(1, id);
+			result = statement.executeQuery();
+
+			return Mapper.toCompany(result);
+		} catch (SQLException e) {
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
 	public List<Company> findAll(int start, int range) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
@@ -32,6 +54,27 @@ public enum ConcreteCompanyDAO implements CompanyDAO {
 					+ COMPANY_NAME + " LIMIT ? OFFSET ?;");
 			statement.setInt(1, range);
 			statement.setInt(2, start);
+			result = statement.executeQuery();
+			return Mapper.toCompanyList(result);
+
+		} catch (SQLException e) {
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
+	public List<Company> findAll() {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try {
+			statement = conn.prepareStatement("SELECT " + COMPANY_NAME + ","
+					+ COMPANY_ID + " FROM " + COMPANY_TABLE + ";");
 			result = statement.executeQuery();
 			return Mapper.toCompanyList(result);
 

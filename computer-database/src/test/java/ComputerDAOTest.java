@@ -41,7 +41,7 @@ public class ComputerDAOTest {
 		// L'element ajoute doit etre le meme que computer
 		assertTrue("Computer added must be the same as ComputerTest",
 				computer.equals(newComputer));
-		
+
 		ConcreteComputerDAO.getInstance().delete(computer.getId());
 
 		if (newComputer != null) {

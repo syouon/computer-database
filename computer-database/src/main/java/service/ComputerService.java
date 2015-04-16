@@ -12,6 +12,10 @@ public enum ComputerService {
 		return ConcreteComputerDAO.getInstance().findAll(start, range);
 	}
 
+	public List<Computer> listComputers() {
+		return ConcreteComputerDAO.getInstance().findAll();
+	}
+
 	public Computer showComputerDetails(long id) {
 		return ConcreteComputerDAO.getInstance().find(id);
 	}

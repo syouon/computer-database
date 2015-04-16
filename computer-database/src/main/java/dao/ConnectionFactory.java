@@ -24,7 +24,8 @@ public enum ConnectionFactory {
 
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"
-					+ DATABASE_NAME, USER, PASSWD);
+					+ DATABASE_NAME + "?zeroDateTimeBehavior=convertToNull",
+					USER, PASSWD);
 		} catch (SQLException e) {
 			throw new DAOException();
 		}
@@ -43,9 +44,8 @@ public enum ConnectionFactory {
 	public static ConnectionFactory getInstance() {
 		return INSTANCE;
 	}
-	
-	public void closeResultSetAndStatement(Statement statement,
-			ResultSet result) {
+
+	public void closeResultSetAndStatement(Statement statement, ResultSet result) {
 
 		try {
 			if (result != null) {

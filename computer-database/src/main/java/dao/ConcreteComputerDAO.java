@@ -202,15 +202,36 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 		ResultSet result = null;
 
 		try {
-			statement = conn.prepareStatement("SELECT " + COMPUTER_NAME + ","
-					+ COMPUTER_ID + " FROM " + COMPUTER_TABLE + " ORDER BY "
-					+ COMPUTER_NAME + " LIMIT ? OFFSET ?;");
+			statement = conn.prepareStatement("SELECT * FROM " + COMPUTER_TABLE
+					+ " ORDER BY " + COMPUTER_NAME + " LIMIT ? OFFSET ?;");
 			statement.setInt(1, range);
 			statement.setInt(2, start);
 			result = statement.executeQuery();
 			return Mapper.toComputerList(result);
 
 		} catch (SQLException e) {
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
+	public List<Computer> findAll() {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try {
+			statement = conn.prepareStatement("SELECT * FROM " + COMPUTER_TABLE
+					+ ";");
+			result = statement.executeQuery();
+			return Mapper.toComputerList(result);
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
