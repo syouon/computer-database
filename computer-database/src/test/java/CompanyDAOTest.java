@@ -1,4 +1,5 @@
 import static dao.DatabaseNaming.COMPANY_TABLE;
+import static dao.DatabaseNaming.COMPANY_NAME;
 import static org.junit.Assert.*;
 
 import java.sql.Connection;
@@ -51,15 +52,16 @@ public class CompanyDAOTest {
 
 		try {
 			statement = conn.createStatement();
-			result = statement.executeQuery("SELECT COUNT(*) FROM "
-					+ COMPANY_TABLE + ";");
+			result = statement.executeQuery("SELECT * FROM "
+					+ COMPANY_TABLE + " ORDER BY " + COMPANY_NAME
+					+ " LIMIT 10;");
 
 			int lineNumber = 0;
-			if (result.next()) {
-				lineNumber = result.getInt(1);
+			while (result.next()) {
+				lineNumber++;
 			}
 
-			assertEquals("must return the same number of line", company.size(),
+			assertEquals("must return 10", company.size(),
 					lineNumber);
 		} catch (SQLException e) {
 			e.printStackTrace();

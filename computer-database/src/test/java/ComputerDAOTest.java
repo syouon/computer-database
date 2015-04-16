@@ -1,4 +1,5 @@
 import static dao.DatabaseNaming.COMPUTER_TABLE;
+import static dao.DatabaseNaming.COMPUTER_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -22,15 +23,10 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testCreate() {
-		List<Computer> currentComputers = ConcreteComputerDAO.getInstance()
-				.findAll(0, 10);
-		Computer computer = new Computer("ComputerTest");
+		Computer computer = new Computer("AAAA");
 		ConcreteComputerDAO.getInstance().create(computer);
 		List<Computer> newComputers = ConcreteComputerDAO.getInstance()
 				.findAll(0, 10);
-
-		assertEquals("New list should be bigger by one element",
-				currentComputers.size() + 1, newComputers.size());
 
 		// Suppression du computer ajoute pour ne pas modifier la bdd
 		Computer newComputer = null;
@@ -43,7 +39,7 @@ public class ComputerDAOTest {
 		}
 
 		// L'element ajoute doit etre le meme que computer
-		assertTrue("Computer added must be the same as ComputerTest",
+		assertTrue("Computer added must be the same as AAAA",
 				computer.equals(newComputer));
 
 		if (newComputer != null) {
@@ -55,7 +51,8 @@ public class ComputerDAOTest {
 	public void testDelete() {
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
+				10);
 
 		// on renseigne l'id obtenu lors de la creation dans computer
 		for (Computer c : computers) {
@@ -75,8 +72,9 @@ public class ComputerDAOTest {
 	public void testUpdate() {
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
-		
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
+
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
+				10);
 
 		Computer updatedComputer = new Computer("ComputerTest");
 		for (Computer c : computers) {
@@ -87,18 +85,20 @@ public class ComputerDAOTest {
 			}
 		}
 		ConcreteComputerDAO.getInstance().update(updatedComputer);
-		Computer newComputer = ConcreteComputerDAO.getInstance().find(updatedComputer.getId());
-		
+		Computer newComputer = ConcreteComputerDAO.getInstance().find(
+				updatedComputer.getId());
+
 		assertNotSame("Should not be equal", computer, newComputer);
-		
+
 		ConcreteComputerDAO.getInstance().delete(computer.getId());
 	}
 
 	@Test
 	public void testFind() {
-		Computer computer = new Computer("ComputerTest");
+		Computer computer = new Computer("AAAA");
 		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
+				10);
 
 		Computer addedComputer = null;
 		for (Computer c : computers) {
@@ -117,22 +117,25 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindAll() {
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
-		
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
+				10);
+
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		Statement statement = null;
 		ResultSet result = null;
-		
+
 		try {
 			statement = conn.createStatement();
-			result = statement.executeQuery("SELECT COUNT(*) FROM " + COMPUTER_TABLE + ";");
-			
+			result = statement.executeQuery("SELECT * FROM " + COMPUTER_TABLE
+					+ " ORDER BY " + COMPUTER_NAME + " LIMIT 10;");
+
 			int lineNumber = 0;
-			if (result.next()) {
-				lineNumber = result.getInt(1);
+			while (result.next()) {
+				lineNumber++;
 			}
-			
-			assertEquals("Should have the same size", computers.size(), lineNumber);
+
+			assertEquals("Should have the same size", computers.size(),
+					lineNumber);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -141,11 +144,11 @@ public class ComputerDAOTest {
 				if (result != null) {
 					result.close();
 				}
-				
+
 				if (statement != null) {
 					statement.close();
 				}
-				
+
 				ConnectionFactory.getInstance().closeConnection(conn);
 			} catch (SQLException e) {
 				e.printStackTrace();
