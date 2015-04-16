@@ -21,7 +21,7 @@ public enum ConcreteCompanyDAO implements CompanyDAO {
 	}
 
 	@Override
-	public List<Company> findAll() {
+	public List<Company> findAll(int start, int range) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
@@ -29,7 +29,9 @@ public enum ConcreteCompanyDAO implements CompanyDAO {
 		try {
 			statement = conn.prepareStatement("SELECT " + COMPANY_NAME + ","
 					+ COMPANY_ID + " FROM " + COMPANY_TABLE + " ORDER BY "
-					+ COMPANY_NAME + ";");
+					+ COMPANY_NAME + " LIMIT ? OFFSET ?;");
+			statement.setInt(1, range);
+			statement.setInt(2, start);
 			result = statement.executeQuery();
 			return Mapper.toCompanyList(result);
 

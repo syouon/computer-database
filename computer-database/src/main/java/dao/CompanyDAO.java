@@ -14,7 +14,7 @@ public interface CompanyDAO {
 	 * 
 	 * @return the list
 	 */
-	public List<Company> findAll();
+	public List<Company> findAll(int start, int range);
 
 	public boolean exists(Company company);
 }

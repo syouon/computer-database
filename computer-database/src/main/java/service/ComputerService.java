@@ -8,8 +8,8 @@ import model.Computer;
 public enum ComputerService {
 	INSTANCE;
 
-	public List<Computer> listComputers() {
-		return ConcreteComputerDAO.getInstance().findAll();
+	public List<Computer> listComputers(int start, int range) {
+		return ConcreteComputerDAO.getInstance().findAll(start, range);
 	}
 
 	public Computer showComputerDetails(long id) {

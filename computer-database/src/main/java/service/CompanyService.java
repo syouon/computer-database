@@ -8,8 +8,8 @@ import dao.ConcreteCompanyDAO;
 public enum CompanyService {
 	INSTANCE;
 
-	public List<Company> listCompanies() {
-		return ConcreteCompanyDAO.getInstance().findAll();
+	public List<Company> listCompanies(int start, int range) {
+		return ConcreteCompanyDAO.getInstance().findAll(start, range);
 	}
 
 	public static CompanyService getInstance() {

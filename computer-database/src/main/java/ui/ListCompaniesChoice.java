@@ -1,9 +1,5 @@
 package ui;
 
-import java.util.List;
-
-import model.Company;
-import service.CompanyService;
 
 /**
  * The Class ListCompaniesChoice.
@@ -17,19 +13,9 @@ public class ListCompaniesChoice extends Choice {
 	 */
 	@Override
 	public void execute() {
-		printResult(CompanyService.getInstance().listCompanies());
-	}
-
-	/**
-	 * Prints the result.
-	 * 
-	 * @param companies
-	 *            the companies
-	 */
-	private void printResult(List<Company> companies) {
-		for (Company company : companies) {
-			System.out.println(company);
-		}
+		Pager pager = new CompanyPager();
+		pager.print();
+		pager.waitForAction();
 	}
 
 	/*

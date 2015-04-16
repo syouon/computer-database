@@ -196,7 +196,7 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 	}
 
 	@Override
-	public List<Computer> findAll() {
+	public List<Computer> findAll(int start, int range) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
@@ -204,7 +204,9 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 		try {
 			statement = conn.prepareStatement("SELECT " + COMPUTER_NAME + ","
 					+ COMPUTER_ID + " FROM " + COMPUTER_TABLE + " ORDER BY "
-					+ COMPUTER_NAME + ";");
+					+ COMPUTER_NAME + " LIMIT ? OFFSET ?;");
+			statement.setInt(1, range);
+			statement.setInt(2, start);
 			result = statement.executeQuery();
 			return Mapper.toComputerList(result);
 

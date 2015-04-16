@@ -50,5 +50,5 @@ public interface ComputerDAO {
 	 *
 	 * @return the list
 	 */
-	public List<Computer> findAll();
+	public List<Computer> findAll(int start, int range);
 }

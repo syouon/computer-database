@@ -47,7 +47,7 @@ public class CompanyDAOTest {
 
 	@Test
 	public void testFindAll() {
-		List<Company> company = ConcreteCompanyDAO.getInstance().findAll();
+		List<Company> company = ConcreteCompanyDAO.getInstance().findAll(0, 10);
 
 		try {
 			statement = conn.createStatement();

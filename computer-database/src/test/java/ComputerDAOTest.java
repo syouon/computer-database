@@ -23,11 +23,11 @@ public class ComputerDAOTest {
 	@Test
 	public void testCreate() {
 		List<Computer> currentComputers = ConcreteComputerDAO.getInstance()
-				.findAll();
+				.findAll(0, 10);
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
 		List<Computer> newComputers = ConcreteComputerDAO.getInstance()
-				.findAll();
+				.findAll(0, 10);
 
 		assertEquals("New list should be bigger by one element",
 				currentComputers.size() + 1, newComputers.size());
@@ -55,7 +55,7 @@ public class ComputerDAOTest {
 	public void testDelete() {
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
 
 		// on renseigne l'id obtenu lors de la creation dans computer
 		for (Computer c : computers) {
@@ -76,7 +76,7 @@ public class ComputerDAOTest {
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
 		
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
 
 		Computer updatedComputer = new Computer("ComputerTest");
 		for (Computer c : computers) {
@@ -98,7 +98,7 @@ public class ComputerDAOTest {
 	public void testFind() {
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
 
 		Computer addedComputer = null;
 		for (Computer c : computers) {
@@ -117,7 +117,7 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindAll() {
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0, 10);
 		
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		Statement statement = null;
