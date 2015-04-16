@@ -2,11 +2,11 @@ package mapper;
 
 import static dao.DatabaseNaming.COMPANY_ID;
 import static dao.DatabaseNaming.COMPANY_NAME;
+import static dao.DatabaseNaming.COMPUTER_COMPANYID;
 import static dao.DatabaseNaming.COMPUTER_DISCONTINUED;
 import static dao.DatabaseNaming.COMPUTER_ID;
 import static dao.DatabaseNaming.COMPUTER_INTRODUCED;
 import static dao.DatabaseNaming.COMPUTER_NAME;
-import static dao.DatabaseNaming.COMPUTER_COMPANYID;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,9 +15,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.ConcreteCompanyDAO;
 import model.Company;
 import model.Computer;
+import servlet.ComputerDTO;
+import dao.ConcreteCompanyDAO;
 
 /* Fait le lien entre le modele objet et
  * les resultats obtenus par une requete
@@ -135,5 +136,30 @@ public class Mapper {
 
 	public static Timestamp localDateTimeToTimestamp(LocalDateTime time) {
 		return (time == null) ? null : Timestamp.valueOf(time);
+	}
+	
+	public static ComputerDTO toComputerDTO(Computer computer) {
+		ComputerDTO dto = new ComputerDTO();
+		dto.setId(computer.getId());
+		dto.setName(computer.getName());
+		
+		LocalDateTime introduced = computer.getIntroductionDate();
+		LocalDateTime discontinued = computer.getDiscontinuationDate();
+		Company company = computer.getCompany();
+		
+		if (introduced != null) {
+			dto.setIntroduced(introduced.toLocalDate().toString());
+		}
+		
+		if (discontinued != null) {
+			dto.setDiscontinued(discontinued.toLocalDate().toString());
+		}
+		
+		if (company != null) {
+			dto.setCompanyId(company.getId());
+			dto.setCompanyName(company.getName());
+		}
+		
+		return dto;
 	}
 }
