@@ -48,20 +48,19 @@ public class CompanyDAOTest {
 
 	@Test
 	public void testFindAll() {
-		List<Company> company = ConcreteCompanyDAO.getInstance().findAll(0, 10);
+		List<Company> company = ConcreteCompanyDAO.getInstance().findAll();
 
 		try {
 			statement = conn.createStatement();
-			result = statement.executeQuery("SELECT * FROM "
-					+ COMPANY_TABLE + " ORDER BY " + COMPANY_NAME
-					+ " LIMIT 10;");
+			result = statement.executeQuery("SELECT COUNT(*) FROM "
+					+ COMPANY_TABLE + ";");
 
 			int lineNumber = 0;
 			while (result.next()) {
-				lineNumber++;
+				lineNumber = result.getInt(1);
 			}
 
-			assertEquals("must return 10", company.size(),
+			assertEquals("must return the same number of line", company.size(),
 					lineNumber);
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -23,10 +23,10 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testCreate() {
-		Computer computer = new Computer("AAAA");
+		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
 		List<Computer> newComputers = ConcreteComputerDAO.getInstance()
-				.findAll(0, 10);
+				.findAll();
 
 		// Suppression du computer ajoute pour ne pas modifier la bdd
 		Computer newComputer = null;
@@ -39,8 +39,10 @@ public class ComputerDAOTest {
 		}
 
 		// L'element ajoute doit etre le meme que computer
-		assertTrue("Computer added must be the same as AAAA",
+		assertTrue("Computer added must be the same as ComputerTest",
 				computer.equals(newComputer));
+		
+		ConcreteComputerDAO.getInstance().delete(computer.getId());
 
 		if (newComputer != null) {
 			ConcreteComputerDAO.getInstance().delete(newComputer.getId());
@@ -51,8 +53,7 @@ public class ComputerDAOTest {
 	public void testDelete() {
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
-				10);
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
 
 		// on renseigne l'id obtenu lors de la creation dans computer
 		for (Computer c : computers) {
@@ -73,8 +74,7 @@ public class ComputerDAOTest {
 		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
 
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
-				10);
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
 
 		Computer updatedComputer = new Computer("ComputerTest");
 		for (Computer c : computers) {
@@ -95,10 +95,9 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFind() {
-		Computer computer = new Computer("AAAA");
+		Computer computer = new Computer("ComputerTest");
 		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
-				10);
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
 
 		Computer addedComputer = null;
 		for (Computer c : computers) {
@@ -117,8 +116,7 @@ public class ComputerDAOTest {
 
 	@Test
 	public void testFindAll() {
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll(0,
-				10);
+		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
 
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		Statement statement = null;
@@ -126,12 +124,12 @@ public class ComputerDAOTest {
 
 		try {
 			statement = conn.createStatement();
-			result = statement.executeQuery("SELECT * FROM " + COMPUTER_TABLE
-					+ " ORDER BY " + COMPUTER_NAME + " LIMIT 10;");
+			result = statement.executeQuery("SELECT COUNT(*) FROM "
+					+ COMPUTER_TABLE + ";");
 
 			int lineNumber = 0;
 			while (result.next()) {
-				lineNumber++;
+				lineNumber = result.getInt(1);
 			}
 
 			assertEquals("Should have the same size", computers.size(),
