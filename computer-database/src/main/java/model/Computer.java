@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * The Class Computer.
@@ -14,10 +14,10 @@ public class Computer {
 	private String name;
 
 	/** The introduction date. */
-	private LocalDateTime introductionDate;
+	private LocalDate introductionDate;
 
 	/** The discontinuation date. */
-	private LocalDateTime discontinuationDate;
+	private LocalDate discontinuationDate;
 
 	/** The manufacturer. */
 	private Company company;
@@ -68,7 +68,7 @@ public class Computer {
 	 *
 	 * @return the introduction date
 	 */
-	public LocalDateTime getIntroductionDate() {
+	public LocalDate getIntroductionDate() {
 		return introductionDate;
 	}
 
@@ -77,7 +77,7 @@ public class Computer {
 	 *
 	 * @return the discontinuation date
 	 */
-	public LocalDateTime getDiscontinuationDate() {
+	public LocalDate getDiscontinuationDate() {
 		return discontinuationDate;
 	}
 
@@ -100,7 +100,7 @@ public class Computer {
 	 * @param introduced
 	 *            the new introduction date
 	 */
-	public void setIntroductionDate(LocalDateTime introduced) {
+	public void setIntroductionDate(LocalDate introduced) {
 		introductionDate = introduced;
 	}
 
@@ -110,7 +110,7 @@ public class Computer {
 	 * @param discontinued
 	 *            the new discontinuation date
 	 */
-	public void setDiscontinuationDate(LocalDateTime discontinued) {
+	public void setDiscontinuationDate(LocalDate discontinued) {
 		discontinuationDate = discontinued;
 	}
 
@@ -133,11 +133,11 @@ public class Computer {
 		String display = "n°" + id + ") " + name;
 
 		if (introductionDate != null) {
-			display += ", introduced in " + introductionDate.toLocalDate();
+			display += ", introduced in " + introductionDate;
 		}
 
 		if (discontinuationDate != null) {
-			display += ", discontinued in " + discontinuationDate.toLocalDate();
+			display += ", discontinued in " + discontinuationDate;
 		}
 
 		if (company != null) {

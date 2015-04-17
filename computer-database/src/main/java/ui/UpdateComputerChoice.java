@@ -1,6 +1,6 @@
 package ui;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import model.Company;
 import model.Computer;
@@ -12,8 +12,8 @@ public class UpdateComputerChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		LocalDateTime introduced = askForIntroductionDate();
-		LocalDateTime discontinued = askForDiscontinuationDate();
+		LocalDate introduced = askForIntroductionDate();
+		LocalDate discontinued = askForDiscontinuationDate();
 		Company company = askForCompany();
 
 		Computer computer = new Computer(id, "");

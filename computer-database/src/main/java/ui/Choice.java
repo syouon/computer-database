@@ -1,6 +1,6 @@
 package ui;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
@@ -59,7 +59,7 @@ public abstract class Choice {
 	 * 
 	 * @return the date
 	 */
-	protected LocalDateTime askForIntroductionDate() {
+	protected LocalDate askForIntroductionDate() {
 
 		while (true) {
 			System.out.print("> Introduced in: ");
@@ -69,8 +69,7 @@ public abstract class Choice {
 					return null;
 				}
 
-				return LocalDateTime.parse(input,
-						DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+				return LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (DateTimeParseException e) {
 				System.out
@@ -85,7 +84,7 @@ public abstract class Choice {
 	 * 
 	 * @return the date
 	 */
-	protected LocalDateTime askForDiscontinuationDate() {
+	protected LocalDate askForDiscontinuationDate() {
 
 		while (true) {
 			System.out.print("> Discontinued in: ");
@@ -95,8 +94,7 @@ public abstract class Choice {
 					return null;
 				}
 
-				return LocalDateTime.parse(input,
-						DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+				return LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (DateTimeParseException e) {
 				System.out

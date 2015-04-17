@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import mapper.Mapper;
@@ -34,13 +34,13 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 
-		LocalDateTime introductionDate = computer.getIntroductionDate();
-		LocalDateTime discontinuationDate = computer.getDiscontinuationDate();
+		LocalDate introductionDate = computer.getIntroductionDate();
+		LocalDate discontinuationDate = computer.getDiscontinuationDate();
 
 		Timestamp introduced = (introductionDate != null) ? (Mapper
-				.localDateTimeToTimestamp(introductionDate)) : null;
+				.localDateToTimestamp(introductionDate)) : null;
 		Timestamp discontinued = (discontinuationDate != null) ? (Mapper
-				.localDateTimeToTimestamp(discontinuationDate)) : null;
+				.localDateToTimestamp(discontinuationDate)) : null;
 
 		// Verification de l'existence de company
 		Company company = computer.getCompany();
@@ -118,9 +118,9 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 							+ COMPUTER_DISCONTINUED + "=? WHERE " + COMPUTER_ID
 							+ "=?;");
 			dateStatement.setTimestamp(1, Mapper
-					.localDateTimeToTimestamp(computer.getIntroductionDate()));
+					.localDateToTimestamp(computer.getIntroductionDate()));
 			dateStatement.setTimestamp(2,
-					Mapper.localDateTimeToTimestamp(computer
+					Mapper.localDateToTimestamp(computer
 							.getDiscontinuationDate()));
 			dateStatement.setLong(3, computer.getId());
 			dateStatement.executeUpdate();
