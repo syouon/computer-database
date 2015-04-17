@@ -20,12 +20,15 @@ import service.ComputerService;
 @WebServlet("/DashboardServlet")
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private int allComputerNumber;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public DashboardServlet() {
 		super();
+		allComputerNumber = ComputerService.getInstance().listComputers()
+				.size();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -35,6 +38,12 @@ public class DashboardServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+
+		String reload = request.getHeader("reload");
+		if (reload != null && reload.equals("yes")) {
+			allComputerNumber = ComputerService.getInstance().listComputers()
+					.size();
+		}
 
 		int nbPerPage = 10;
 		int currentPage = 1;
@@ -49,8 +58,6 @@ public class DashboardServlet extends HttpServlet {
 			nbPerPage = Integer.parseInt(range);
 		}
 
-		int allComputerNumber = ComputerService.getInstance().listComputers()
-				.size();
 		List<ComputerDTO> dtos = new ArrayList<>();
 		List<Computer> computers = ComputerService.getInstance().listComputers(
 				(currentPage - 1) * nbPerPage, nbPerPage);

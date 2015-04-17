@@ -38,8 +38,9 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="AddComputerServlet">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
+					<a class="btn btn-success" id="addComputer"
+						href="AddComputerServlet">Add Computer</a> <a
+						class="btn btn-default" id="editComputer" href="#"
 						onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
@@ -96,41 +97,48 @@
 		<div class="container text-center">
 			<ul class="pagination">
 				<c:if test="${page-1 != 0}">
-					<li><a href="DashboardServlet?page=${page-1}&range=${currentRange}"
+					<li><a
+						href="DashboardServlet?page=${page-1}&range=${currentRange}"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 					</a></li>
 				</c:if>
 				<c:choose>
 					<c:when test="${page <= 2}">
 						<c:forEach var="i" begin="1" end="${page+2}">
-							<li><a href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
+							<li><a
+								href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
 						</c:forEach>
 					</c:when>
 					<c:when test="${page > 2 && page <= pageNumber-2}">
 						<c:forEach var="i" begin="${page-2}" end="${page+2}">
-							<li><a href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
+							<li><a
+								href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
 						</c:forEach>
 					</c:when>
 					<c:otherwise>
 						<c:forEach var="i" begin="${page-2}" end="${pageNumber+1}">
-							<li><a href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
+							<li><a
+								href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
 						</c:forEach>
 					</c:otherwise>
 				</c:choose>
 				<c:if test="${page <= pageNumber}">
-					<li><a href="DashboardServlet?page=${page+1}&range=${currentRange}"
+					<li><a
+						href="DashboardServlet?page=${page+1}&range=${currentRange}"
 						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 					</a></li>
 				</c:if>
 			</ul>
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<a href="DashboardServlet?page=${page}&range=10"><button type="button"
-						class="btn btn-default">10</button></a> <a
-					href="DashboardServlet?page=${page}&range=50"><button type="button"
-						class="btn btn-default">50</button></a> <a
-					href="DashboardServlet?page=${page}&range=100"><button type="button"
-						class="btn btn-default">100</button></a>
+				<a href="DashboardServlet?page=${page}&range=10"><button
+						type="button" class="btn btn-default">10</button></a> <a
+					href="DashboardServlet?page=${page}&range=50"><button
+						type="button" class="btn btn-default">50</button></a>
+				<c:choose>
+					<a href="DashboardServlet?page=${page}&range=100"><button
+							type="button" class="btn btn-default">100</button></a>
+				</c:choose>
 			</div>
 		</div>
 	</footer>

@@ -85,7 +85,7 @@ public class AddComputerServlet extends HttpServlet {
 		}
 
 		ComputerService.getInstance().addComputer(computer);
-		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
-				.forward(request, response);
+		response.addHeader("reload", "yes");
+		response.sendRedirect("DashboardServlet");
 	}
 }
