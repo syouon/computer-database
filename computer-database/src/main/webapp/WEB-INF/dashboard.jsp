@@ -23,7 +23,10 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle"><c:out value="${computersNumber}" /> Computers found</h1>
+			<h1 id="homeTitle">
+				<c:out value="${computersNumber}" />
+				Computers found
+			</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
@@ -74,16 +77,14 @@
 				<tbody id="results">
 					<c:forEach var="computer" items="${computers}">
 						<tr>
-	                        <td class="editMode">
-	                            <input type="checkbox" name="cb" class="cb" value="0">
-	                        </td>
-	                        <td>
-	                            <a href="editComputer.html" onclick="">${computer.name}</a>
-	                        </td>
-	                        <td>${computer.introduced}</td>
-	                        <td>${computer.discontinued}</td>
-	                        <td>${computer.companyName}</td>
-	                    </tr>
+							<td class="editMode"><input type="checkbox" name="cb"
+								class="cb" value="0"></td>
+							<td><a href="editComputer.html" onclick="">${computer.name}</a>
+							</td>
+							<td>${computer.introduced}</td>
+							<td>${computer.discontinued}</td>
+							<td>${computer.companyName}</td>
+						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
@@ -94,22 +95,42 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<ul class="pagination">
-				<li><a href="#" aria-label="Previous"> <span
-						aria-hidden="true">&laquo;</span>
-				</a></li>
-				<li><a href="#">1</a></li>
-				<li><a href="#">2</a></li>
-				<li><a href="#">3</a></li>
-				<li><a href="#">4</a></li>
-				<li><a href="#">5</a></li>
-				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-				</a></li>
+				<c:if test="${page-1 != 0}">
+					<li><a href="DashboardServlet?page=${page-1}&range=${currentRange}"
+						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+					</a></li>
+				</c:if>
+				<c:choose>
+					<c:when test="${page <= 2}">
+						<c:forEach var="i" begin="1" end="${page+2}">
+							<li><a href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
+						</c:forEach>
+					</c:when>
+					<c:when test="${page > 2 && page <= pageNumber-2}">
+						<c:forEach var="i" begin="${page-2}" end="${page+2}">
+							<li><a href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<c:forEach var="i" begin="${page-2}" end="${pageNumber+1}">
+							<li><a href="DashboardServlet?page=${i}&range=${currentRange}">${i}</a></li>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
+				<c:if test="${page <= pageNumber}">
+					<li><a href="DashboardServlet?page=${page+1}&range=${currentRange}"
+						aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+					</a></li>
+				</c:if>
 			</ul>
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<button type="button" class="btn btn-default">10</button>
-				<button type="button" class="btn btn-default">50</button>
-				<button type="button" class="btn btn-default">100</button>
+				<a href="DashboardServlet?page=${page}&range=10"><button type="button"
+						class="btn btn-default">10</button></a> <a
+					href="DashboardServlet?page=${page}&range=50"><button type="button"
+						class="btn btn-default">50</button></a> <a
+					href="DashboardServlet?page=${page}&range=100"><button type="button"
+						class="btn btn-default">100</button></a>
 			</div>
 		</div>
 	</footer>

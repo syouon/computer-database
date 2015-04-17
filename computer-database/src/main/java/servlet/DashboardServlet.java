@@ -35,16 +35,35 @@ public class DashboardServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+
+		int nbPerPage = 10;
+		int currentPage = 1;
+		String page = request.getParameter("page");
+		String range = request.getParameter("range");
+
+		if (!(page == null || page.equals(""))) {
+			currentPage = Integer.parseInt(page);
+		}
+
+		if (!(range == null || range.equals(""))) {
+			nbPerPage = Integer.parseInt(range);
+		}
+
+		int allComputerNumber = ComputerService.getInstance().listComputers()
+				.size();
 		List<ComputerDTO> dtos = new ArrayList<>();
-		List<Computer> computers = ComputerService.getInstance()
-				.listComputers();
+		List<Computer> computers = ComputerService.getInstance().listComputers(
+				(currentPage - 1) * nbPerPage, nbPerPage);
 		// conversion des computers vers leur DTO
 		for (Computer c : computers) {
 			dtos.add(Mapper.toComputerDTO(c));
 		}
 
-		request.setAttribute("computersNumber", computers.size());
+		request.setAttribute("currentRange", nbPerPage);
+		request.setAttribute("computersNumber", allComputerNumber);
+		request.setAttribute("pageNumber", allComputerNumber / nbPerPage);
 		request.setAttribute("computers", dtos);
+		request.setAttribute("page", currentPage);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
 				.forward(request, response);
 	}
