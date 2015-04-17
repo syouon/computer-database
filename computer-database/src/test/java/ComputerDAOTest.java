@@ -16,7 +16,7 @@ import model.Computer;
 
 import org.junit.Test;
 
-import dao.ConcreteComputerDAO;
+import dao.ComputerDAOImpl;
 import dao.ConnectionFactory;
 
 public class ComputerDAOTest {
@@ -24,8 +24,8 @@ public class ComputerDAOTest {
 	@Test
 	public void testCreate() {
 		Computer computer = new Computer("ComputerTest");
-		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> newComputers = ConcreteComputerDAO.getInstance()
+		ComputerDAOImpl.getInstance().create(computer);
+		List<Computer> newComputers = ComputerDAOImpl.getInstance()
 				.findAll();
 
 		// Suppression du computer ajoute pour ne pas modifier la bdd
@@ -42,18 +42,18 @@ public class ComputerDAOTest {
 		assertTrue("Computer added must be the same as ComputerTest",
 				computer.equals(newComputer));
 
-		ConcreteComputerDAO.getInstance().delete(computer.getId());
+		ComputerDAOImpl.getInstance().delete(computer.getId());
 
 		if (newComputer != null) {
-			ConcreteComputerDAO.getInstance().delete(newComputer.getId());
+			ComputerDAOImpl.getInstance().delete(newComputer.getId());
 		}
 	}
 
 	@Test
 	public void testDelete() {
 		Computer computer = new Computer("ComputerTest");
-		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		ComputerDAOImpl.getInstance().create(computer);
+		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
 
 		// on renseigne l'id obtenu lors de la creation dans computer
 		for (Computer c : computers) {
@@ -63,18 +63,18 @@ public class ComputerDAOTest {
 		}
 
 		// Suppression de l'element ajoute
-		ConcreteComputerDAO.getInstance().delete(computer.getId());
+		ComputerDAOImpl.getInstance().delete(computer.getId());
 
-		assertNull("ComputerTest should not exist", ConcreteComputerDAO
+		assertNull("ComputerTest should not exist", ComputerDAOImpl
 				.getInstance().find(computer.getId()));
 	}
 
 	@Test
 	public void testUpdate() {
 		Computer computer = new Computer("ComputerTest");
-		ConcreteComputerDAO.getInstance().create(computer);
+		ComputerDAOImpl.getInstance().create(computer);
 
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
 
 		Computer updatedComputer = new Computer("ComputerTest");
 		for (Computer c : computers) {
@@ -84,20 +84,20 @@ public class ComputerDAOTest {
 				break;
 			}
 		}
-		ConcreteComputerDAO.getInstance().update(updatedComputer);
-		Computer newComputer = ConcreteComputerDAO.getInstance().find(
+		ComputerDAOImpl.getInstance().update(updatedComputer);
+		Computer newComputer = ComputerDAOImpl.getInstance().find(
 				updatedComputer.getId());
 
 		assertNotSame("Should not be equal", computer, newComputer);
 
-		ConcreteComputerDAO.getInstance().delete(computer.getId());
+		ComputerDAOImpl.getInstance().delete(computer.getId());
 	}
 
 	@Test
 	public void testFind() {
 		Computer computer = new Computer("ComputerTest");
-		ConcreteComputerDAO.getInstance().create(computer);
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		ComputerDAOImpl.getInstance().create(computer);
+		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
 
 		Computer addedComputer = null;
 		for (Computer c : computers) {
@@ -111,12 +111,12 @@ public class ComputerDAOTest {
 		assertNotNull("Should not be null", addedComputer);
 
 		// Suppression de l'element
-		ConcreteComputerDAO.getInstance().delete(computer.getId());
+		ComputerDAOImpl.getInstance().delete(computer.getId());
 	}
 
 	@Test
 	public void testFindAll() {
-		List<Computer> computers = ConcreteComputerDAO.getInstance().findAll();
+		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
 
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		Statement statement = null;

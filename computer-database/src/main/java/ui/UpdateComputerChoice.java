@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import model.Company;
 import model.Computer;
 import service.ComputerService;
-import dao.ConcreteCompanyDAO;
+import dao.CompanyDAOImpl;
 
 public class UpdateComputerChoice extends Choice {
 
@@ -20,7 +20,7 @@ public class UpdateComputerChoice extends Choice {
 		computer.setIntroductionDate(introduced);
 		computer.setDiscontinuationDate(discontinued);
 
-		if (company != null && ConcreteCompanyDAO.getInstance().exists(company)) {
+		if (company != null && CompanyDAOImpl.getInstance().exists(company)) {
 			computer.setCompany(company);
 		}
 

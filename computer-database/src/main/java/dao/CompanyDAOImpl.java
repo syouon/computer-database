@@ -13,10 +13,10 @@ import java.util.List;
 import mapper.Mapper;
 import model.Company;
 
-public enum ConcreteCompanyDAO implements CompanyDAO {
+public enum CompanyDAOImpl implements CompanyDAO {
 	INSTANCE;
 
-	public static ConcreteCompanyDAO getInstance() {
+	public static CompanyDAOImpl getInstance() {
 		return INSTANCE;
 	}
 

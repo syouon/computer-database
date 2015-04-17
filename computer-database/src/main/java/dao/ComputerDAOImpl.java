@@ -22,7 +22,7 @@ import mapper.Mapper;
 import model.Company;
 import model.Computer;
 
-public enum ConcreteComputerDAO implements ComputerDAO {
+public enum ComputerDAOImpl implements ComputerDAO {
 	INSTANCE;
 
 	public static ComputerDAO getInstance() {
@@ -45,7 +45,7 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 		// Verification de l'existence de company
 		Company company = computer.getCompany();
 		Long companyId = null;
-		if (company != null && ConcreteCompanyDAO.getInstance().exists(company)) {
+		if (company != null && CompanyDAOImpl.getInstance().exists(company)) {
 			companyId = company.getId();
 		}
 
@@ -142,7 +142,7 @@ public enum ConcreteComputerDAO implements ComputerDAO {
 
 		try {
 			if (computer.getCompany() != null) {
-				if (ConcreteCompanyDAO.getInstance().exists(
+				if (CompanyDAOImpl.getInstance().exists(
 						computer.getCompany())) {
 					companyStatement = conn.prepareStatement("UPDATE "
 							+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID

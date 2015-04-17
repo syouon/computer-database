@@ -14,7 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import dao.ConcreteCompanyDAO;
+import dao.CompanyDAOImpl;
 import dao.ConnectionFactory;
 
 public class CompanyDAOTest {
@@ -48,16 +48,16 @@ public class CompanyDAOTest {
 
 	@Test
 	public void testFind() {
-		List<Company> companies = ConcreteCompanyDAO.getInstance().findAll();
+		List<Company> companies = CompanyDAOImpl.getInstance().findAll();
 
-		Company company = ConcreteCompanyDAO.getInstance().find(
+		Company company = CompanyDAOImpl.getInstance().find(
 				companies.get(0).getId());
 		assertEquals("Should be equal", company, companies.get(0));
 	}
 
 	@Test
 	public void testFindAll() {
-		List<Company> company = ConcreteCompanyDAO.getInstance().findAll();
+		List<Company> company = CompanyDAOImpl.getInstance().findAll();
 
 		try {
 			statement = conn.createStatement();
@@ -80,9 +80,9 @@ public class CompanyDAOTest {
 	public void testExists() {
 		Company company = new Company("Apple Inc.");
 		Company falseCompany = new Company("InexistantCorp");
-		assertTrue("Apple Inc. should exist", ConcreteCompanyDAO.getInstance()
+		assertTrue("Apple Inc. should exist", CompanyDAOImpl.getInstance()
 				.exists(company));
-		assertFalse("InexistantCorp should not exist", ConcreteCompanyDAO
+		assertFalse("InexistantCorp should not exist", CompanyDAOImpl
 				.getInstance().exists(falseCompany));
 	}
 }

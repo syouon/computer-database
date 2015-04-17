@@ -2,34 +2,34 @@ package service;
 
 import java.util.List;
 
-import dao.ConcreteComputerDAO;
+import dao.ComputerDAOImpl;
 import model.Computer;
 
 public enum ComputerService {
 	INSTANCE;
 
 	public List<Computer> listComputers(int start, int range) {
-		return ConcreteComputerDAO.getInstance().findAll(start, range);
+		return ComputerDAOImpl.getInstance().findAll(start, range);
 	}
 
 	public List<Computer> listComputers() {
-		return ConcreteComputerDAO.getInstance().findAll();
+		return ComputerDAOImpl.getInstance().findAll();
 	}
 
 	public Computer showComputerDetails(long id) {
-		return ConcreteComputerDAO.getInstance().find(id);
+		return ComputerDAOImpl.getInstance().find(id);
 	}
 
 	public boolean addComputer(Computer computer) {
-		return ConcreteComputerDAO.getInstance().create(computer);
+		return ComputerDAOImpl.getInstance().create(computer);
 	}
 
 	public boolean deleteComputer(long id) {
-		return ConcreteComputerDAO.getInstance().delete(id);
+		return ComputerDAOImpl.getInstance().delete(id);
 	}
 
 	public boolean updateComputer(Computer computer) {
-		return ConcreteComputerDAO.getInstance().update(computer);
+		return ComputerDAOImpl.getInstance().update(computer);
 	}
 
 	public static ComputerService getInstance() {

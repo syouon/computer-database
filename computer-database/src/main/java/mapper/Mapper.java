@@ -18,7 +18,7 @@ import java.util.List;
 import model.Company;
 import model.Computer;
 import servlet.ComputerDTO;
-import dao.ConcreteCompanyDAO;
+import dao.CompanyDAOImpl;
 
 /* Fait le lien entre le modele objet et
  * les resultats obtenus par une requete
@@ -49,7 +49,7 @@ public class Mapper {
 			LocalDate discontinued = Mapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_DISCONTINUED));
 			long company_id = result.getLong(COMPUTER_COMPANYID);
-			Company company = ConcreteCompanyDAO.getInstance().find(company_id);
+			Company company = CompanyDAOImpl.getInstance().find(company_id);
 			Computer computer = new Computer(id, name);
 			computer.setIntroductionDate(introduced);
 			computer.setDiscontinuationDate(discontinued);
