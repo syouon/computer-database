@@ -41,11 +41,11 @@ public class DashboardServlet extends HttpServlet {
 		String page = request.getParameter("page");
 		String range = request.getParameter("range");
 
-		if (!(page == null || page.equals(""))) {
+		if (page != null && !page.equals("") && page.matches("\\d*")) {
 			currentPage = Integer.parseInt(page);
 		}
 
-		if (!(range == null || range.equals(""))) {
+		if (range != null && !range.equals("") && range.matches("\\d*")) {
 			nbPerPage = Integer.parseInt(range);
 		}
 
