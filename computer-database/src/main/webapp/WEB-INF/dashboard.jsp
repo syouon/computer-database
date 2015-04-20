@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="servlet.ComputerDTO, java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="mlib" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="mlib" tagdir="/WEB-INF/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -96,52 +96,21 @@
 	<!-- Choix de page -->
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<ul class="pagination">
-				<c:if test="${page-1 != 0}">
-					<li><mlib:link body="<span aria-hidden='true'>&laquo;</span>"
-							range="${currentRange}" page="${page-1}"
-							target="DashboardServlet" /></li>
-				</c:if>
-				<c:choose>
-					<c:when test="${page <= 2}">
-						<c:forEach var="i" begin="1" end="${page+2}">
-							<li><mlib:link target="DashboardServlet" page="${i}"
-									range="${currentRange}" body="${i}" /></li>
-						</c:forEach>
-					</c:when>
-					<c:when test="${page > 2 && page <= pageNumber-2}">
-						<c:forEach var="i" begin="${page-2}" end="${page+2}">
-							<li><mlib:link target="DashboardServlet" page="${i}"
-									range="${currentRange}" body="${i}" /></li>
-						</c:forEach>
-					</c:when>
-					<c:otherwise>
-						<c:forEach var="i" begin="${page-2}" end="${pageNumber+1}">
-							<li><mlib:link target="DashboardServlet" page="${i}"
-									range="${currentRange}" body="${i}" /></li>
-						</c:forEach>
-					</c:otherwise>
-				</c:choose>
-				<c:if test="${page <= pageNumber}">
-					<li><mlib:link body="<span aria-hidden='true'>&raquo;</span>"
-							range="${currentRange}" page="${page+1}"
-							target="DashboardServlet" ariaValue="Next" /></li>
-				</c:if>
-			</ul>
+			<mlib:pagination page="${page}" currentRange="${currentRange}" pageNumber="${pageNumber}" />
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>10</button>"
-					range="10" page="${page}" target="DashboardServlet" />
+					range="10" page="1" target="DashboardServlet" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>50</button>"
-					range="50" page="${page}" target="DashboardServlet" />
+					range="50" page="1" target="DashboardServlet" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>100</button>"
-					range="100" page="${page}" target="DashboardServlet" />
+					range="100" page="1" target="DashboardServlet" />
 			</div>
 		</div>
 	</footer>
