@@ -1,10 +1,9 @@
 import static dao.DatabaseNaming.COMPUTER_TABLE;
-import static dao.DatabaseNaming.COMPUTER_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotSame;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -25,8 +24,7 @@ public class ComputerDAOTest {
 	public void testCreate() {
 		Computer computer = new Computer("ComputerTest");
 		ComputerDAOImpl.getInstance().create(computer);
-		List<Computer> newComputers = ComputerDAOImpl.getInstance()
-				.findAll();
+		List<Computer> newComputers = ComputerDAOImpl.getInstance().findAll();
 
 		// Suppression du computer ajoute pour ne pas modifier la bdd
 		Computer newComputer = null;

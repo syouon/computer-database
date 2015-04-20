@@ -40,7 +40,6 @@ public class DashboardServlet extends HttpServlet {
 
 		String reload = request.getParameter("reload");
 		if (reload != null && reload.equals("yes")) {
-			System.out.println("RELOAD");
 			allComputerNumber = ComputerService.getInstance().listComputers()
 					.size();
 		}
