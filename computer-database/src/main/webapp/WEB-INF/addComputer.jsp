@@ -11,6 +11,8 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="css/main.css" rel="stylesheet" media="screen">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -25,7 +27,7 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1>Add Computer</h1>
-					<form action="AddComputerServlet" method="POST">
+					<form id="addForm" action="AddComputerServlet" method="POST">
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
@@ -60,5 +62,6 @@
 			</div>
 		</div>
 	</section>
+	<script type="text/javascript" src="js/validateAddForm.js"></script>
 </body>
 </html>

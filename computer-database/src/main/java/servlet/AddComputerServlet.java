@@ -85,7 +85,6 @@ public class AddComputerServlet extends HttpServlet {
 		}
 
 		ComputerService.getInstance().addComputer(computer);
-		response.addHeader("reload", "yes");
-		response.sendRedirect("DashboardServlet");
+		response.sendRedirect("DashboardServlet?reload=yes");
 	}
 }
