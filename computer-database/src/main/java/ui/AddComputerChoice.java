@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import model.Company;
 import model.Computer;
-import service.ComputerService;
+import service.ComputerServiceImpl;
 
 /**
  * The Class AddComputerChoice.
@@ -28,9 +28,7 @@ public class AddComputerChoice extends Choice {
 		computer.setDiscontinuationDate(discontinued);
 		computer.setCompany(company);
 
-		if (!ComputerService.getInstance().addComputer(computer)) {
-			System.out.println("Addition failed");
-		}
+		ComputerServiceImpl.getInstance().addComputer(computer);
 	}
 
 	/**

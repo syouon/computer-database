@@ -1,6 +1,6 @@
 package ui;
 
-import service.ComputerService;
+import service.ComputerServiceImpl;
 
 /**
  * The Class ShowDetailsChoice.
@@ -15,7 +15,7 @@ public class ShowDetailsChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		System.out.println(ComputerService.getInstance()
+		System.out.println(ComputerServiceImpl.getInstance()
 				.showComputerDetails(id));
 	}
 

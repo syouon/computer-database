@@ -1,17 +1,24 @@
 package dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
-import static dao.DatabaseNaming.*;
+import exception.DAOException;
+import exception.PropertiesNotFoundException;
 
 public enum ConnectionFactory {
 	INSTANCE;
 
+	private Properties prop;
+
 	static {
+		// Chargement du driver
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -19,13 +26,31 @@ public enum ConnectionFactory {
 		}
 	}
 
+	private ConnectionFactory() {
+		prop = new Properties();
+		InputStream input = null;
+		try {
+			input = getClass().getClassLoader().getResourceAsStream(
+					"database.properties");
+
+			if (input != null) {
+				prop.load(input);
+			}
+
+		} catch (IOException e) {
+			throw new PropertiesNotFoundException();
+		} /*
+		 * finally { try { input.close(); } catch (IOException e) { throw new
+		 * PropertiesNotFoundException(); } }
+		 */
+	}
+
 	public Connection openConnection() {
 		Connection conn = null;
 
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/"
-					+ DATABASE_NAME + "?zeroDateTimeBehavior=convertToNull",
-					USER, PASSWD);
+			conn = DriverManager.getConnection(prop.getProperty("url"),
+					prop.getProperty("user"), prop.getProperty("password"));
 		} catch (SQLException e) {
 			throw new DAOException();
 		}

@@ -10,9 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import mapper.Mapper;
+import mapper.DTOMapper;
 import model.Computer;
 import service.ComputerService;
+import service.ComputerServiceImpl;
 
 /**
  * Servlet implementation class DashboardServlet
@@ -20,15 +21,14 @@ import service.ComputerService;
 @WebServlet("/DashboardServlet")
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private int allComputerNumber;
+	private ComputerService service;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public DashboardServlet() {
 		super();
-		allComputerNumber = ComputerService.getInstance().listComputers()
-				.size();
+		service = ComputerServiceImpl.getInstance();
 	}
 
 	/**
@@ -38,11 +38,7 @@ public class DashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		String reload = request.getParameter("reload");
-		if (reload != null && reload.equals("yes")) {
-			allComputerNumber = ComputerService.getInstance().listComputers()
-					.size();
-		}
+		int allComputerSize = service.count();
 
 		int nbPerPage = 10;
 		int currentPage = 1;
@@ -58,16 +54,16 @@ public class DashboardServlet extends HttpServlet {
 		}
 
 		List<ComputerDTO> dtos = new ArrayList<>();
-		List<Computer> computers = ComputerService.getInstance().listComputers(
-				(currentPage - 1) * nbPerPage, nbPerPage);
+		List<Computer> computers = service.listComputers((currentPage - 1)
+				* nbPerPage, nbPerPage);
 		// conversion des computers vers leur DTO
 		for (Computer c : computers) {
-			dtos.add(Mapper.toComputerDTO(c));
+			dtos.add(DTOMapper.toComputerDTO(c));
 		}
 
 		request.setAttribute("currentRange", nbPerPage);
-		request.setAttribute("computersNumber", allComputerNumber);
-		request.setAttribute("pageNumber", allComputerNumber / nbPerPage);
+		request.setAttribute("computersNumber", allComputerSize);
+		request.setAttribute("pageNumber", allComputerSize / nbPerPage);
 		request.setAttribute("computers", dtos);
 		request.setAttribute("page", currentPage);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")

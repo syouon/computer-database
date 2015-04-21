@@ -14,13 +14,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
-import mapper.Mapper;
 import model.Company;
 import model.Computer;
+import exception.DAOException;
 
 public enum ComputerDAOImpl implements ComputerDAO {
 	INSTANCE;
@@ -30,16 +31,17 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	}
 
 	@Override
-	public boolean create(Computer computer) {
+	public long create(Computer computer) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
+		ResultSet result = null;
 
 		LocalDate introductionDate = computer.getIntroductionDate();
 		LocalDate discontinuationDate = computer.getDiscontinuationDate();
 
-		Timestamp introduced = (introductionDate != null) ? (Mapper
+		Timestamp introduced = (introductionDate != null) ? (DateMapper
 				.localDateToTimestamp(introductionDate)) : null;
-		Timestamp discontinued = (discontinuationDate != null) ? (Mapper
+		Timestamp discontinued = (discontinuationDate != null) ? (DateMapper
 				.localDateToTimestamp(discontinuationDate)) : null;
 
 		// Verification de l'existence de company
@@ -54,12 +56,13 @@ public enum ComputerDAOImpl implements ComputerDAO {
 				statement = conn.prepareStatement("INSERT INTO "
 						+ COMPUTER_TABLE + "(" + COMPUTER_NAME + ","
 						+ COMPUTER_INTRODUCED + "," + COMPUTER_DISCONTINUED
-						+ ") VALUES (?,?,?);");
+						+ ") VALUES (?,?,?);", Statement.RETURN_GENERATED_KEYS);
 			} else {
 				statement = conn.prepareStatement("INSERT INTO "
 						+ COMPUTER_TABLE + "(" + COMPUTER_NAME + ","
 						+ COMPUTER_INTRODUCED + "," + COMPUTER_DISCONTINUED
-						+ "," + COMPUTER_COMPANYID + ") VALUES (?,?,?,?);");
+						+ "," + COMPUTER_COMPANYID + ") VALUES (?,?,?,?);",
+						Statement.RETURN_GENERATED_KEYS);
 			}
 			statement.setString(1, computer.getName());
 			statement.setTimestamp(2, introduced);
@@ -68,11 +71,21 @@ public enum ComputerDAOImpl implements ComputerDAO {
 				statement.setLong(4, companyId);
 			}
 			statement.executeUpdate();
-			return true;
+			result = statement.getGeneratedKeys();
+
+			long lastId = -1;
+			if (result.next()) {
+				lastId = result.getLong(1);
+			}
+
+			return lastId;
 
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			throw new DAOException();
 		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(null,
+					result);
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, null);
 			ConnectionFactory.getInstance().closeConnection(conn);
@@ -117,11 +130,10 @@ public enum ComputerDAOImpl implements ComputerDAO {
 							+ COMPUTER_INTRODUCED + "=?, "
 							+ COMPUTER_DISCONTINUED + "=? WHERE " + COMPUTER_ID
 							+ "=?;");
-			dateStatement.setTimestamp(1, Mapper
+			dateStatement.setTimestamp(1, DateMapper
 					.localDateToTimestamp(computer.getIntroductionDate()));
-			dateStatement.setTimestamp(2,
-					Mapper.localDateToTimestamp(computer
-							.getDiscontinuationDate()));
+			dateStatement.setTimestamp(2, DateMapper
+					.localDateToTimestamp(computer.getDiscontinuationDate()));
 			dateStatement.setLong(3, computer.getId());
 			dateStatement.executeUpdate();
 
@@ -142,8 +154,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 		try {
 			if (computer.getCompany() != null) {
-				if (CompanyDAOImpl.getInstance().exists(
-						computer.getCompany())) {
+				if (CompanyDAOImpl.getInstance().exists(computer.getCompany())) {
 					companyStatement = conn.prepareStatement("UPDATE "
 							+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
 							+ "=? WHERE " + COMPUTER_ID + "=?;");
@@ -183,7 +194,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 					+ " WHERE c." + COMPUTER_ID + "=?;");
 			statement.setLong(1, id);
 			result = statement.executeQuery();
-			return Mapper.toComputer(result);
+			return DatabaseMapper.toComputer(result);
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -207,7 +218,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			statement.setInt(1, range);
 			statement.setInt(2, start);
 			result = statement.executeQuery();
-			return Mapper.toComputerList(result);
+			return DatabaseMapper.toComputerList(result);
 
 		} catch (SQLException e) {
 			throw new DAOException();
@@ -228,7 +239,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			statement = conn.prepareStatement("SELECT * FROM " + COMPUTER_TABLE
 					+ ";");
 			result = statement.executeQuery();
-			return Mapper.toComputerList(result);
+			return DatabaseMapper.toComputerList(result);
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -237,6 +248,24 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
 			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
+	public int count() {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try {
+			statement = conn.prepareStatement("SELECT COUNT(*) FROM "
+					+ COMPUTER_TABLE);
+			result = statement.executeQuery();
+			result.next();
+			return result.getInt(1);
+
+		} catch (SQLException e) {
+			throw new DAOException();
 		}
 	}
 }

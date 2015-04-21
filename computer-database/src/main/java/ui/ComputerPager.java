@@ -2,7 +2,7 @@ package ui;
 
 import java.util.List;
 
-import service.ComputerService;
+import service.ComputerServiceImpl;
 import model.Computer;
 
 public class ComputerPager extends Pager {
@@ -11,7 +11,7 @@ public class ComputerPager extends Pager {
 
 	public ComputerPager() {
 		super();
-		entities = ComputerService.getInstance().listComputers(start,
+		entities = ComputerServiceImpl.getInstance().listComputers(start,
 				entitiesNumber);
 	}
 
@@ -24,7 +24,7 @@ public class ComputerPager extends Pager {
 
 	@Override
 	public void refresh() {
-		entities = ComputerService.getInstance().listComputers(start,
+		entities = ComputerServiceImpl.getInstance().listComputers(start,
 				entitiesNumber);
 	}
 

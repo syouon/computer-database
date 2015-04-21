@@ -1,6 +1,6 @@
 package ui;
 
-import service.ComputerService;
+import service.ComputerServiceImpl;
 
 /**
  * The Class DeleteComputerChoice.
@@ -15,7 +15,7 @@ public class DeleteComputerChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		if (!ComputerService.getInstance().deleteComputer(id)) {
+		if (!ComputerServiceImpl.getInstance().deleteComputer(id)) {
 			System.out.println("Delete failed!");
 		}
 	}

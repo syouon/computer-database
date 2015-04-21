@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import model.Company;
 import model.Computer;
 import service.CompanyService;
+import service.CompanyServiceImpl;
 import service.ComputerService;
+import service.ComputerServiceImpl;
 
 /**
  * Servlet implementation class AddComputerServlet
@@ -21,7 +23,9 @@ import service.ComputerService;
 @WebServlet("/AddComputerServlet")
 public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+
+	private CompanyService companyService;
+	private ComputerService computerService;
 	private List<Company> companies;
 
 	/**
@@ -29,8 +33,9 @@ public class AddComputerServlet extends HttpServlet {
 	 */
 	public AddComputerServlet() {
 		super();
-		companies = CompanyService.getInstance().listCompanies();
-		// TODO Auto-generated constructor stub
+		companyService = CompanyServiceImpl.getInstance();
+		computerService = ComputerServiceImpl.getInstance();
+		companies = companyService.listCompanies();
 	}
 
 	/**
@@ -73,16 +78,20 @@ public class AddComputerServlet extends HttpServlet {
 
 		if (companyId.matches("\\d*")) {
 			long id = Long.parseLong(companyId);
-			Company company = CompanyService.getInstance().find(id);
-			computer.setCompany(company);
+
+			if (id != 0) {
+				Company company = companyService.find(id);
+				computer.setCompany(company);
+			}
 		}
 
-		if (!name.equals("") && (introduced.equals("") || isWellFormedDate(introduced))
+		if (!name.equals("")
+				&& (introduced.equals("") || isWellFormedDate(introduced))
 				&& (discontinued.equals("") || isWellFormedDate(discontinued))) {
-			
-			ComputerService.getInstance().addComputer(computer);
-			response.sendRedirect("DashboardServlet?reload=yes");
-			
+
+			computerService.addComputer(computer);
+			response.sendRedirect("DashboardServlet");
+
 		} else {
 			request.setAttribute("companies", companies);
 			this.getServletContext()
@@ -97,12 +106,36 @@ public class AddComputerServlet extends HttpServlet {
 		}
 
 		String[] tokens = time.split("-");
-		//int year = Integer.parseInt(tokens[0]);
+		int year = Integer.parseInt(tokens[0]);
 		int month = Integer.parseInt(tokens[1]);
 		int day = Integer.parseInt(tokens[2]);
 
 		if (month > 12 || day > 31) {
 			return false;
+		}
+
+		if (month == 4 || month == 6 || month == 9 || month == 11) {
+			if (day > 30) {
+				return false;
+			}
+		}
+		
+		// fevrier
+		if (month == 2) {
+			// si annee bisextile
+			if (year % 4 == 0 && year % 100 != 0) {
+				if (day > 29) {
+					return false;
+				}
+			} else if (year % 400 == 0) {
+				if (day > 29) {
+					return false;
+				}
+			} else {
+				if (day > 28) {
+					return false;
+				}
+			}
 		}
 
 		return true;

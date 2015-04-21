@@ -10,8 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import mapper.Mapper;
 import model.Company;
+import exception.DAOException;
 
 public enum CompanyDAOImpl implements CompanyDAO {
 	INSTANCE;
@@ -32,7 +32,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			statement.setLong(1, id);
 			result = statement.executeQuery();
 
-			return Mapper.toCompany(result);
+			return DatabaseMapper.toCompany(result);
 		} catch (SQLException e) {
 			throw new DAOException();
 		} finally {
@@ -55,7 +55,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			statement.setInt(1, range);
 			statement.setInt(2, start);
 			result = statement.executeQuery();
-			return Mapper.toCompanyList(result);
+			return DatabaseMapper.toCompanyList(result);
 
 		} catch (SQLException e) {
 			throw new DAOException();
@@ -76,7 +76,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			statement = conn.prepareStatement("SELECT " + COMPANY_NAME + ","
 					+ COMPANY_ID + " FROM " + COMPANY_TABLE + ";");
 			result = statement.executeQuery();
-			return Mapper.toCompanyList(result);
+			return DatabaseMapper.toCompanyList(result);
 
 		} catch (SQLException e) {
 			throw new DAOException();

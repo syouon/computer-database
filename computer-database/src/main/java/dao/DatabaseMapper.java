@@ -1,4 +1,4 @@
-package mapper;
+package dao;
 
 import static dao.DatabaseNaming.COMPANY_ID;
 import static dao.DatabaseNaming.COMPANY_NAME;
@@ -10,23 +10,14 @@ import static dao.DatabaseNaming.COMPUTER_NAME;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import model.Company;
 import model.Computer;
-import servlet.ComputerDTO;
-import dao.CompanyDAOImpl;
 
-/* Fait le lien entre le modele objet et
- * les resultats obtenus par une requete
- */
-/**
- * The Class Mapper.
- */
-public class Mapper {
+public class DatabaseMapper {
 
 	/**
 	 * To computer list.
@@ -44,9 +35,9 @@ public class Mapper {
 		while (result.next()) {
 			long id = result.getLong(COMPUTER_ID);
 			String name = result.getString(COMPUTER_NAME);
-			LocalDate introduced = Mapper.timestampToLocalDate(result
+			LocalDate introduced = DateMapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_INTRODUCED));
-			LocalDate discontinued = Mapper.timestampToLocalDate(result
+			LocalDate discontinued = DateMapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_DISCONTINUED));
 			long company_id = result.getLong(COMPUTER_COMPANYID);
 			Company company = CompanyDAOImpl.getInstance().find(company_id);
@@ -98,9 +89,9 @@ public class Mapper {
 		while (result.next()) {
 			long id = result.getLong("c_id");
 			String name = result.getString("c_name");
-			LocalDate introduced = timestampToLocalDate(result
+			LocalDate introduced = DateMapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_INTRODUCED));
-			LocalDate discontinued = timestampToLocalDate(result
+			LocalDate discontinued = DateMapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_DISCONTINUED));
 			computer = new Computer(id, name);
 
@@ -128,38 +119,5 @@ public class Mapper {
 		}
 
 		return company;
-	}
-
-	public static LocalDate timestampToLocalDate(Timestamp time) {
-		return (time == null) ? null : time.toLocalDateTime().toLocalDate();
-	}
-
-	public static Timestamp localDateToTimestamp(LocalDate time) {
-		return (time == null) ? null : Timestamp.valueOf(time.atStartOfDay());
-	}
-	
-	public static ComputerDTO toComputerDTO(Computer computer) {
-		ComputerDTO dto = new ComputerDTO();
-		dto.setId(computer.getId());
-		dto.setName(computer.getName());
-		
-		LocalDate introduced = computer.getIntroductionDate();
-		LocalDate discontinued = computer.getDiscontinuationDate();
-		Company company = computer.getCompany();
-		
-		if (introduced != null) {
-			dto.setIntroduced(introduced.toString());
-		}
-		
-		if (discontinued != null) {
-			dto.setDiscontinued(discontinued.toString());
-		}
-		
-		if (company != null) {
-			dto.setCompanyId(company.getId());
-			dto.setCompanyName(company.getName());
-		}
-		
-		return dto;
 	}
 }

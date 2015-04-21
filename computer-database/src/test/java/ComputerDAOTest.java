@@ -1,7 +1,6 @@
 import static dao.DatabaseNaming.COMPUTER_TABLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -9,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 
 import model.Computer;
@@ -23,42 +23,23 @@ public class ComputerDAOTest {
 	@Test
 	public void testCreate() {
 		Computer computer = new Computer("ComputerTest");
-		ComputerDAOImpl.getInstance().create(computer);
-		List<Computer> newComputers = ComputerDAOImpl.getInstance().findAll();
+		long id = ComputerDAOImpl.getInstance().create(computer);
+		computer.setId(id);
 
-		// Suppression du computer ajoute pour ne pas modifier la bdd
-		Computer newComputer = null;
-		for (Computer c : newComputers) {
-			if (c.getName().equals(computer.getName())) {
-				newComputer = c;
-				computer.setId(c.getId());
-				break;
-			}
-		}
+		List<Computer> newComputers = ComputerDAOImpl.getInstance().findAll();
 
 		// L'element ajoute doit etre le meme que computer
 		assertTrue("Computer added must be the same as ComputerTest",
-				computer.equals(newComputer));
+				newComputers.contains(computer));
 
 		ComputerDAOImpl.getInstance().delete(computer.getId());
-
-		if (newComputer != null) {
-			ComputerDAOImpl.getInstance().delete(newComputer.getId());
-		}
 	}
 
 	@Test
 	public void testDelete() {
 		Computer computer = new Computer("ComputerTest");
-		ComputerDAOImpl.getInstance().create(computer);
-		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
-
-		// on renseigne l'id obtenu lors de la creation dans computer
-		for (Computer c : computers) {
-			if (c.getName().equals(computer.getName())) {
-				computer.setId(c.getId());
-			}
-		}
+		long id = ComputerDAOImpl.getInstance().create(computer);
+		computer.setId(id);
 
 		// Suppression de l'element ajoute
 		ComputerDAOImpl.getInstance().delete(computer.getId());
@@ -70,23 +51,17 @@ public class ComputerDAOTest {
 	@Test
 	public void testUpdate() {
 		Computer computer = new Computer("ComputerTest");
-		ComputerDAOImpl.getInstance().create(computer);
+		long id = ComputerDAOImpl.getInstance().create(computer);
+		computer.setId(id);
 
-		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
+		Computer updatedComputer = new Computer(id, "ComputerTest");
+		updatedComputer.setIntroductionDate(LocalDate.now());
 
-		Computer updatedComputer = new Computer("ComputerTest");
-		for (Computer c : computers) {
-			if (c.getName().equals(computer.getName())) {
-				computer.setId(c.getId());
-				updatedComputer.setId(c.getId());
-				break;
-			}
-		}
 		ComputerDAOImpl.getInstance().update(updatedComputer);
 		Computer newComputer = ComputerDAOImpl.getInstance().find(
 				updatedComputer.getId());
 
-		assertNotSame("Should not be equal", computer, newComputer);
+		assertTrue("Should not be equal", !computer.equals(newComputer));
 
 		ComputerDAOImpl.getInstance().delete(computer.getId());
 	}
@@ -94,19 +69,12 @@ public class ComputerDAOTest {
 	@Test
 	public void testFind() {
 		Computer computer = new Computer("ComputerTest");
-		ComputerDAOImpl.getInstance().create(computer);
+		long id = ComputerDAOImpl.getInstance().create(computer);
+		computer.setId(id);
+
 		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
 
-		Computer addedComputer = null;
-		for (Computer c : computers) {
-			if (c.getName().equals(computer.getName())) {
-				computer.setId(c.getId());
-				addedComputer = c;
-				break;
-			}
-		}
-
-		assertNotNull("Should not be null", addedComputer);
+		assertNotNull("Should not be null", computers.contains(computer));
 
 		// Suppression de l'element
 		ComputerDAOImpl.getInstance().delete(computer.getId());

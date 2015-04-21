@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import model.Company;
 import model.Computer;
-import service.ComputerService;
+import service.ComputerServiceImpl;
 import dao.CompanyDAOImpl;
 
 public class UpdateComputerChoice extends Choice {
@@ -24,7 +24,7 @@ public class UpdateComputerChoice extends Choice {
 			computer.setCompany(company);
 		}
 
-		if (!ComputerService.getInstance().updateComputer(computer)) {
+		if (!ComputerServiceImpl.getInstance().updateComputer(computer)) {
 			System.out.println("Update failed");
 		}
 	}

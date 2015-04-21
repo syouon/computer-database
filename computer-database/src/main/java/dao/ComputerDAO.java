@@ -16,7 +16,7 @@ public interface ComputerDAO {
 	 *            the computer
 	 * @return true, if successful
 	 */
-	public boolean create(Computer computer);
+	public long create(Computer computer);
 
 	/**
 	 * Delete.
@@ -53,4 +53,6 @@ public interface ComputerDAO {
 	public List<Computer> findAll(int start, int range);
 
 	public List<Computer> findAll();
+
+	public int count();
 }
