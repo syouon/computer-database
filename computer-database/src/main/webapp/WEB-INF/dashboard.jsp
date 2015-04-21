@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="servlet.ComputerDTO, java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="mlib" tagdir="/WEB-INF/tags"%>
 <!DOCTYPE html>
@@ -81,7 +80,7 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="0"></td>
-							<td><a href="editComputer.html" onclick="">${computer.name}</a>
+							<td><a href="EditComputerServlet" onclick="">${computer.name}</a>
 							</td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>
