@@ -38,9 +38,17 @@ public enum ComputerServiceImpl implements ComputerService {
 	public boolean updateComputer(Computer computer) {
 		return dao.update(computer);
 	}
+	
+	public List<Computer> search(String regex, int start, int range) {
+		return dao.search(regex, start, range);
+	}
 
 	public int count() {
 		return dao.count();
+	}
+	
+	public int countSearchResult(String regex) {
+		return dao.countSearchResult(regex);
 	}
 	
 	public static ComputerServiceImpl getInstance() {

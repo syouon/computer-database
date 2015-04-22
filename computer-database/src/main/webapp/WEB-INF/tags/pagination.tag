@@ -1,9 +1,10 @@
-<%@ tag language="java" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="mlib" tagdir="/WEB-INF/tags" %>
-<%@ attribute name="page" required="true" type="java.lang.Integer" %>
-<%@ attribute name="currentRange" required="true" type="java.lang.Integer" %>
-<%@ attribute name="pageNumber" required="true" type="java.lang.Integer" %>
+<%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="mlib" tagdir="/WEB-INF/tags"%>
+<%@ attribute name="page" required="true" type="java.lang.Integer"%>
+<%@ attribute name="currentRange" required="true"
+	type="java.lang.Integer"%>
+<%@ attribute name="pageNumber" required="true" type="java.lang.Integer"%>
 
 <ul class="pagination">
 	<c:if test="${page-1 != 0}">
@@ -11,6 +12,12 @@
 				range="${currentRange}" page="${page-1}" target="DashboardServlet" /></li>
 	</c:if>
 	<c:choose>
+		<c:when test="${pageNumber <= 2}">
+			<c:forEach var="i" begin="1" end="${pageNumber+1}">
+				<li><mlib:link target="DashboardServlet" page="${i}"
+						range="${currentRange}" body="${i}" /></li>
+			</c:forEach>
+		</c:when>
 		<c:when test="${page <= 2}">
 			<c:forEach var="i" begin="1" end="${page+2}">
 				<li><mlib:link target="DashboardServlet" page="${i}"

@@ -53,6 +53,10 @@ public interface ComputerDAO {
 	public List<Computer> findAll(int start, int range);
 
 	public List<Computer> findAll();
+	
+	public List<Computer> search(String regex, int start, int range);
 
 	public int count();
+	
+	public int countSearchResult(String regex);
 }

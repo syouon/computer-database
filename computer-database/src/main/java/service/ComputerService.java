@@ -17,6 +17,10 @@ public interface ComputerService {
 	public boolean deleteComputer(long id);
 
 	public boolean updateComputer(Computer computer);
-	
+
+	public List<Computer> search(String regex, int start, int range);
+
 	public int count();
+	
+	public int countSearchResult(String regex);
 }

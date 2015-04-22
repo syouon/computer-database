@@ -29,7 +29,9 @@
 			</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
-					<form id="searchForm" action="#" method="GET" class="form-inline">
+					<form id="searchForm"
+						action="DashboardServlet?range=${currentRange}&page=${page}"
+						method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
@@ -102,15 +104,15 @@
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>10</button>"
-					range="10" page="1" target="DashboardServlet" />
+					range="10" page="1" search="${search}" target="DashboardServlet" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>50</button>"
-					range="50" page="1" target="DashboardServlet" />
+					range="50" page="1" search="${search}" target="DashboardServlet" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>100</button>"
-					range="100" page="1" target="DashboardServlet" />
+					range="100" page="1" search="${search}" target="DashboardServlet" />
 			</div>
 		</div>
 	</footer>

@@ -38,12 +38,13 @@ public class DashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		int allComputerSize = service.count();
+		int allComputerSize = 0;
 
 		int nbPerPage = 10;
 		int currentPage = 1;
 		String page = request.getParameter("page");
 		String range = request.getParameter("range");
+		String search = request.getParameter("search");
 
 		if (page != null && !page.equals("") && page.matches("\\d*")) {
 			currentPage = Integer.parseInt(page);
@@ -54,18 +55,30 @@ public class DashboardServlet extends HttpServlet {
 		}
 
 		List<ComputerDTO> dtos = new ArrayList<>();
-		List<Computer> computers = service.listComputers((currentPage - 1)
-				* nbPerPage, nbPerPage);
+
+		List<Computer> computers = null;
+
+		if (search != null && !search.equals("")) {
+			computers = service.search(search, (currentPage - 1) * nbPerPage,
+					nbPerPage);
+			allComputerSize = service.countSearchResult(search);
+		} else {
+			computers = service.listComputers((currentPage - 1) * nbPerPage,
+					nbPerPage);
+			allComputerSize = service.count();
+		}
+		
 		// conversion des computers vers leur DTO
 		for (Computer c : computers) {
 			dtos.add(DTOMapper.toComputerDTO(c));
 		}
-
+		
 		request.setAttribute("currentRange", nbPerPage);
 		request.setAttribute("computersNumber", allComputerSize);
 		request.setAttribute("pageNumber", allComputerSize / nbPerPage);
 		request.setAttribute("computers", dtos);
 		request.setAttribute("page", currentPage);
+		request.setAttribute("search", search);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
 				.forward(request, response);
 	}
@@ -76,7 +89,7 @@ public class DashboardServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
+
 	}
 
 }

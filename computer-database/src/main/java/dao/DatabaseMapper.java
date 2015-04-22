@@ -4,9 +4,7 @@ import static dao.DatabaseNaming.COMPANY_ID;
 import static dao.DatabaseNaming.COMPANY_NAME;
 import static dao.DatabaseNaming.COMPUTER_COMPANYID;
 import static dao.DatabaseNaming.COMPUTER_DISCONTINUED;
-import static dao.DatabaseNaming.COMPUTER_ID;
 import static dao.DatabaseNaming.COMPUTER_INTRODUCED;
-import static dao.DatabaseNaming.COMPUTER_NAME;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,8 +31,8 @@ public class DatabaseMapper {
 		List<Computer> computers = new ArrayList<>();
 
 		while (result.next()) {
-			long id = result.getLong(COMPUTER_ID);
-			String name = result.getString(COMPUTER_NAME);
+			long id = result.getLong("c_id");
+			String name = result.getString("c_name");
 			LocalDate introduced = DateMapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_INTRODUCED));
 			LocalDate discontinued = DateMapper.timestampToLocalDate(result
@@ -47,6 +45,8 @@ public class DatabaseMapper {
 			computer.setCompany(company);
 			computers.add(computer);
 		}
+
+		System.out.println("SIZE: " + computers.size());
 
 		return computers;
 	}
