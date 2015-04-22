@@ -116,7 +116,30 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 	@Override
 	public boolean update(Computer computer) {
-		return updateDate(computer) && updateCompany(computer);
+		return updateName(computer) && updateDate(computer)
+				&& updateCompany(computer);
+	}
+
+	private boolean updateName(Computer computer) {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement nameStatement = null;
+
+		try {
+			nameStatement = conn.prepareStatement("UPDATE " + COMPUTER_TABLE
+					+ " SET " + COMPUTER_NAME + "=? WHERE " + COMPUTER_ID
+					+ "=?;");
+			nameStatement.setString(1, computer.getName());
+			nameStatement.setLong(2, computer.getId());
+			nameStatement.executeUpdate();
+
+			return true;
+		} catch (SQLException e) {
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					nameStatement, null);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
 	}
 
 	private boolean updateDate(Computer computer) {

@@ -80,8 +80,8 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="0"></td>
-							<td><a href="EditComputerServlet" onclick="">${computer.name}</a>
-							</td>
+							<td><a href="EditComputerServlet?id=${computer.id}"
+								onclick="">${computer.name}</a></td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>
 							<td>${computer.companyName}</td>
@@ -95,7 +95,8 @@
 	<!-- Choix de page -->
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<mlib:pagination page="${page}" currentRange="${currentRange}" pageNumber="${pageNumber}" />
+			<mlib:pagination page="${page}" currentRange="${currentRange}"
+				pageNumber="${pageNumber}" />
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mlib:link
