@@ -8,10 +8,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
+import exception.BoneCPInitException;
+import exception.ConnectionException;
 import exception.DAOException;
+import exception.DriverNotFoundException;
 import exception.PropertiesNotFoundException;
 
 public enum ConnectionFactory {
@@ -19,8 +25,12 @@ public enum ConnectionFactory {
 
 	private Properties prop;
 	private BoneCP pool;
+	private Logger logger;
 
 	private ConnectionFactory() {
+		// Logger
+		logger = LoggerFactory.getLogger(this.getClass());
+
 		// Properties
 		prop = new Properties();
 		InputStream input = null;
@@ -33,7 +43,7 @@ public enum ConnectionFactory {
 			}
 
 		} catch (IOException e) {
-			System.out.println("PROPERTIES: " + e.getMessage());
+			logger.debug(e.getMessage());
 			throw new PropertiesNotFoundException();
 		} /*
 		 * finally { try { input.close(); } catch (IOException e) { throw new
@@ -44,8 +54,8 @@ public enum ConnectionFactory {
 		try {
 			Class.forName(prop.getProperty("driver"));
 		} catch (ClassNotFoundException e) {
-			System.out.println("DRIVER: " + e.getMessage());
-			throw new DAOException();
+			logger.debug(e.getMessage());
+			throw new DriverNotFoundException();
 		}
 
 		// Pool de connexion
@@ -59,8 +69,8 @@ public enum ConnectionFactory {
 		try {
 			pool = new BoneCP(config);
 		} catch (SQLException e) {
-			System.out.println("BONECP: " + e.getMessage());
-			throw new DAOException();
+			logger.debug(e.getMessage());
+			throw new BoneCPInitException();
 		}
 	}
 
@@ -70,8 +80,8 @@ public enum ConnectionFactory {
 		try {
 			conn = pool.getConnection();
 		} catch (SQLException e) {
-			System.out.println("BONECP GETCONNECTTION: " + e.getMessage());
-			throw new DAOException();
+			logger.debug(e.getMessage());
+			throw new ConnectionException();
 		}
 
 		return conn;
@@ -81,8 +91,8 @@ public enum ConnectionFactory {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			System.out.println("CONNECTION CLOSE: " + e.getMessage());
-			throw new DAOException();
+			logger.debug(e.getMessage());
+			throw new ConnectionException();
 		}
 	}
 
@@ -102,7 +112,7 @@ public enum ConnectionFactory {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("CLOSE RESOURCES: " + e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		}
 	}

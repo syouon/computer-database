@@ -11,11 +11,20 @@ import java.sql.SQLException;
 import java.util.List;
 
 import model.Company;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import exception.DAOException;
 
 public enum CompanyDAOImpl implements CompanyDAO {
 	INSTANCE;
-
+	private Logger logger;
+	
+	private CompanyDAOImpl() {
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
+	
 	public static CompanyDAOImpl getInstance() {
 		return INSTANCE;
 	}
@@ -34,6 +43,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 
 			return DatabaseMapper.toCompany(result);
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -58,6 +68,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			return DatabaseMapper.toCompanyList(result);
 
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -79,6 +90,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			return DatabaseMapper.toCompanyList(result);
 
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -109,7 +121,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			return false;
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(

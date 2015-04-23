@@ -19,13 +19,21 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import model.Company;
 import model.Computer;
 import exception.DAOException;
 
 public enum ComputerDAOImpl implements ComputerDAO {
 	INSTANCE;
-
+	private Logger logger;
+	
+	private ComputerDAOImpl() {
+		logger = LoggerFactory.getLogger(this.getClass());
+	}
+	
 	public static ComputerDAO getInstance() {
 		return INSTANCE;
 	}
@@ -81,7 +89,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return lastId;
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(null,
@@ -105,6 +113,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return true;
 
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DAOException();
 
 		} finally {
@@ -153,6 +162,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 			return true;
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -181,7 +191,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 			return true;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -211,7 +221,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 			return true;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -239,7 +249,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return DatabaseMapper.toComputer(result);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -263,7 +273,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return DatabaseMapper.toComputerList(result);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -290,7 +300,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return DatabaseMapper.toComputerList(result);
 
 		} catch (SQLException e) {
-			System.out.println("FINDALL: " + e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -332,7 +342,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return DatabaseMapper.toComputerList(result);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -364,7 +374,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 			return DatabaseMapper.toComputerList(result);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -415,7 +425,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 			return DatabaseMapper.toComputerList(result);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -438,6 +448,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return result.getInt(1);
 
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -465,7 +476,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return result.getInt(1);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.debug(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
