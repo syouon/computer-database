@@ -74,5 +74,6 @@
 			</div>
 		</div>
 	</section>
+	<script type="text/javascript" src="js/validateEditForm.js"></script>
 </body>
 </html>
