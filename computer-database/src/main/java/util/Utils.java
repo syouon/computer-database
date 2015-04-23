@@ -8,7 +8,7 @@ public class Utils {
 		if (date.equals("")) {
 			return true;
 		}
-		
+
 		if (!date.matches("\\d{4}-\\d{2}-\\d{2}")) {
 			return false;
 		}
@@ -48,7 +48,7 @@ public class Utils {
 
 		return true;
 	}
-	
+
 	public static String normalizeOrderBy(String orderBy) {
 		switch (orderBy) {
 		case "introduced":
@@ -59,7 +59,7 @@ public class Utils {
 		case "company":
 			return "co.name";
 		default:
-			throw new BadOrderValueException();	
+			throw new BadOrderValueException();
 		}
 	}
 }

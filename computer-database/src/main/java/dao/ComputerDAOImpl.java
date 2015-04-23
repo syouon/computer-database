@@ -115,6 +115,25 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	}
 
 	@Override
+	public boolean deleteByCompany(long companyId, Connection conn)
+			throws SQLException {
+		PreparedStatement statement = null;
+
+		try {
+			statement = conn.prepareStatement("DELETE FROM " + COMPUTER_TABLE
+					+ " WHERE " + COMPUTER_COMPANYID + "=?;");
+			statement.setLong(1, companyId);
+
+			statement.executeUpdate();
+
+			return true;
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, null);
+		}
+	}
+
+	@Override
 	public boolean update(Computer computer) {
 		return updateName(computer) && updateDate(computer)
 				&& updateCompany(computer);

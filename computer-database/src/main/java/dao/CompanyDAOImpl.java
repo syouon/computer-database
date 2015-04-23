@@ -87,6 +87,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 		}
 	}
 
+	/* Modifie l'objet company en ajoutant son id */
 	@Override
 	public boolean exists(Company company) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
@@ -114,6 +115,23 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
 			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
+	public boolean delete(long id, Connection conn) throws SQLException {
+		PreparedStatement statement = null;
+
+		try {
+			statement = conn.prepareStatement("DELETE FROM " + COMPANY_TABLE
+					+ " WHERE " + COMPANY_ID + "=?;");
+			statement.setLong(1, id);
+			statement.executeUpdate();
+
+			return true;
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, null);
 		}
 	}
 }

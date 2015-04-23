@@ -1,5 +1,7 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import model.Company;
@@ -21,4 +23,6 @@ public interface CompanyDAO {
 	public List<Company> findAll();
 
 	public boolean exists(Company company);
+
+	public boolean delete(long id, Connection conn) throws SQLException;
 }

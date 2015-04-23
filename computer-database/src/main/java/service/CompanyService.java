@@ -11,4 +11,8 @@ public interface CompanyService {
 	public List<Company> listCompanies(int start, int range);
 
 	public Company find(long id);
+
+	public boolean exists(Company company);
+
+	public boolean deleteCompany(long id);
 }

@@ -1,5 +1,7 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import model.Computer;
@@ -27,6 +29,8 @@ public interface ComputerDAO {
 	 */
 	public boolean delete(long id);
 
+	public boolean deleteByCompany(long companyId, Connection conn) throws SQLException;
+
 	/**
 	 * Update.
 	 *
@@ -52,16 +56,18 @@ public interface ComputerDAO {
 	 */
 
 	public List<Computer> findAll();
-	
+
 	public List<Computer> findAll(int start, int range);
-	
+
 	public List<Computer> findAll(String regex, int start, int range);
-	
-	public List<Computer> findAll(int start, int range, String orderBy, boolean desc);
-	
-	public List<Computer> findAll(String regex, int start, int range, String orderBy, boolean desc);
+
+	public List<Computer> findAll(int start, int range, String orderBy,
+			boolean desc);
+
+	public List<Computer> findAll(String regex, int start, int range,
+			String orderBy, boolean desc);
 
 	public int count();
-	
+
 	public int countSearchResult(String regex);
 }

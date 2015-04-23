@@ -1,6 +1,7 @@
 package main;
 
 import ui.AddComputerChoice;
+import ui.DeleteCompanyChoice;
 import ui.DeleteComputerChoice;
 import ui.ListCompaniesChoice;
 import ui.ListComputersChoice;
@@ -21,6 +22,7 @@ public class Main {
 		menu.addChoice(new AddComputerChoice());
 		menu.addChoice(new UpdateComputerChoice());
 		menu.addChoice(new DeleteComputerChoice());
+		menu.addChoice(new DeleteCompanyChoice());
 		menu.loop();
 	}
 }
