@@ -46,8 +46,6 @@ public class DatabaseMapper {
 			computers.add(computer);
 		}
 
-		System.out.println("SIZE: " + computers.size());
-
 		return computers;
 	}
 

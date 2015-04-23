@@ -3,11 +3,13 @@ package dao;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+
+import com.jolbox.bonecp.BoneCP;
+import com.jolbox.bonecp.BoneCPConfig;
 
 import exception.DAOException;
 import exception.PropertiesNotFoundException;
@@ -16,17 +18,10 @@ public enum ConnectionFactory {
 	INSTANCE;
 
 	private Properties prop;
-
-	static {
-		// Chargement du driver
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			throw new DAOException();
-		}
-	}
+	private BoneCP pool;
 
 	private ConnectionFactory() {
+		// Properties
 		prop = new Properties();
 		InputStream input = null;
 		try {
@@ -38,20 +33,46 @@ public enum ConnectionFactory {
 			}
 
 		} catch (IOException e) {
+			System.out.println("PROPERTIES: " + e.getMessage());
 			throw new PropertiesNotFoundException();
 		} /*
 		 * finally { try { input.close(); } catch (IOException e) { throw new
 		 * PropertiesNotFoundException(); } }
 		 */
+		
+		// Chargement du Driver
+		try {
+			Class.forName(prop.getProperty("driver"));
+		} catch (ClassNotFoundException e) {
+			System.out.println("DRIVER: " + e.getMessage());
+			throw new DAOException();
+		}
+		
+		// Pool de connexion
+		BoneCPConfig config = new BoneCPConfig();
+		config.setJdbcUrl(prop.getProperty("url"));
+		config.setUsername(prop.getProperty("user"));
+		config.setPassword(prop.getProperty("password"));
+		config.setMinConnectionsPerPartition(1);
+		config.setMaxConnectionsPerPartition(10);
+		config.setPartitionCount(2);
+		try {
+			pool = new BoneCP(config);
+		} catch (SQLException e) {
+			System.out.println("BONECP: " + e.getMessage());
+			throw new DAOException();
+		}
 	}
 
 	public Connection openConnection() {
 		Connection conn = null;
 
 		try {
-			conn = DriverManager.getConnection(prop.getProperty("url"),
-					prop.getProperty("user"), prop.getProperty("password"));
+			conn = /*DriverManager.getConnection(prop.getProperty("url"),
+					prop.getProperty("user"), prop.getProperty("password"));*/
+					pool.getConnection();
 		} catch (SQLException e) {
+			System.out.println("BONECP GETCONNECTTION: " + e.getMessage());
 			throw new DAOException();
 		}
 
@@ -62,6 +83,7 @@ public enum ConnectionFactory {
 		try {
 			connection.close();
 		} catch (SQLException e) {
+			System.out.println("CONNECTION CLOSE: " + e.getMessage());
 			throw new DAOException();
 		}
 	}
@@ -82,6 +104,7 @@ public enum ConnectionFactory {
 			}
 
 		} catch (SQLException e) {
+			System.out.println("CLOSE RESOURCES: " + e.getMessage());
 			throw new DAOException();
 		}
 	}

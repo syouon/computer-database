@@ -13,6 +13,9 @@
 		<jstl.version>1.2</jstl.version>
 		<taglibs.version>1.1.2</taglibs.version>
 		<selenium.version>2.45.0</selenium.version>
+		<slf4j.version>1.7.12</slf4j.version>
+		<guava.version>18.0</guava.version>
+		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 	</properties>
 
 	<build>
@@ -77,6 +80,21 @@
 			<artifactId>selenium-java</artifactId>
 			<version>${selenium.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp</artifactId>
+			<version>${bonecp.version}</version>
 		</dependency>
 	</dependencies>
 	<packaging>war</packaging>

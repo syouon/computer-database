@@ -247,6 +247,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			return DatabaseMapper.toComputerList(result);
 
 		} catch (SQLException e) {
+			System.out.println("FINDALL: " + e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
