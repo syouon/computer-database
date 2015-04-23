@@ -6,6 +6,14 @@ import model.Computer;
 
 public interface ComputerService {
 
+	public List<Computer> listComputers(String regex, int start, int range,
+			String orderBy, boolean desc);
+
+	public List<Computer> listComputers(String regex, int start, int range);
+
+	public List<Computer> listComputers(int start, int range, String orderBy,
+			boolean desc);
+
 	public List<Computer> listComputers(int start, int range);
 
 	public List<Computer> listComputers();
@@ -18,9 +26,7 @@ public interface ComputerService {
 
 	public boolean updateComputer(Computer computer);
 
-	public List<Computer> search(String regex, int start, int range);
-
 	public int count();
-	
+
 	public int countSearchResult(String regex);
 }

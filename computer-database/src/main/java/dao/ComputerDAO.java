@@ -50,11 +50,16 @@ public interface ComputerDAO {
 	 *
 	 * @return the list
 	 */
-	public List<Computer> findAll(int start, int range);
 
 	public List<Computer> findAll();
 	
-	public List<Computer> search(String regex, int start, int range);
+	public List<Computer> findAll(int start, int range);
+	
+	public List<Computer> findAll(String regex, int start, int range);
+	
+	public List<Computer> findAll(int start, int range, String orderBy, boolean desc);
+	
+	public List<Computer> findAll(String regex, int start, int range, String orderBy, boolean desc);
 
 	public int count();
 	

@@ -39,7 +39,7 @@ public enum ConnectionFactory {
 		 * finally { try { input.close(); } catch (IOException e) { throw new
 		 * PropertiesNotFoundException(); } }
 		 */
-		
+
 		// Chargement du Driver
 		try {
 			Class.forName(prop.getProperty("driver"));
@@ -47,7 +47,7 @@ public enum ConnectionFactory {
 			System.out.println("DRIVER: " + e.getMessage());
 			throw new DAOException();
 		}
-		
+
 		// Pool de connexion
 		BoneCPConfig config = new BoneCPConfig();
 		config.setJdbcUrl(prop.getProperty("url"));
@@ -68,9 +68,7 @@ public enum ConnectionFactory {
 		Connection conn = null;
 
 		try {
-			conn = /*DriverManager.getConnection(prop.getProperty("url"),
-					prop.getProperty("user"), prop.getProperty("password"));*/
-					pool.getConnection();
+			conn = pool.getConnection();
 		} catch (SQLException e) {
 			System.out.println("BONECP GETCONNECTTION: " + e.getMessage());
 			throw new DAOException();

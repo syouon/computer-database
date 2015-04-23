@@ -15,6 +15,20 @@ public enum ComputerServiceImpl implements ComputerService {
 		dao = ComputerDAOImpl.getInstance();
 	}
 
+	public List<Computer> listComputers(String regex, int start, int range,
+			String orderBy, boolean desc) {
+		return dao.findAll(regex, start, range, orderBy, desc);
+	}
+	
+	public List<Computer> listComputers(String regex, int start, int range) {
+		return dao.findAll(regex, start, range);
+	}
+	
+	public List<Computer> listComputers(int start, int range, String orderBy,
+			boolean desc) {
+		return dao.findAll(start, range, orderBy, desc);
+	}
+	
 	public List<Computer> listComputers(int start, int range) {
 		return dao.findAll(start, range);
 	}
@@ -37,10 +51,6 @@ public enum ComputerServiceImpl implements ComputerService {
 
 	public boolean updateComputer(Computer computer) {
 		return dao.update(computer);
-	}
-	
-	public List<Computer> search(String regex, int start, int range) {
-		return dao.search(regex, start, range);
 	}
 
 	public int count() {

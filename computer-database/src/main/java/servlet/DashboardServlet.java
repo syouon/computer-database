@@ -14,6 +14,7 @@ import mapper.DTOMapper;
 import model.Computer;
 import service.ComputerService;
 import service.ComputerServiceImpl;
+import static util.Utils.*;
 
 /**
  * Servlet implementation class DashboardServlet
@@ -45,6 +46,25 @@ public class DashboardServlet extends HttpServlet {
 		String page = request.getParameter("page");
 		String range = request.getParameter("range");
 		String search = request.getParameter("search");
+		String orderBy = request.getParameter("orderby");
+		String desc = request.getParameter("desc");
+		String change = request.getParameter("change");
+
+		boolean descState;
+		if (desc != null && !desc.equals("") && desc.equals("true")) {
+			descState = true;
+		} else {
+			descState = false;
+		}
+
+		if (change != null && !change.equals("") && change.equals("true")) {
+			descState = !descState;
+			if (descState) {
+				desc = "true";
+			} else {
+				desc = "false";
+			}
+		}
 
 		if (page != null && !page.equals("") && page.matches("\\d*")) {
 			currentPage = Integer.parseInt(page);
@@ -59,26 +79,40 @@ public class DashboardServlet extends HttpServlet {
 		List<Computer> computers = null;
 
 		if (search != null && !search.equals("")) {
-			computers = service.search(search, (currentPage - 1) * nbPerPage,
-					nbPerPage);
+			if (orderBy != null && !orderBy.equals("")) {
+				computers = service.listComputers(search, (currentPage - 1)
+						* nbPerPage, nbPerPage, normalizeOrderBy(orderBy),
+						descState);
+			} else {
+				computers = service.listComputers(search, (currentPage - 1)
+						* nbPerPage, nbPerPage);
+			}
 			allComputerSize = service.countSearchResult(search);
 		} else {
-			computers = service.listComputers((currentPage - 1) * nbPerPage,
-					nbPerPage);
+			if (orderBy != null && !orderBy.equals("")) {
+				computers = service.listComputers(
+						(currentPage - 1) * nbPerPage, nbPerPage,
+						normalizeOrderBy(orderBy), descState);
+			} else {
+				computers = service.listComputers(
+						(currentPage - 1) * nbPerPage, nbPerPage);
+			}
 			allComputerSize = service.count();
 		}
-		
+
 		// conversion des computers vers leur DTO
 		for (Computer c : computers) {
 			dtos.add(DTOMapper.toComputerDTO(c));
 		}
-		
+
 		request.setAttribute("currentRange", nbPerPage);
 		request.setAttribute("computersNumber", allComputerSize);
 		request.setAttribute("pageNumber", allComputerSize / nbPerPage);
 		request.setAttribute("computers", dtos);
 		request.setAttribute("page", currentPage);
 		request.setAttribute("search", search);
+		request.setAttribute("orderBy", orderBy);
+		request.setAttribute("desc", desc);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
 				.forward(request, response);
 	}

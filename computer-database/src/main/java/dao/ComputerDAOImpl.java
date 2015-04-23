@@ -230,6 +230,30 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	}
 
 	@Override
+	public List<Computer> findAll() {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try {
+			statement = conn.prepareStatement("SELECT " + COMPUTER_ID
+					+ " as c_id, " + COMPUTER_NAME + " as c_name, "
+					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+					+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE + ";");
+			result = statement.executeQuery();
+			return DatabaseMapper.toComputerList(result);
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
 	public List<Computer> findAll(int start, int range) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
@@ -257,16 +281,34 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	}
 
 	@Override
-	public List<Computer> findAll() {
+	public List<Computer> findAll(int start, int range, String orderBy,
+			boolean desc) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
 		try {
-			statement = conn.prepareStatement("SELECT " + COMPUTER_ID
-					+ " as c_id, " + COMPUTER_NAME + " as c_name, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE + ";");
+			if (desc) {
+				statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
+						+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+						+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED
+						+ ", " + COMPUTER_COMPANYID + ", co." + COMPANY_NAME
+						+ " FROM " + COMPUTER_TABLE + " c LEFT OUTER JOIN "
+						+ COMPANY_TABLE + " co ON c." + COMPUTER_COMPANYID
+						+ "=co." + COMPANY_ID + " ORDER BY " + orderBy
+						+ " DESC LIMIT ? OFFSET ?;");
+			} else {
+				statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
+						+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+						+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED
+						+ ", " + COMPUTER_COMPANYID + ", co." + COMPANY_NAME
+						+ " FROM " + COMPUTER_TABLE + " c LEFT OUTER JOIN "
+						+ COMPANY_TABLE + " co ON c." + COMPUTER_COMPANYID
+						+ "=co." + COMPANY_ID + " ORDER BY " + orderBy
+						+ " LIMIT ? OFFSET ?;");
+			}
+			statement.setInt(1, range);
+			statement.setInt(2, start);
 			result = statement.executeQuery();
 			return DatabaseMapper.toComputerList(result);
 
@@ -281,7 +323,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	}
 
 	@Override
-	public List<Computer> search(String regex, int start, int range) {
+	public List<Computer> findAll(String regex, int start, int range) {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
@@ -295,6 +337,57 @@ public enum ComputerDAOImpl implements ComputerDAO {
 					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
 					+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
 					+ COMPANY_NAME + " LIKE ?) LIMIT ? OFFSET ?;");
+			statement.setString(1, "%" + regex + "%");
+			statement.setString(2, "%" + regex + "%");
+			statement.setInt(3, range);
+			statement.setInt(4, start);
+			result = statement.executeQuery();
+
+			return DatabaseMapper.toComputerList(result);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new DAOException();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
+			ConnectionFactory.getInstance().closeConnection(conn);
+		}
+	}
+
+	@Override
+	public List<Computer> findAll(String regex, int start, int range,
+			String orderBy, boolean desc) {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
+		try {
+			if (desc) {
+				statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
+						+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+						+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED
+						+ ", " + COMPUTER_COMPANYID + ", co." + COMPANY_NAME
+						+ " FROM " + COMPUTER_TABLE + " c LEFT OUTER JOIN "
+						+ COMPANY_TABLE + " co ON c." + COMPUTER_COMPANYID
+						+ "=co." + COMPANY_ID + " WHERE (c." + COMPUTER_NAME
+						+ " LIKE ? OR co." + COMPANY_NAME
+						+ " LIKE ?) ORDER BY " + orderBy
+						+ " DESC LIMIT ? OFFSET ?;");
+			} else {
+				statement = conn
+						.prepareStatement("SELECT c." + COMPUTER_NAME
+								+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+								+ COMPUTER_INTRODUCED + ", "
+								+ COMPUTER_DISCONTINUED + ", "
+								+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME
+								+ " FROM " + COMPUTER_TABLE
+								+ " c LEFT OUTER JOIN " + COMPANY_TABLE
+								+ " co ON c." + COMPUTER_COMPANYID + "=co."
+								+ COMPANY_ID + " WHERE (c." + COMPUTER_NAME
+								+ " LIKE ? OR co." + COMPANY_NAME
+								+ " LIKE ?) ORDER BY " + orderBy
+								+ " LIMIT ? OFFSET ?;");
+			}
 			statement.setString(1, "%" + regex + "%");
 			statement.setString(2, "%" + regex + "%");
 			statement.setInt(3, range);

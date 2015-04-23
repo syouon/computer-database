@@ -1,5 +1,7 @@
 package util;
 
+import exception.BadOrderValueException;
+
 public class Utils {
 
 	public static boolean isWellFormedDate(String date) {
@@ -45,5 +47,19 @@ public class Utils {
 		}
 
 		return true;
+	}
+	
+	public static String normalizeOrderBy(String orderBy) {
+		switch (orderBy) {
+		case "introduced":
+		case "discontinued":
+			return orderBy;
+		case "name":
+			return "c." + orderBy;
+		case "company":
+			return "co.name";
+		default:
+			throw new BadOrderValueException();	
+		}
 	}
 }

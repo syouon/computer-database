@@ -6,5 +6,8 @@
 <%@ attribute name="body" required="true" type="java.lang.String" %>
 <%@ attribute name="ariaValue" type="java.lang.String" %>
 <%@ attribute name="search" type="java.lang.String" %>
+<%@ attribute name="orderBy" type="java.lang.String" %>
+<%@ attribute name="desc" type="java.lang.String" %>
+<%@ attribute name="change" type="java.lang.String" %>
 
-<a href="${target}?page=${page}&range=${range}&search=${search}" aria-label="${aria_value}">${body}</a>
+<a href="${target}?page=${page}&range=${range}&search=${search}&orderby=${orderBy}&desc=${desc}&change=${change}" aria-label="${aria_value}">${body}</a>

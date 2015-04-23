@@ -67,12 +67,20 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
+						<th><mlib:link target="DashboardServlet"
+								range="${currentRange}" page="${page}" orderBy="name"
+								body="Computer name" desc="${desc}" change="true" /></th>
+						<th><mlib:link target="DashboardServlet"
+								range="${currentRange}" page="${page}" orderBy="introduced"
+								body="Introduced date" desc="${desc}" change="true" /></th>
 						<!-- Table header for Discontinued Date -->
-						<th>Discontinued date</th>
+						<th><mlib:link target="DashboardServlet"
+								range="${currentRange}" page="${page}" orderBy="discontinued"
+								body="Discontinued date" desc="${desc}" change="true" /></th>
 						<!-- Table header for Company -->
-						<th>Company</th>
+						<th><mlib:link target="DashboardServlet"
+								range="${currentRange}" page="${page}" orderBy="company"
+								body="Company" desc="${desc}" change="true" /></th>
 
 					</tr>
 				</thead>
@@ -98,21 +106,24 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<mlib:pagination page="${page}" currentRange="${currentRange}"
-				pageNumber="${pageNumber}" />
+				pageNumber="${pageNumber}" orderBy="${orderBy}" desc="${desc}" />
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>10</button>"
-					range="10" page="1" search="${search}" target="DashboardServlet" />
+					range="10" page="1" search="${search}" target="DashboardServlet"
+					orderBy="${orderBy}" desc="${desc}" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>50</button>"
-					range="50" page="1" search="${search}" target="DashboardServlet" />
+					range="50" page="1" search="${search}" target="DashboardServlet"
+					orderBy="${orderBy}" desc="${desc}" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>100</button>"
-					range="100" page="1" search="${search}" target="DashboardServlet" />
+					range="100" page="1" search="${search}" target="DashboardServlet"
+					orderBy="${orderBy}" desc="${desc}" />
 			</div>
 		</div>
 	</footer>
