@@ -39,50 +39,38 @@ public class DashboardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		int allComputerSize = 0;
-
-		int nbPerPage = 10;
-		int currentPage = 1;
-		String page = request.getParameter("page");
+		Page page = new Page();
+		String pageParam = request.getParameter("page");
 		String range = request.getParameter("range");
 		String search = request.getParameter("search");
 		String orderBy = request.getParameter("orderby");
 		String desc = request.getParameter("desc");
 		String change = request.getParameter("change");
 
-		boolean descState;
-		if (desc != null && !desc.equals("") && desc.equals("true")) {
-			descState = true;
-		} else {
-			descState = false;
-		}
-
+		page.setDesc(desc);
+		page.setRange(range);
+		page.setPage(pageParam);
 		if (change != null && !change.equals("") && change.equals("true")) {
-			descState = !descState;
-			if (descState) {
+			page.reverseDesc();
+			if (page.isDesc()) {
 				desc = "true";
 			} else {
 				desc = "false";
 			}
 		}
 
-		if (page != null && !page.equals("") && page.matches("\\d*")) {
-			currentPage = Integer.parseInt(page);
-		}
-
-		if (range != null && !range.equals("") && range.matches("\\d*")) {
-			nbPerPage = Integer.parseInt(range);
-		}
+		int allComputerSize = 0;
+		int nbPerPage = page.getRange();
+		int currentPage = page.getPage();
 
 		List<ComputerDTO> dtos = new ArrayList<>();
-
 		List<Computer> computers = null;
 
 		if (search != null && !search.equals("")) {
 			if (orderBy != null && !orderBy.equals("")) {
 				computers = service.listComputers(search, (currentPage - 1)
 						* nbPerPage, nbPerPage, normalizeOrderBy(orderBy),
-						descState);
+						page.isDesc());
 			} else {
 				computers = service.listComputers(search, (currentPage - 1)
 						* nbPerPage, nbPerPage);
@@ -92,7 +80,7 @@ public class DashboardServlet extends HttpServlet {
 			if (orderBy != null && !orderBy.equals("")) {
 				computers = service.listComputers(
 						(currentPage - 1) * nbPerPage, nbPerPage,
-						normalizeOrderBy(orderBy), descState);
+						normalizeOrderBy(orderBy), page.isDesc());
 			} else {
 				computers = service.listComputers(
 						(currentPage - 1) * nbPerPage, nbPerPage);
