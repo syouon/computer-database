@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<company id="1" name="Syou-On Corp" />
+	<company id="2" name="Apple" />
+	<company id="3" name="Lolilol Corp" />
+	<computer id="1" name="Syou-On" introduced="2015-04-01"
+		company_id="1" />
+	<computer id="2" name="Syou-On II" introduced="2015-04-02"
+		company_id="1" />
+	<computer id="3" name="Mac I" discontinued="2000-02-29"
+		company_id="2" />
+	<computer id="4" name="Mac II" discontinued="2001-05-23"
+		company_id="2" />
+	<computer id="5" name="Lolilol I" introduced="1995-08-15"
+		discontinued="2000-02-29" company_id="3" />
+	<computer name="What?" />
+</dataset>

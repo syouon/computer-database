@@ -1,24 +1,39 @@
-import static dao.DatabaseNaming.COMPUTER_TABLE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 
 import model.Computer;
 
+import org.dbunit.DBTestCase;
+import org.dbunit.PropertiesBasedJdbcDatabaseTester;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Test;
 
+import util.Utils;
 import dao.ComputerDAOImpl;
 import dao.ConnectionFactory;
+import dao.DatabaseNaming;
 
-public class ComputerDAOTest {
+public class ComputerDAOTest extends DBTestCase {
+
+	public ComputerDAOTest() {
+		Properties prop = Utils.loadProperties("database.properties");
+		System.setProperty(
+				PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS,
+				prop.getProperty("driver"));
+		System.setProperty(
+				PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL,
+				prop.getProperty("url"));
+		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME,
+				prop.getProperty("user"));
+		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD,
+				prop.getProperty("password"));
+	}
 
 	@Test
 	public void testCreate() {
@@ -31,8 +46,6 @@ public class ComputerDAOTest {
 		// L'element ajoute doit etre le meme que computer
 		assertTrue("Computer added must be the same as ComputerTest",
 				newComputers.contains(computer));
-
-		ComputerDAOImpl.getInstance().delete(computer.getId());
 	}
 
 	@Test
@@ -62,8 +75,6 @@ public class ComputerDAOTest {
 				updatedComputer.getId());
 
 		assertTrue("Should not be equal", !computer.equals(newComputer));
-
-		ComputerDAOImpl.getInstance().delete(computer.getId());
 	}
 
 	@Test
@@ -75,9 +86,6 @@ public class ComputerDAOTest {
 		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
 
 		assertNotNull("Should not be null", computers.contains(computer));
-
-		// Suppression de l'element
-		ComputerDAOImpl.getInstance().delete(computer.getId());
 	}
 
 	@Test
@@ -91,7 +99,7 @@ public class ComputerDAOTest {
 		try {
 			statement = conn.createStatement();
 			result = statement.executeQuery("SELECT COUNT(*) FROM "
-					+ COMPUTER_TABLE + ";");
+					+ DatabaseNaming.COMPUTER_TABLE + ";");
 
 			int lineNumber = 0;
 			while (result.next()) {
@@ -118,6 +126,12 @@ public class ComputerDAOTest {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	protected IDataSet getDataSet() throws Exception {
+		return new FlatXmlDataSetBuilder().build(this.getClass()
+				.getClassLoader().getResourceAsStream("dataset.xml"));
 	}
 
 }

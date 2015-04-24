@@ -1,6 +1,11 @@
 package util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import exception.BadOrderValueException;
+import exception.PropertiesNotFoundException;
 
 public class Utils {
 
@@ -61,5 +66,24 @@ public class Utils {
 		default:
 			throw new BadOrderValueException();
 		}
+	}
+
+	public static Properties loadProperties(String file) {
+		Properties prop = new Properties();
+		InputStream input = null;
+		try {
+			input = Utils.class.getClassLoader().getResourceAsStream(file);
+
+			if (input != null) {
+				prop.load(input);
+			}
+
+			return prop;
+		} catch (IOException e) {
+			throw new PropertiesNotFoundException();
+		} /*
+		 * finally { try { input.close(); } catch (IOException e) { throw new
+		 * PropertiesNotFoundException(); } }
+		 */
 	}
 }

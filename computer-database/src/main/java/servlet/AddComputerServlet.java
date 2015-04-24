@@ -67,12 +67,14 @@ public class AddComputerServlet extends HttpServlet {
 
 		Computer computer = new Computer(name);
 
-		if (!introduced.equals("") && Utils.isWellFormedDate(introduced)) {
+		if (introduced != null && !introduced.equals("")
+				&& Utils.isWellFormedDate(introduced)) {
 			LocalDate introducedIn = LocalDate.parse(introduced);
 			computer.setIntroductionDate(introducedIn);
 		}
 
-		if (!discontinued.equals("") && Utils.isWellFormedDate(discontinued)) {
+		if (discontinued != null && !discontinued.equals("")
+				&& Utils.isWellFormedDate(discontinued)) {
 			LocalDate discontinuedIn = LocalDate.parse(discontinued);
 			computer.setDiscontinuationDate(discontinuedIn);
 		}
@@ -86,9 +88,10 @@ public class AddComputerServlet extends HttpServlet {
 			}
 		}
 
-		if (!name.equals("")
+		if (name != null && !name.equals("")
 				&& (introduced.equals("") || Utils.isWellFormedDate(introduced))
-				&& (discontinued.equals("") || Utils.isWellFormedDate(discontinued))) {
+				&& (discontinued.equals("") || Utils
+						.isWellFormedDate(discontinued))) {
 
 			computerService.addComputer(computer);
 			response.sendRedirect("DashboardServlet");

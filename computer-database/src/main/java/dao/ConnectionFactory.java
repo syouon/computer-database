@@ -1,7 +1,5 @@
 package dao;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +9,8 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import util.Utils;
+
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
@@ -18,7 +18,6 @@ import exception.BoneCPInitException;
 import exception.ConnectionException;
 import exception.DAOException;
 import exception.DriverNotFoundException;
-import exception.PropertiesNotFoundException;
 
 public enum ConnectionFactory {
 	INSTANCE;
@@ -30,26 +29,10 @@ public enum ConnectionFactory {
 	private ConnectionFactory() {
 		// Logger
 		logger = LoggerFactory.getLogger(this.getClass());
-
+		
 		// Properties
-		prop = new Properties();
-		InputStream input = null;
-		try {
-			input = getClass().getClassLoader().getResourceAsStream(
-					"database.properties");
-
-			if (input != null) {
-				prop.load(input);
-			}
-
-		} catch (IOException e) {
-			logger.debug(e.getMessage());
-			throw new PropertiesNotFoundException();
-		} /*
-		 * finally { try { input.close(); } catch (IOException e) { throw new
-		 * PropertiesNotFoundException(); } }
-		 */
-
+		prop = Utils.loadProperties("database.properties");
+		
 		// Chargement du Driver
 		try {
 			Class.forName(prop.getProperty("driver"));
