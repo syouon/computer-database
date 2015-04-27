@@ -1,50 +1,37 @@
-import static dao.DatabaseNaming.COMPANY_TABLE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
+import java.util.Properties;
 
 import model.Company;
 
-import org.junit.After;
-import org.junit.Before;
+import org.dbunit.DBTestCase;
+import org.dbunit.PropertiesBasedJdbcDatabaseTester;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Test;
 
+import util.Utils;
 import dao.CompanyDAOImpl;
 import dao.ConnectionFactory;
+import static dao.DatabaseNaming.COMPANY_TABLE;
 
-public class CompanyDAOTest {
+public class CompanyDAOTest extends DBTestCase {
 
-	private Connection conn;
-	private Statement statement;
-	private ResultSet result;
-
-	@Before
-	public void initResource() {
-		conn = ConnectionFactory.getInstance().openConnection();
-		statement = null;
-		result = null;
-	}
-
-	@After
-	public void closeResource() {
-		try {
-			if (result != null) {
-				result.close();
-			}
-
-			if (statement != null) {
-				statement.close();
-			}
-			ConnectionFactory.getInstance().closeConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public CompanyDAOTest() {
+		Properties prop = Utils.loadProperties("database.properties");
+		System.setProperty(
+				PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS,
+				prop.getProperty("driver"));
+		System.setProperty(
+				PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL,
+				prop.getProperty("url"));
+		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME,
+				prop.getProperty("user"));
+		System.setProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD,
+				prop.getProperty("password"));
 	}
 
 	@Test
@@ -60,10 +47,14 @@ public class CompanyDAOTest {
 	public void testFindAll() {
 		List<Company> company = CompanyDAOImpl.getInstance().findAll();
 
+		Connection conn = ConnectionFactory.getInstance().openConnection();
+		PreparedStatement statement = null;
+		ResultSet result = null;
+
 		try {
-			statement = conn.createStatement();
-			result = statement.executeQuery("SELECT COUNT(*) FROM "
+			statement = conn.prepareStatement("SELECT COUNT(*) FROM "
 					+ COMPANY_TABLE + ";");
+			result = statement.executeQuery();
 
 			int lineNumber = 0;
 			while (result.next()) {
@@ -74,16 +65,37 @@ public class CompanyDAOTest {
 					lineNumber);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			ConnectionFactory.getInstance().closeResultSetAndStatement(
+					statement, result);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
 	@Test
 	public void testExists() {
-		Company company = new Company("Apple Inc.");
+		Company company = new Company("Apple");
 		Company falseCompany = new Company("InexistantCorp");
-		assertTrue("Apple Inc. should exist", CompanyDAOImpl.getInstance()
-				.exists(company));
+		assertTrue("Apple should exist",
+				CompanyDAOImpl.getInstance().exists(company));
 		assertFalse("InexistantCorp should not exist", CompanyDAOImpl
 				.getInstance().exists(falseCompany));
+	}
+
+	@Test
+	public void testDelete() {
+		try {
+			assertNotNull(CompanyDAOImpl.getInstance().find(3));
+			CompanyDAOImpl.getInstance().delete(3);
+			assertNull(CompanyDAOImpl.getInstance().find(3));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected IDataSet getDataSet() throws Exception {
+		return new FlatXmlDataSetBuilder().build(this.getClass()
+				.getClassLoader().getResourceAsStream("dataset.xml"));
 	}
 }

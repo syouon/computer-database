@@ -38,16 +38,13 @@ public enum CompanyServiceImpl implements CompanyService {
 		ConnectionFactory factory = ConnectionFactory.getInstance();
 
 		try {
-			// Debut de la transaction
 			factory.startTransaction();
 			ComputerDAOImpl.getInstance().deleteByCompany(id);
 			dao.delete(id);
-			// fin de la transaction
 			factory.endTransaction();
 
 			return true;
 		} catch (SQLException e) {
-			// rollback de la transaction
 			factory.rollback();
 			return false;
 		} finally {

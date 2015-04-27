@@ -62,6 +62,19 @@ public class ComputerDAOTest extends DBTestCase {
 	}
 
 	@Test
+	public void testDeleteByCompany() {
+		try {
+			assertNotNull(ComputerDAOImpl.getInstance().find(3));
+			assertNotNull(ComputerDAOImpl.getInstance().find(4));
+			ComputerDAOImpl.getInstance().deleteByCompany(2);
+			assertNull(ComputerDAOImpl.getInstance().find(3));
+			assertNull(ComputerDAOImpl.getInstance().find(4));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
 	public void testUpdate() {
 		Computer computer = new Computer("ComputerTest");
 		long id = ComputerDAOImpl.getInstance().create(computer);
