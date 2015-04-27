@@ -29,11 +29,11 @@ import exception.DAOException;
 public enum ComputerDAOImpl implements ComputerDAO {
 	INSTANCE;
 	private Logger logger;
-	
+
 	private ComputerDAOImpl() {
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
-	
+
 	public static ComputerDAO getInstance() {
 		return INSTANCE;
 	}
@@ -96,7 +96,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 					result);
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, null);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -119,13 +119,13 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, null);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
 	@Override
-	public boolean deleteByCompany(long companyId, Connection conn)
-			throws SQLException {
+	public boolean deleteByCompany(long companyId) throws SQLException {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 
 		try {
@@ -167,7 +167,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					nameStatement, null);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -196,7 +196,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					dateStatement, null);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -226,7 +226,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					companyStatement, null);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -254,7 +254,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -278,7 +278,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -305,7 +305,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -347,7 +347,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -379,7 +379,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -430,7 +430,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -453,7 +453,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -481,7 +481,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 }

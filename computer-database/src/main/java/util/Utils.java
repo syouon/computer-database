@@ -35,7 +35,7 @@ public class Utils {
 
 		// fevrier
 		if (month == 2) {
-			// si annee bisextile
+			// si annee bissextile
 			if (year % 4 == 0 && year % 100 != 0) {
 				if (day > 29) {
 					return false;

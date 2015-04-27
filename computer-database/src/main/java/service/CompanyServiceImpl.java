@@ -1,6 +1,5 @@
 package service;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import dao.CompanyDAO;
 import dao.CompanyDAOImpl;
 import dao.ComputerDAOImpl;
 import dao.ConnectionFactory;
-import exception.RollBackException;
 
 public enum CompanyServiceImpl implements CompanyService {
 	INSTANCE;
@@ -37,29 +35,23 @@ public enum CompanyServiceImpl implements CompanyService {
 	}
 
 	public boolean deleteCompany(long id) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		ConnectionFactory factory = ConnectionFactory.getInstance();
 
 		try {
 			// Debut de la transaction
-			conn.setAutoCommit(false);
-			ComputerDAOImpl.getInstance().deleteByCompany(id, conn);
-			dao.delete(id, conn);
-
+			factory.startTransaction();
+			ComputerDAOImpl.getInstance().deleteByCompany(id);
+			dao.delete(id);
 			// fin de la transaction
-			conn.commit();
-			conn.setAutoCommit(true);
+			factory.endTransaction();
 
 			return true;
 		} catch (SQLException e) {
 			// rollback de la transaction
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				throw new RollBackException();
-			}
+			factory.rollback();
 			return false;
 		} finally {
-			ConnectionFactory.getInstance().closeConnection(conn);
+			factory.closeConnection();
 		}
 	}
 

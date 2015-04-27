@@ -20,11 +20,11 @@ import exception.DAOException;
 public enum CompanyDAOImpl implements CompanyDAO {
 	INSTANCE;
 	private Logger logger;
-	
+
 	private CompanyDAOImpl() {
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
-	
+
 	public static CompanyDAOImpl getInstance() {
 		return INSTANCE;
 	}
@@ -48,7 +48,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -73,7 +73,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -95,7 +95,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
@@ -126,12 +126,13 @@ public enum CompanyDAOImpl implements CompanyDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, result);
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 
 	@Override
-	public boolean delete(long id, Connection conn) throws SQLException {
+	public boolean delete(long id) throws SQLException {
+		Connection conn = ConnectionFactory.getInstance().openConnection();
 		PreparedStatement statement = null;
 
 		try {

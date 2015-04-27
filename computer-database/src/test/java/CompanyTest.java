@@ -3,7 +3,6 @@ import model.Company;
 
 import org.junit.Test;
 
-
 public class CompanyTest {
 
 	@Test
@@ -31,7 +30,7 @@ public class CompanyTest {
 		Company company1 = new Company("CompanyTest1");
 		Company company2 = new Company("CompanyTest2");
 		assertNotEquals(company1, company2);
-		
+
 		Company company = new Company("CompanyTest1");
 		assertEquals(company, company1);
 	}

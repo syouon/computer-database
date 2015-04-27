@@ -41,7 +41,7 @@ public class CompanyDAOTest {
 			if (statement != null) {
 				statement.close();
 			}
-			ConnectionFactory.getInstance().closeConnection(conn);
+			ConnectionFactory.getInstance().closeConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
