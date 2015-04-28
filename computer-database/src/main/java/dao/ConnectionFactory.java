@@ -26,7 +26,7 @@ public enum ConnectionFactory {
 	private Properties prop;
 	private BoneCP pool;
 	private Logger logger;
-	private final ThreadLocal<Connection> localConn = new ThreadLocal<>();
+	private static final ThreadLocal<Connection> LOCALCONN = new ThreadLocal<>();
 
 	private ConnectionFactory() {
 		// Logger
@@ -38,9 +38,9 @@ public enum ConnectionFactory {
 		// Chargement du Driver
 		try {
 			Class.forName(prop.getProperty("driver"));
-			logger.info("Driver loaded");
+			logger.debug("Driver loaded");
 		} catch (ClassNotFoundException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new DriverNotFoundException();
 		}
 
@@ -50,41 +50,41 @@ public enum ConnectionFactory {
 		config.setUsername(prop.getProperty("user"));
 		config.setPassword(prop.getProperty("password"));
 		config.setMinConnectionsPerPartition(1);
-		config.setMaxConnectionsPerPartition(10);
+		config.setMaxConnectionsPerPartition(5);
 		config.setPartitionCount(2);
 		try {
 			pool = new BoneCP(config);
-			logger.info("BoneCP initialized");
+			logger.debug("BoneCP initialized");
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new BoneCPInitException();
 		}
 	}
 
 	public Connection openConnection() {
 		try {
-			if (localConn.get() == null) {
-				localConn.set(pool.getConnection());
+			if (LOCALCONN.get() == null) {
+				LOCALCONN.set(pool.getConnection());
 			}
 
-			logger.info("Connection get");
-			return localConn.get();
+			logger.debug("Connection get");
+			return LOCALCONN.get();
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new ConnectionException();
 		}
 	}
 
 	public void closeConnection() {
 		try {
-			Connection connection = localConn.get();
-			if (connection != null) {
+			Connection connection = LOCALCONN.get();
+			if (connection != null && !connection.isClosed()) {
 				connection.close();
 			}
-			localConn.remove();
-			logger.info("Connection closed");
+			LOCALCONN.remove();
+			logger.debug("Connection closed");
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new ConnectionException();
 		}
 	}
@@ -94,23 +94,23 @@ public enum ConnectionFactory {
 	}
 
 	public void startTransaction() throws SQLException {
-		Connection conn = localConn.get();
+		Connection conn = LOCALCONN.get();
 		conn.setAutoCommit(false);
 	}
 
 	public void endTransaction() throws SQLException {
-		Connection conn = localConn.get();
+		Connection conn = LOCALCONN.get();
 		conn.commit();
 		conn.setAutoCommit(true);
 	}
 
 	public void rollback() {
-		Connection conn = localConn.get();
+		Connection conn = LOCALCONN.get();
 		try {
 			conn.rollback();
-			logger.info("Rollback done");
+			logger.debug("Rollback done");
 		} catch (SQLException e) {
-			logger.debug("Rollback failed: " + e.getMessage());
+			logger.error("Rollback failed: " + e.getMessage());
 			throw new RollBackException();
 		}
 	}
@@ -126,9 +126,9 @@ public enum ConnectionFactory {
 				statement.close();
 			}
 
-			logger.info("ResultSet and Statement closed");
+			logger.debug("ResultSet and Statement closed");
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new DAOException();
 		}
 	}

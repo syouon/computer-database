@@ -77,7 +77,8 @@ public class EditComputerServlet extends HttpServlet {
 		String newDiscontinued = request.getParameter("discontinued");
 		String newCompanyId = request.getParameter("companyId");
 		String idParam = request.getParameter("id");
-		long id = Long.parseLong(idParam);;
+		long id = Long.parseLong(idParam);
+		;
 
 		if (newName.equals("") || !Utils.isWellFormedDate(newIntroduced)
 				|| !Utils.isWellFormedDate(newDiscontinued)) {
@@ -100,17 +101,18 @@ public class EditComputerServlet extends HttpServlet {
 			if (!newIntroduced.equals("")) {
 				newComputer.setIntroductionDate(LocalDate.parse(newIntroduced));
 			}
-			
+
 			if (!newDiscontinued.equals("")) {
-				newComputer.setDiscontinuationDate(LocalDate.parse(newDiscontinued));
+				newComputer.setDiscontinuationDate(LocalDate
+						.parse(newDiscontinued));
 			}
-			
+
 			long companyId = Long.parseLong(newCompanyId);
 			if (companyId != 0) {
 				Company newCompany = companyService.find(companyId);
 				newComputer.setCompany(newCompany);
 			}
-			
+
 			computerService.updateComputer(newComputer);
 			response.sendRedirect("DashboardServlet");
 		}

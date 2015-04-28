@@ -88,7 +88,8 @@ public class AddComputerServlet extends HttpServlet {
 			}
 		}
 
-		if (name != null && !name.equals("")
+		if (name != null
+				&& !name.equals("")
 				&& (introduced.equals("") || Utils.isWellFormedDate(introduced))
 				&& (discontinued.equals("") || Utils
 						.isWellFormedDate(discontinued))) {

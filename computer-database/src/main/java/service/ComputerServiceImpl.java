@@ -19,16 +19,16 @@ public enum ComputerServiceImpl implements ComputerService {
 			String orderBy, boolean desc) {
 		return dao.findAll(regex, start, range, orderBy, desc);
 	}
-	
+
 	public List<Computer> listComputers(String regex, int start, int range) {
 		return dao.findAll(regex, start, range);
 	}
-	
+
 	public List<Computer> listComputers(int start, int range, String orderBy,
 			boolean desc) {
 		return dao.findAll(start, range, orderBy, desc);
 	}
-	
+
 	public List<Computer> listComputers(int start, int range) {
 		return dao.findAll(start, range);
 	}
@@ -56,11 +56,11 @@ public enum ComputerServiceImpl implements ComputerService {
 	public int count() {
 		return dao.count();
 	}
-	
+
 	public int countSearchResult(String regex) {
 		return dao.countSearchResult(regex);
 	}
-	
+
 	public static ComputerServiceImpl getInstance() {
 		return INSTANCE;
 	}

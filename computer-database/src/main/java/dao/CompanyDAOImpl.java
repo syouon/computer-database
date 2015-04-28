@@ -40,10 +40,11 @@ public enum CompanyDAOImpl implements CompanyDAO {
 					+ " WHERE " + COMPANY_ID + "=?;");
 			statement.setLong(1, id);
 			result = statement.executeQuery();
+			logger.debug("Finding done");
 
 			return DatabaseMapper.toCompany(result);
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -65,10 +66,12 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			statement.setInt(1, range);
 			statement.setInt(2, start);
 			result = statement.executeQuery();
+			logger.debug("Finding All done");
+
 			return DatabaseMapper.toCompanyList(result);
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -87,10 +90,11 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			statement = conn.prepareStatement("SELECT " + COMPANY_NAME + ","
 					+ COMPANY_ID + " FROM " + COMPANY_TABLE + ";");
 			result = statement.executeQuery();
+			logger.debug("Finding All done");
 			return DatabaseMapper.toCompanyList(result);
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -115,13 +119,15 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			if (result.next()) {
 				long id = result.getLong(COMPANY_ID);
 				company.setId(id);
+				logger.debug("Company exists");
 				return true;
 			}
 
+			logger.debug("Company doesn't exists");
 			return false;
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
@@ -140,6 +146,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 					+ " WHERE " + COMPANY_ID + "=?;");
 			statement.setLong(1, id);
 			statement.executeUpdate();
+			logger.debug("Delete done");
 
 			return true;
 		} finally {
