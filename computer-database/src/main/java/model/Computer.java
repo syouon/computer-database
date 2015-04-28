@@ -22,6 +22,9 @@ public class Computer {
 	/** The manufacturer. */
 	private Company company;
 
+	public Computer() {
+	}
+
 	/**
 	 * Instantiates a new computer.
 	 *
@@ -179,5 +182,47 @@ public class Computer {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public class Builder {
+
+		private Computer computer;
+
+		public Builder() {
+			computer = new Computer();
+		}
+
+		public Builder(String name) {
+			computer = new Computer(name);
+		}
+
+		public Builder setId(long id) {
+			computer.id = id;
+			return this;
+		}
+
+		public Builder setName(String name) {
+			computer.name = name;
+			return this;
+		}
+
+		public Builder setIntroduced(LocalDate date) {
+			computer.introductionDate = date;
+			return this;
+		}
+
+		public Builder setDiscontinued(LocalDate date) {
+			computer.discontinuationDate = date;
+			return this;
+		}
+
+		public Builder setCompany(Company company) {
+			computer.company = company;
+			return this;
+		}
+
+		public Computer build() {
+			return computer;
+		}
 	}
 }

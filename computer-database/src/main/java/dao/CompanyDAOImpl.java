@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import model.Company;
@@ -83,13 +84,13 @@ public enum CompanyDAOImpl implements CompanyDAO {
 	@Override
 	public List<Company> findAll() {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
-		PreparedStatement statement = null;
+		Statement statement = null;
 		ResultSet result = null;
 
 		try {
-			statement = conn.prepareStatement("SELECT " + COMPANY_NAME + ","
+			statement = conn.createStatement();
+			result = statement.executeQuery("SELECT " + COMPANY_NAME + ","
 					+ COMPANY_ID + " FROM " + COMPANY_TABLE + ";");
-			result = statement.executeQuery();
 			logger.debug("Finding All done");
 			return DatabaseMapper.toCompanyList(result);
 

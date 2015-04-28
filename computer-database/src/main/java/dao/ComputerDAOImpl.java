@@ -266,15 +266,15 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	@Override
 	public List<Computer> findAll() {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
-		PreparedStatement statement = null;
+		Statement statement = null;
 		ResultSet result = null;
 
 		try {
-			statement = conn.prepareStatement("SELECT " + COMPUTER_ID
+			statement = conn.createStatement();
+			result = statement.executeQuery("SELECT " + COMPUTER_ID
 					+ " as c_id, " + COMPUTER_NAME + " as c_name, "
 					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
 					+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE + ";");
-			result = statement.executeQuery();
 			return DatabaseMapper.toComputerList(result);
 
 		} catch (SQLException e) {
@@ -442,13 +442,13 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	@Override
 	public int count() {
 		Connection conn = ConnectionFactory.getInstance().openConnection();
-		PreparedStatement statement = null;
+		Statement statement = null;
 		ResultSet result = null;
 
 		try {
-			statement = conn.prepareStatement("SELECT COUNT(*) FROM "
-					+ COMPUTER_TABLE);
-			result = statement.executeQuery();
+			statement = conn.createStatement();
+			result = statement.executeQuery("SELECT COUNT(*) FROM "
+					+ COMPUTER_TABLE + ";");
 			result.next();
 			return result.getInt(1);
 
