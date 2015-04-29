@@ -140,6 +140,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, null);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 

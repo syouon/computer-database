@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.ComputerDTO;
 import mapper.DTOMapper;
 import model.Company;
 import model.Computer;
@@ -97,7 +98,8 @@ public class EditComputerServlet extends HttpServlet {
 					.getRequestDispatcher("/WEB-INF/editComputer.jsp")
 					.forward(request, response);
 		} else {
-			Computer newComputer = new Computer(id, newName);
+			Computer newComputer = new Computer.Builder(newName).setId(id)
+					.build();
 			if (!newIntroduced.equals("")) {
 				newComputer.setIntroductionDate(LocalDate.parse(newIntroduced));
 			}

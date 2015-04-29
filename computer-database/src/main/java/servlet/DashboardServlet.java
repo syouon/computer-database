@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dto.ComputerDTO;
 import mapper.DTOMapper;
 import model.Computer;
 import service.ComputerService;
@@ -44,24 +45,39 @@ public class DashboardServlet extends HttpServlet {
 		String range = request.getParameter("range");
 		String search = request.getParameter("search");
 		String orderBy = request.getParameter("orderby");
-		String desc = request.getParameter("desc");
+		String descParam = request.getParameter("desc");
 		String change = request.getParameter("change");
 
-		page.setDesc(desc);
-		page.setRange(range);
-		page.setPage(pageParam);
+		boolean desc = false;
+
+		if (descParam != null && !descParam.equals("")
+				&& descParam.equals("true")) {
+			desc = true;
+		} else {
+			desc = false;
+		}
+
 		if (change != null && !change.equals("") && change.equals("true")) {
-			page.reverseDesc();
-			if (page.isDesc()) {
-				desc = "true";
+			desc = !desc;
+			if (desc) {
+				descParam = "true";
 			} else {
-				desc = "false";
+				descParam = "false";
 			}
 		}
 
 		int allComputerSize = 0;
-		int nbPerPage = page.getRange();
-		int currentPage = page.getPage();
+		int nbPerPage = 10;
+		int currentPage = 1;
+
+		if (pageParam != null && !pageParam.equals("")
+				&& pageParam.matches("\\d*")) {
+			currentPage = Integer.parseInt(pageParam);
+		}
+
+		if (range != null && !range.equals("") && range.matches("\\d*")) {
+			nbPerPage = Integer.parseInt(range);
+		}
 
 		List<ComputerDTO> dtos = new ArrayList<>();
 		List<Computer> computers = null;
@@ -70,7 +86,7 @@ public class DashboardServlet extends HttpServlet {
 			if (orderBy != null && !orderBy.equals("")) {
 				computers = service.listComputers(search, (currentPage - 1)
 						* nbPerPage, nbPerPage, normalizeOrderBy(orderBy),
-						page.isDesc());
+						desc);
 			} else {
 				computers = service.listComputers(search, (currentPage - 1)
 						* nbPerPage, nbPerPage);
@@ -80,7 +96,7 @@ public class DashboardServlet extends HttpServlet {
 			if (orderBy != null && !orderBy.equals("")) {
 				computers = service.listComputers(
 						(currentPage - 1) * nbPerPage, nbPerPage,
-						normalizeOrderBy(orderBy), page.isDesc());
+						normalizeOrderBy(orderBy), desc);
 			} else {
 				computers = service.listComputers(
 						(currentPage - 1) * nbPerPage, nbPerPage);
@@ -92,7 +108,7 @@ public class DashboardServlet extends HttpServlet {
 		for (Computer c : computers) {
 			dtos.add(DTOMapper.toComputerDTO(c));
 		}
-
+		
 		request.setAttribute("currentRange", nbPerPage);
 		request.setAttribute("computersNumber", allComputerSize);
 		request.setAttribute("pageNumber", allComputerSize / nbPerPage);
@@ -100,7 +116,7 @@ public class DashboardServlet extends HttpServlet {
 		request.setAttribute("page", currentPage);
 		request.setAttribute("search", search);
 		request.setAttribute("orderBy", orderBy);
-		request.setAttribute("desc", desc);
+		request.setAttribute("desc", descParam);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
 				.forward(request, response);
 	}

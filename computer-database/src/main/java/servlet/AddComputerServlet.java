@@ -65,7 +65,7 @@ public class AddComputerServlet extends HttpServlet {
 		String discontinued = request.getParameter("discontinued");
 		String companyId = request.getParameter("company");
 
-		Computer computer = new Computer(name);
+		Computer computer = new Computer.Builder(name).build();
 
 		if (introduced != null && !introduced.equals("")
 				&& Utils.isWellFormedDate(introduced)) {

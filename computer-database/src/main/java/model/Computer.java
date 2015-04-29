@@ -184,13 +184,9 @@ public class Computer {
 		return true;
 	}
 
-	public class Builder {
+	public static class Builder {
 
 		private Computer computer;
-
-		public Builder() {
-			computer = new Computer();
-		}
 
 		public Builder(String name) {
 			computer = new Computer(name);

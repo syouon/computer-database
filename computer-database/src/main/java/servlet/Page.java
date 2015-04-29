@@ -16,9 +16,7 @@ public class Page {
 	}
 
 	public void setPage(String page) {
-		if (page != null && !page.equals("") && page.matches("\\d*")) {
-			this.page = Integer.parseInt(page);
-		}
+		
 	}
 
 	public int getRange() {
@@ -26,9 +24,7 @@ public class Page {
 	}
 
 	public void setRange(String range) {
-		if (range != null && !range.equals("") && range.matches("\\d*")) {
-			this.range = Integer.parseInt(range);
-		}
+		
 	}
 
 	public boolean isDesc() {
@@ -36,12 +32,7 @@ public class Page {
 	}
 
 	public void setDesc(String descState) {
-		if (descState != null && !descState.equals("")
-				&& descState.equals("true")) {
-			desc = true;
-		} else {
-			desc = false;
-		}
+		
 	}
 
 	public void reverseDesc() {

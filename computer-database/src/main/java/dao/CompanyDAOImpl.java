@@ -153,6 +153,7 @@ public enum CompanyDAOImpl implements CompanyDAO {
 		} finally {
 			ConnectionFactory.getInstance().closeResultSetAndStatement(
 					statement, null);
+			ConnectionFactory.getInstance().closeConnection();
 		}
 	}
 }

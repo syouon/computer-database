@@ -16,7 +16,7 @@ public class UpdateComputerChoice extends Choice {
 		LocalDate discontinued = askForDiscontinuationDate();
 		Company company = askForCompany();
 
-		Computer computer = new Computer(id, "");
+		Computer computer = new Computer.Builder("").setId(id).build();
 		computer.setIntroductionDate(introduced);
 		computer.setDiscontinuationDate(discontinued);
 

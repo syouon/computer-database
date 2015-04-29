@@ -2,9 +2,9 @@ package mapper;
 
 import java.time.LocalDate;
 
+import dto.ComputerDTO;
 import model.Company;
 import model.Computer;
-import servlet.ComputerDTO;
 
 /* Fait le lien entre le modele objet et
  * les resultats obtenus par une requete

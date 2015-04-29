@@ -39,7 +39,7 @@ public class DatabaseMapper {
 					.getTimestamp(COMPUTER_DISCONTINUED));
 			long company_id = result.getLong(COMPUTER_COMPANYID);
 			Company company = CompanyDAOImpl.getInstance().find(company_id);
-			Computer computer = new Computer(id, name);
+			Computer computer = new Computer.Builder(name).setId(id).build();
 			computer.setIntroductionDate(introduced);
 			computer.setDiscontinuationDate(discontinued);
 			computer.setCompany(company);
@@ -91,7 +91,7 @@ public class DatabaseMapper {
 					.getTimestamp(COMPUTER_INTRODUCED));
 			LocalDate discontinued = DateMapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_DISCONTINUED));
-			computer = new Computer(id, name);
+			computer = new Computer.Builder(name).setId(id).build();
 
 			String companyName = result.getString(COMPANY_NAME);
 			if (companyName != null) {

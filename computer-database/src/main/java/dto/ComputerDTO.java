@@ -1,4 +1,4 @@
-package servlet;
+package dto;
 
 public class ComputerDTO {
 
