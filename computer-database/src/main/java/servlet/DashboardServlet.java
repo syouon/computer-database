@@ -48,76 +48,82 @@ public class DashboardServlet extends HttpServlet {
 		String descParam = request.getParameter("desc");
 		String change = request.getParameter("change");
 
-		boolean desc = false;
-
+		page.setSearch(search);
+		page.setOrderBy(orderBy);
+		
 		if (descParam != null && !descParam.equals("")
 				&& descParam.equals("true")) {
-			desc = true;
+			page.setDesc(true);
 		} else {
-			desc = false;
+			page.setDesc(false);
 		}
 
 		if (change != null && !change.equals("") && change.equals("true")) {
-			desc = !desc;
-			if (desc) {
-				descParam = "true";
-			} else {
-				descParam = "false";
-			}
+			page.reverseDesc();
 		}
+
+		validatePage(pageParam, page);
+		validateRange(range, page);
+		validateSearch(search, orderBy, page);
 
 		int allComputerSize = 0;
-		int nbPerPage = 10;
-		int currentPage = 1;
-
-		if (pageParam != null && !pageParam.equals("")
-				&& pageParam.matches("\\d*")) {
-			currentPage = Integer.parseInt(pageParam);
-		}
-
-		if (range != null && !range.equals("") && range.matches("\\d*")) {
-			nbPerPage = Integer.parseInt(range);
-		}
-
-		List<ComputerDTO> dtos = new ArrayList<>();
-		List<Computer> computers = null;
-
 		if (search != null && !search.equals("")) {
-			if (orderBy != null && !orderBy.equals("")) {
-				computers = service.listComputers(search, (currentPage - 1)
-						* nbPerPage, nbPerPage, normalizeOrderBy(orderBy),
-						desc);
-			} else {
-				computers = service.listComputers(search, (currentPage - 1)
-						* nbPerPage, nbPerPage);
-			}
 			allComputerSize = service.countSearchResult(search);
 		} else {
-			if (orderBy != null && !orderBy.equals("")) {
-				computers = service.listComputers(
-						(currentPage - 1) * nbPerPage, nbPerPage,
-						normalizeOrderBy(orderBy), desc);
-			} else {
-				computers = service.listComputers(
-						(currentPage - 1) * nbPerPage, nbPerPage);
-			}
 			allComputerSize = service.count();
 		}
 
 		// conversion des computers vers leur DTO
-		for (Computer c : computers) {
+		List<ComputerDTO> dtos = new ArrayList<>();
+		for (Computer c : page.getComputers()) {
 			dtos.add(DTOMapper.toComputerDTO(c));
 		}
-		
-		request.setAttribute("currentRange", nbPerPage);
+
+		request.setAttribute("page", page);
 		request.setAttribute("computersNumber", allComputerSize);
-		request.setAttribute("pageNumber", allComputerSize / nbPerPage);
+		request.setAttribute("pageNumber", allComputerSize / page.getRange());
 		request.setAttribute("computers", dtos);
-		request.setAttribute("page", currentPage);
-		request.setAttribute("search", search);
-		request.setAttribute("orderBy", orderBy);
-		request.setAttribute("desc", descParam);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
 				.forward(request, response);
+	}
+
+	private void validatePage(String param, Page page) {
+		if (param != null && !param.equals("") && param.matches("\\d*")) {
+			page.setPage(Integer.parseInt(param));
+		} else {
+			page.setPage(1);
+		}
+	}
+
+	private void validateRange(String param, Page page) {
+		if (param != null && !param.equals("") && param.matches("\\d*")) {
+			page.setRange(Integer.parseInt(param));
+		} else {
+			page.setRange(10);
+		}
+	}
+
+	private void validateSearch(String searchParam, String orderByParam,
+			Page page) {
+		if (searchParam != null && !searchParam.equals("")) {
+			if (orderByParam != null && !orderByParam.equals("")) {
+				page.setComputers(service.listComputers(searchParam,
+						(page.getPage() - 1) * page.getRange(),
+						page.getRange(), normalizeOrderBy(orderByParam),
+						page.isDesc()));
+			} else {
+				page.setComputers(service.listComputers(searchParam,
+						(page.getPage() - 1) * page.getRange(), page.getRange()));
+			}
+		} else {
+			if (orderByParam != null && !orderByParam.equals("")) {
+				page.setComputers(service.listComputers((page.getPage() - 1)
+						* page.getRange(), page.getRange(),
+						normalizeOrderBy(orderByParam), page.isDesc()));
+			} else {
+				page.setComputers(service.listComputers((page.getPage() - 1)
+						* page.getRange(), page.getRange()));
+			}
+		}
 	}
 }

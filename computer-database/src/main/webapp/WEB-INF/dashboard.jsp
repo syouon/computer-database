@@ -30,7 +30,7 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm"
-						action="DashboardServlet?range=${currentRange}&page=${page}"
+						action="DashboardServlet?range=${page.range}&page=${page}"
 						method="GET" class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
@@ -68,19 +68,23 @@
 							</a>
 						</span></th>
 						<th><mlib:link target="DashboardServlet"
-								range="${currentRange}" page="${page}" orderBy="name"
-								body="Computer name" desc="${desc}" change="true" /></th>
+								range="${page.range}" page="${page.page}" orderBy="name"
+								body="Computer name" desc="${page.desc}" change="true"
+								search="${page.search}" /></th>
 						<th><mlib:link target="DashboardServlet"
-								range="${currentRange}" page="${page}" orderBy="introduced"
-								body="Introduced date" desc="${desc}" change="true" /></th>
+								range="${page.range}" page="${page.page}" orderBy="introduced"
+								body="Introduced date" desc="${page.desc}" change="true"
+								search="${page.search}" /></th>
 						<!-- Table header for Discontinued Date -->
 						<th><mlib:link target="DashboardServlet"
-								range="${currentRange}" page="${page}" orderBy="discontinued"
-								body="Discontinued date" desc="${desc}" change="true" /></th>
+								range="${page.range}" page="${page.page}" orderBy="discontinued"
+								body="Discontinued date" desc="${page.desc}" change="true"
+								search="${page.search}" /></th>
 						<!-- Table header for Company -->
 						<th><mlib:link target="DashboardServlet"
-								range="${currentRange}" page="${page}" orderBy="company"
-								body="Company" desc="${desc}" change="true" /></th>
+								range="${page.range}" page="${page.page}" orderBy="company"
+								body="Company" desc="${page.desc}" change="true"
+								search="${page.search}" /></th>
 
 					</tr>
 				</thead>
@@ -105,25 +109,29 @@
 	<!-- Choix de page -->
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<mlib:pagination page="${page}" currentRange="${currentRange}"
-				pageNumber="${pageNumber}" orderBy="${orderBy}" desc="${desc}" />
+			<mlib:pagination page="${page.page}" currentRange="${page.range}"
+				pageNumber="${pageNumber}" orderBy="${page.orderBy}"
+				desc="${page.desc}" search="${page.search}" />
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>10</button>"
-					range="10" page="1" search="${search}" target="DashboardServlet"
-					orderBy="${orderBy}" desc="${desc}" />
+					range="10" page="1" search="${page.search}"
+					target="DashboardServlet" orderBy="${page.orderBy}"
+					desc="${page.desc}" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>50</button>"
-					range="50" page="1" search="${search}" target="DashboardServlet"
-					orderBy="${orderBy}" desc="${desc}" />
+					range="50" page="1" search="${page.search}"
+					target="DashboardServlet" orderBy="${page.orderBy}"
+					desc="${page.desc}" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>100</button>"
-					range="100" page="1" search="${search}" target="DashboardServlet"
-					orderBy="${orderBy}" desc="${desc}" />
+					range="100" page="1" search="${page.search}"
+					target="DashboardServlet" orderBy="${page.orderBy}"
+					desc="${page.desc}" />
 			</div>
 		</div>
 	</footer>

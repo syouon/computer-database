@@ -1,41 +1,67 @@
 package servlet;
 
+import java.util.List;
+
+import model.Computer;
+
 public class Page {
 
 	private int page;
 	private int range;
+	private List<Computer> computers;
 	private boolean desc;
-
-	public Page() {
-		page = 1;
-		range = 10;
-	}
+	private String search;
+	private String orderBy;
 
 	public int getPage() {
 		return page;
 	}
 
-	public void setPage(String page) {
-		
+	public void setPage(int page) {
+		this.page = page;
 	}
 
 	public int getRange() {
 		return range;
 	}
 
-	public void setRange(String range) {
-		
+	public void setRange(int range) {
+		this.range = range;
+	}
+
+	public List<Computer> getComputers() {
+		return computers;
+	}
+
+	public void setComputers(List<Computer> computers) {
+		this.computers = computers;
 	}
 
 	public boolean isDesc() {
 		return desc;
 	}
 
-	public void setDesc(String descState) {
-		
+	public void setDesc(boolean desc) {
+		this.desc = desc;
+	}
+	
+	public void reverseDesc() {
+		desc = !desc;
 	}
 
-	public void reverseDesc() {
-		this.desc = !this.desc;
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
 	}
 }
