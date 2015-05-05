@@ -6,8 +6,14 @@ import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 import model.Company;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import service.CompanyService;
+import service.CompanyServiceImpl;
 import service.ComputerService;
+import service.ComputerServiceImpl;
 
 /* Un choix represente une entree du menu, une des options
  * offertes a l'utilisateur.
@@ -20,6 +26,13 @@ public abstract class Choice {
 
 	protected CompanyService companyService;
 	protected ComputerService computerService;
+
+	public Choice() {
+		ApplicationContext context = new ClassPathXmlApplicationContext(
+				"applicationContext.xml");
+		companyService = context.getBean(CompanyServiceImpl.class);
+		computerService = context.getBean(ComputerServiceImpl.class);
+	}
 
 	/**
 	 * Ask for computer id.

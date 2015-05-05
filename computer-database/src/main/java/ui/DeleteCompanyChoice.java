@@ -8,8 +8,7 @@ public class DeleteCompanyChoice extends Choice {
 	public void execute() {
 		Company company = askForCompany();
 		if (!companyService.exists(company)
-				|| !companyService.deleteCompany(
-						company.getId())) {
+				|| !companyService.deleteCompany(company.getId())) {
 			System.out.println("Deletion failed!");
 		}
 	}
