@@ -1,3 +1,5 @@
+import static dao.DatabaseNaming.COMPANY_TABLE;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,13 +14,23 @@ import org.dbunit.PropertiesBasedJdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import util.Utils;
-import dao.CompanyDAOImpl;
+import dao.CompanyDAO;
 import dao.ConnectionFactory;
-import static dao.DatabaseNaming.COMPANY_TABLE;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/applicationContext.xml" })
 public class CompanyDAOTest extends DBTestCase {
+
+	@Autowired
+	private CompanyDAO companyDAO;
+	@Autowired
+	private ConnectionFactory connection;
 
 	public CompanyDAOTest() {
 		Properties prop = Utils.loadProperties("database.properties");
@@ -36,18 +48,17 @@ public class CompanyDAOTest extends DBTestCase {
 
 	@Test
 	public void testFind() {
-		List<Company> companies = CompanyDAOImpl.getInstance().findAll();
+		List<Company> companies = companyDAO.findAll();
 
-		Company company = CompanyDAOImpl.getInstance().find(
-				companies.get(0).getId());
+		Company company = companyDAO.find(companies.get(0).getId());
 		assertEquals("Should be equal", company, companies.get(0));
 	}
 
 	@Test
 	public void testFindAll() {
-		List<Company> company = CompanyDAOImpl.getInstance().findAll();
+		List<Company> company = companyDAO.findAll();
 
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -66,9 +77,8 @@ public class CompanyDAOTest extends DBTestCase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
@@ -76,18 +86,17 @@ public class CompanyDAOTest extends DBTestCase {
 	public void testExists() {
 		Company company = new Company("Apple");
 		Company falseCompany = new Company("InexistantCorp");
-		assertTrue("Apple should exist",
-				CompanyDAOImpl.getInstance().exists(company));
-		assertFalse("InexistantCorp should not exist", CompanyDAOImpl
-				.getInstance().exists(falseCompany));
+		assertTrue("Apple should exist ", companyDAO.exists(company));
+		assertFalse("InexistantCorp should not exist",
+				companyDAO.exists(falseCompany));
 	}
 
 	@Test
 	public void testDelete() {
 		try {
-			assertNotNull(CompanyDAOImpl.getInstance().find(3));
-			CompanyDAOImpl.getInstance().delete(3);
-			assertNull(CompanyDAOImpl.getInstance().find(3));
+			assertNotNull(companyDAO.find(3));
+			companyDAO.delete(3);
+			assertNull(companyDAO.find(3));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

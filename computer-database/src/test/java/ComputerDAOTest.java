@@ -13,13 +13,24 @@ import org.dbunit.PropertiesBasedJdbcDatabaseTester;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import util.Utils;
-import dao.ComputerDAOImpl;
+import dao.ComputerDAO;
 import dao.ConnectionFactory;
 import dao.DatabaseNaming;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/applicationContext.xml" })
 public class ComputerDAOTest extends DBTestCase {
+
+	@Autowired
+	private ConnectionFactory connection;
+	@Autowired
+	private ComputerDAO computerDAO;
 
 	public ComputerDAOTest() {
 		Properties prop = Utils.loadProperties("database.properties");
@@ -38,10 +49,10 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testCreate() {
 		Computer computer = new Computer("ComputerTest");
-		long id = ComputerDAOImpl.getInstance().create(computer);
+		long id = computerDAO.create(computer);
 		computer.setId(id);
 
-		List<Computer> newComputers = ComputerDAOImpl.getInstance().findAll();
+		List<Computer> newComputers = computerDAO.findAll();
 
 		// L'element ajoute doit etre le meme que computer
 		assertTrue("Computer added must be the same as ComputerTest",
@@ -51,24 +62,24 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testDelete() {
 		Computer computer = new Computer("ComputerTest");
-		long id = ComputerDAOImpl.getInstance().create(computer);
+		long id = computerDAO.create(computer);
 		computer.setId(id);
 
 		// Suppression de l'element ajoute
-		ComputerDAOImpl.getInstance().delete(computer.getId());
+		computerDAO.delete(computer.getId());
 
-		assertNull("ComputerTest should not exist", ComputerDAOImpl
-				.getInstance().find(computer.getId()));
+		assertNull("ComputerTest should not exist",
+				computerDAO.find(computer.getId()));
 	}
 
 	@Test
 	public void testDeleteByCompany() {
 		try {
-			assertNotNull(ComputerDAOImpl.getInstance().find(3));
-			assertNotNull(ComputerDAOImpl.getInstance().find(4));
-			ComputerDAOImpl.getInstance().deleteByCompany(2);
-			assertNull(ComputerDAOImpl.getInstance().find(3));
-			assertNull(ComputerDAOImpl.getInstance().find(4));
+			assertNotNull(computerDAO.find(3));
+			assertNotNull(computerDAO.find(4));
+			computerDAO.deleteByCompany(2);
+			assertNull(computerDAO.find(3));
+			assertNull(computerDAO.find(4));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -77,15 +88,14 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testUpdate() {
 		Computer computer = new Computer("ComputerTest");
-		long id = ComputerDAOImpl.getInstance().create(computer);
+		long id = computerDAO.create(computer);
 		computer.setId(id);
 
 		Computer updatedComputer = new Computer(id, "ComputerTest");
 		updatedComputer.setIntroductionDate(LocalDate.now());
 
-		ComputerDAOImpl.getInstance().update(updatedComputer);
-		Computer newComputer = ComputerDAOImpl.getInstance().find(
-				updatedComputer.getId());
+		computerDAO.update(updatedComputer);
+		Computer newComputer = computerDAO.find(updatedComputer.getId());
 
 		assertTrue("Should not be equal", !computer.equals(newComputer));
 	}
@@ -93,19 +103,19 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testFind() {
 		Computer computer = new Computer("ComputerTest");
-		long id = ComputerDAOImpl.getInstance().create(computer);
+		long id = computerDAO.create(computer);
 		computer.setId(id);
 
-		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
+		List<Computer> computers = computerDAO.findAll();
 
 		assertNotNull("Should not be null", computers.contains(computer));
 	}
 
 	@Test
 	public void testFindAll() {
-		List<Computer> computers = ComputerDAOImpl.getInstance().findAll();
+		List<Computer> computers = computerDAO.findAll();
 
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		Statement statement = null;
 		ResultSet result = null;
 
@@ -134,7 +144,7 @@ public class ComputerDAOTest extends DBTestCase {
 					statement.close();
 				}
 
-				ConnectionFactory.getInstance().closeConnection();
+				connection.closeConnection();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
