@@ -3,17 +3,17 @@ package service;
 import java.util.List;
 
 import model.Computer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import dao.ComputerDAO;
-import dao.ComputerDAOImpl;
 
-public enum ComputerServiceImpl implements ComputerService {
-	INSTANCE;
+@Service
+public class ComputerServiceImpl implements ComputerService {
 
+	@Autowired
 	private ComputerDAO dao;
-
-	private ComputerServiceImpl() {
-		dao = ComputerDAOImpl.getInstance();
-	}
 
 	public List<Computer> listComputers(String regex, int start, int range,
 			String orderBy, boolean desc) {
@@ -59,9 +59,5 @@ public enum ComputerServiceImpl implements ComputerService {
 
 	public int countSearchResult(String regex) {
 		return dao.countSearchResult(regex);
-	}
-
-	public static ComputerServiceImpl getInstance() {
-		return INSTANCE;
 	}
 }

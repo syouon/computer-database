@@ -3,7 +3,6 @@ package ui;
 import java.util.List;
 
 import model.Company;
-import service.CompanyServiceImpl;
 
 public class CompanyPager extends Pager {
 
@@ -11,7 +10,7 @@ public class CompanyPager extends Pager {
 
 	public CompanyPager() {
 		super();
-		entities = CompanyServiceImpl.getInstance().listCompanies(start,
+		entities = companyService.listCompanies(start,
 				entitiesNumber);
 	}
 
@@ -24,7 +23,7 @@ public class CompanyPager extends Pager {
 	
 	@Override
 	public void refresh() {
-		entities = CompanyServiceImpl.getInstance().listCompanies(start,
+		entities = companyService.listCompanies(start,
 				entitiesNumber);
 	}
 

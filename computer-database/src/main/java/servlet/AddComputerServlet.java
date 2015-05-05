@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,30 +13,34 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Company;
 import model.Computer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import service.CompanyService;
-import service.CompanyServiceImpl;
 import service.ComputerService;
-import service.ComputerServiceImpl;
 import util.Utils;
 
 /**
  * Servlet implementation class AddComputerServlet
  */
+@Controller
 @WebServlet("/AddComputerServlet")
 public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	@Autowired
 	private CompanyService companyService;
+	@Autowired
 	private ComputerService computerService;
+
 	private List<Company> companies;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AddComputerServlet() {
-		super();
-		companyService = CompanyServiceImpl.getInstance();
-		computerService = ComputerServiceImpl.getInstance();
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		companies = companyService.listCompanies();
 	}
 

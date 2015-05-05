@@ -4,10 +4,15 @@ import java.time.LocalDate;
 
 import model.Company;
 import model.Computer;
-import service.ComputerServiceImpl;
-import dao.CompanyDAOImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import dao.CompanyDAO;
 
 public class UpdateComputerChoice extends Choice {
+
+	@Autowired
+	private CompanyDAO dao;
 
 	@Override
 	public void execute() {
@@ -20,11 +25,11 @@ public class UpdateComputerChoice extends Choice {
 		computer.setIntroductionDate(introduced);
 		computer.setDiscontinuationDate(discontinued);
 
-		if (company != null && CompanyDAOImpl.getInstance().exists(company)) {
+		if (company != null && dao.exists(company)) {
 			computer.setCompany(company);
 		}
 
-		if (!ComputerServiceImpl.getInstance().updateComputer(computer)) {
+		if (!computerService.updateComputer(computer)) {
 			System.out.println("Update failed");
 		}
 	}

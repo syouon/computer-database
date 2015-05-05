@@ -26,8 +26,8 @@ public class DatabaseMapper {
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public static List<Computer> toComputerList(ResultSet result)
-			throws SQLException {
+	public static List<Computer> toComputerList(ResultSet result,
+			CompanyDAO companyDAO) throws SQLException {
 		List<Computer> computers = new ArrayList<>();
 
 		while (result.next()) {
@@ -38,7 +38,7 @@ public class DatabaseMapper {
 			LocalDate discontinued = DateMapper.timestampToLocalDate(result
 					.getTimestamp(COMPUTER_DISCONTINUED));
 			long company_id = result.getLong(COMPUTER_COMPANYID);
-			Company company = CompanyDAOImpl.getInstance().find(company_id);
+			Company company = companyDAO.find(company_id);
 			Computer computer = new Computer.Builder(name).setId(id).build();
 			computer.setIntroductionDate(introduced);
 			computer.setDiscontinuationDate(discontinued);

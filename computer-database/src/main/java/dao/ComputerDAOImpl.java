@@ -19,23 +19,27 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import model.Company;
 import model.Computer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import exception.DAOException;
 
-public enum ComputerDAOImpl implements ComputerDAO {
-	INSTANCE;
+@Repository("computerDAO")
+public class ComputerDAOImpl implements ComputerDAO {
 	private Logger logger;
+
+	@Autowired
+	private ConnectionFactory connection;
+	@Autowired
+	private CompanyDAO companyDAO;
 
 	private ComputerDAOImpl() {
 		logger = LoggerFactory.getLogger(this.getClass());
-	}
-
-	public static ComputerDAO getInstance() {
-		return INSTANCE;
 	}
 
 	@Override
@@ -54,11 +58,11 @@ public enum ComputerDAOImpl implements ComputerDAO {
 		// Verification de l'existence de company
 		Company company = computer.getCompany();
 		Long companyId = null;
-		if (company != null && CompanyDAOImpl.getInstance().exists(company)) {
+		if (company != null && companyDAO.exists(company)) {
 			companyId = company.getId();
 		}
 
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 
 		try {
 			if (companyId == null) { // si company n'existe pas
@@ -93,17 +97,15 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(null,
-					result);
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, null);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(null, result);
+			connection.closeResultSetAndStatement(statement, null);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public boolean delete(long id) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 
 		try {
@@ -118,15 +120,14 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, null);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, null);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public boolean deleteByCompany(long companyId) throws SQLException {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 
 		try {
@@ -138,9 +139,8 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 			return true;
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, null);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, null);
+			connection.closeConnection();
 		}
 	}
 
@@ -151,7 +151,7 @@ public enum ComputerDAOImpl implements ComputerDAO {
 	}
 
 	private boolean updateName(Computer computer) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement nameStatement = null;
 
 		try {
@@ -168,14 +168,13 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					nameStatement, null);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(nameStatement, null);
+			connection.closeConnection();
 		}
 	}
 
 	private boolean updateDate(Computer computer) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement dateStatement = null;
 
 		try {
@@ -198,9 +197,8 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					dateStatement, null);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(dateStatement, null);
+			connection.closeConnection();
 		}
 	}
 
@@ -210,8 +208,8 @@ public enum ComputerDAOImpl implements ComputerDAO {
 
 		try {
 			if (computer.getCompany() != null) {
-				if (CompanyDAOImpl.getInstance().exists(computer.getCompany())) {
-					conn = ConnectionFactory.getInstance().openConnection();
+				if (companyDAO.exists(computer.getCompany())) {
+					conn = connection.openConnection();
 					companyStatement = conn.prepareStatement("UPDATE "
 							+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
 							+ "=? WHERE " + COMPUTER_ID + "=?;");
@@ -222,23 +220,28 @@ public enum ComputerDAOImpl implements ComputerDAO {
 				}
 
 				return false;
+			} else {
+				conn = connection.openConnection();
+				companyStatement = conn.prepareStatement("UPDATE "
+						+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
+						+ "=NULL WHERE " + COMPUTER_ID + "=?;");
+				companyStatement.setLong(1, computer.getId());
+				companyStatement.executeUpdate();
+				return true;
 			}
-			logger.debug("Company updated");
-
-			return true;
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					companyStatement, null);
-			ConnectionFactory.getInstance().closeConnection();
+			logger.debug("Company updated");
+			connection.closeResultSetAndStatement(companyStatement, null);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public Computer find(long id) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -258,15 +261,14 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public List<Computer> findAll() {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		Statement statement = null;
 		ResultSet result = null;
 
@@ -276,21 +278,20 @@ public enum ComputerDAOImpl implements ComputerDAO {
 					+ " as c_id, " + COMPUTER_NAME + " as c_name, "
 					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
 					+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE + ";");
-			return DatabaseMapper.toComputerList(result);
+			return DatabaseMapper.toComputerList(result, companyDAO);
 
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public List<Computer> findAll(int start, int range) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -303,22 +304,21 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			statement.setInt(1, range);
 			statement.setInt(2, start);
 			result = statement.executeQuery();
-			return DatabaseMapper.toComputerList(result);
+			return DatabaseMapper.toComputerList(result, companyDAO);
 
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public List<Computer> findAll(int start, int range, String orderBy,
 			boolean desc) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -345,21 +345,20 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			statement.setInt(1, range);
 			statement.setInt(2, start);
 			result = statement.executeQuery();
-			return DatabaseMapper.toComputerList(result);
+			return DatabaseMapper.toComputerList(result, companyDAO);
 
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public List<Computer> findAll(String regex, int start, int range) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -378,21 +377,20 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			statement.setInt(4, start);
 			result = statement.executeQuery();
 
-			return DatabaseMapper.toComputerList(result);
+			return DatabaseMapper.toComputerList(result, companyDAO);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public List<Computer> findAll(String regex, int start, int range,
 			String orderBy, boolean desc) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -429,20 +427,19 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			statement.setInt(4, start);
 			result = statement.executeQuery();
 
-			return DatabaseMapper.toComputerList(result);
+			return DatabaseMapper.toComputerList(result, companyDAO);
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public int count() {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		Statement statement = null;
 		ResultSet result = null;
 
@@ -457,15 +454,14 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public int countSearchResult(String regex) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -485,9 +481,8 @@ public enum ComputerDAOImpl implements ComputerDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 }

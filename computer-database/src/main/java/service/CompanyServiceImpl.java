@@ -4,43 +4,50 @@ import java.sql.SQLException;
 import java.util.List;
 
 import model.Company;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import dao.CompanyDAO;
-import dao.CompanyDAOImpl;
-import dao.ComputerDAOImpl;
+import dao.ComputerDAO;
 import dao.ConnectionFactory;
 
-public enum CompanyServiceImpl implements CompanyService {
-	INSTANCE;
+@Service
+public class CompanyServiceImpl implements CompanyService {
 
-	private CompanyDAO dao;
+	@Autowired
+	private CompanyDAO companyDAO;
+	@Autowired
+	private ComputerDAO computerDAO;
+	@Autowired
+	private ConnectionFactory factory;
 
 	private CompanyServiceImpl() {
-		dao = CompanyDAOImpl.getInstance();
+		// dao = CompanyDAOImpl.getInstance();
 	}
 
 	public List<Company> listCompanies(int start, int range) {
-		return dao.findAll(start, range);
+		return companyDAO.findAll(start, range);
 	}
 
 	public List<Company> listCompanies() {
-		return dao.findAll();
+		return companyDAO.findAll();
 	}
 
 	public Company find(long id) {
-		return dao.find(id);
+		return companyDAO.find(id);
 	}
 
 	public boolean exists(Company company) {
-		return dao.exists(company);
+		return companyDAO.exists(company);
 	}
 
 	public boolean deleteCompany(long id) {
-		ConnectionFactory factory = ConnectionFactory.getInstance();
 
 		try {
 			factory.startTransaction();
-			ComputerDAOImpl.getInstance().deleteByCompany(id);
-			dao.delete(id);
+			computerDAO.deleteByCompany(id);
+			companyDAO.delete(id);
 			factory.endTransaction();
 
 			return true;
@@ -50,9 +57,5 @@ public enum CompanyServiceImpl implements CompanyService {
 		} finally {
 			factory.closeConnection();
 		}
-	}
-
-	public static CompanyServiceImpl getInstance() {
-		return INSTANCE;
 	}
 }

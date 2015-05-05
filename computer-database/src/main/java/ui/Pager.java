@@ -1,9 +1,14 @@
 package ui;
 
+import service.CompanyService;
+import service.ComputerService;
+
 public abstract class Pager {
 
 	protected int entitiesNumber;
 	protected int start;
+	protected CompanyService companyService;
+	protected ComputerService computerService;
 
 	public Pager() {
 		entitiesNumber = 10;

@@ -15,24 +15,25 @@ import model.Company;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import exception.DAOException;
 
-public enum CompanyDAOImpl implements CompanyDAO {
-	INSTANCE;
+@Repository("companyDAO")
+public class CompanyDAOImpl implements CompanyDAO {
 	private Logger logger;
+
+	@Autowired
+	private ConnectionFactory connection;
 
 	private CompanyDAOImpl() {
 		logger = LoggerFactory.getLogger(this.getClass());
 	}
 
-	public static CompanyDAOImpl getInstance() {
-		return INSTANCE;
-	}
-
 	@Override
 	public Company find(long id) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -47,16 +48,15 @@ public enum CompanyDAOImpl implements CompanyDAO {
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 			throw new DAOException();
-		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
-		}
+		}/*
+		 * finally { connection.closeResultSetAndStatement(statement, result);
+		 * connection.closeConnection(); }
+		 */
 	}
 
 	@Override
 	public List<Company> findAll(int start, int range) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -75,15 +75,14 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public List<Company> findAll() {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		Statement statement = null;
 		ResultSet result = null;
 
@@ -98,16 +97,15 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	/* Modifie l'objet company en ajoutant son id */
 	@Override
 	public boolean exists(Company company) {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 		ResultSet result = null;
 
@@ -131,15 +129,14 @@ public enum CompanyDAOImpl implements CompanyDAO {
 			logger.error(e.getMessage());
 			throw new DAOException();
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, result);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, result);
+			connection.closeConnection();
 		}
 	}
 
 	@Override
 	public boolean delete(long id) throws SQLException {
-		Connection conn = ConnectionFactory.getInstance().openConnection();
+		Connection conn = connection.openConnection();
 		PreparedStatement statement = null;
 
 		try {
@@ -151,9 +148,8 @@ public enum CompanyDAOImpl implements CompanyDAO {
 
 			return true;
 		} finally {
-			ConnectionFactory.getInstance().closeResultSetAndStatement(
-					statement, null);
-			ConnectionFactory.getInstance().closeConnection();
+			connection.closeResultSetAndStatement(statement, null);
+			connection.closeConnection();
 		}
 	}
 }

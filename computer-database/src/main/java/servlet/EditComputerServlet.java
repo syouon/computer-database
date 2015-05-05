@@ -4,39 +4,43 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dto.ComputerDTO;
 import mapper.DTOMapper;
 import model.Company;
 import model.Computer;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import service.CompanyService;
-import service.CompanyServiceImpl;
 import service.ComputerService;
-import service.ComputerServiceImpl;
 import util.Utils;
+import dto.ComputerDTO;
 
 /**
  * Servlet implementation class EditComputerServlet
  */
 @WebServlet("/EditComputerServlet")
+@Controller
 public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	@Autowired
 	private ComputerService computerService;
+	@Autowired
 	private CompanyService companyService;
 	private List<Company> companies;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public EditComputerServlet() {
-		super();
-		computerService = ComputerServiceImpl.getInstance();
-		companyService = CompanyServiceImpl.getInstance();
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 		companies = companyService.listCompanies();
 	}
 

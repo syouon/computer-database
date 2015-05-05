@@ -4,67 +4,34 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import util.Utils;
-
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
-
-import exception.BoneCPInitException;
 import exception.ConnectionException;
 import exception.DAOException;
-import exception.DriverNotFoundException;
 import exception.RollBackException;
 
-public enum ConnectionFactory {
-	INSTANCE;
+@Component
+public class ConnectionFactory {
 
-	private Properties prop;
-	private BoneCP pool;
+	@Autowired
+	private DataSource datasource;
 	private Logger logger;
 	private static final ThreadLocal<Connection> LOCALCONN = new ThreadLocal<>();
 
 	private ConnectionFactory() {
-		// Logger
 		logger = LoggerFactory.getLogger(this.getClass());
-
-		// Properties
-		prop = Utils.loadProperties("database.properties");
-
-		// Chargement du Driver
-		try {
-			Class.forName(prop.getProperty("driver"));
-			logger.debug("Driver loaded");
-		} catch (ClassNotFoundException e) {
-			logger.error(e.getMessage());
-			throw new DriverNotFoundException();
-		}
-
-		// Pool de connexion
-		BoneCPConfig config = new BoneCPConfig();
-		config.setJdbcUrl(prop.getProperty("url"));
-		config.setUsername(prop.getProperty("user"));
-		config.setPassword(prop.getProperty("password"));
-		config.setMinConnectionsPerPartition(1);
-		config.setMaxConnectionsPerPartition(5);
-		config.setPartitionCount(2);
-		try {
-			pool = new BoneCP(config);
-			logger.debug("BoneCP initialized");
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new BoneCPInitException();
-		}
 	}
 
 	public Connection openConnection() {
 		try {
 			if (LOCALCONN.get() == null) {
-				LOCALCONN.set(pool.getConnection());
+				LOCALCONN.set(datasource.getConnection());
 			}
 
 			logger.debug("Connection get");
@@ -87,10 +54,6 @@ public enum ConnectionFactory {
 			logger.error(e.getMessage());
 			throw new ConnectionException();
 		}
-	}
-
-	public static ConnectionFactory getInstance() {
-		return INSTANCE;
 	}
 
 	public void startTransaction() throws SQLException {
@@ -118,11 +81,11 @@ public enum ConnectionFactory {
 	public void closeResultSetAndStatement(Statement statement, ResultSet result) {
 
 		try {
-			if (result != null) {
+			if (result != null && !result.isClosed()) {
 				result.close();
 			}
 
-			if (statement != null) {
+			if (statement != null && !statement.isClosed()) {
 				statement.close();
 			}
 

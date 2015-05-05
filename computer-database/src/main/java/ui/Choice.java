@@ -6,6 +6,8 @@ import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 import model.Company;
+import service.CompanyService;
+import service.ComputerService;
 
 /* Un choix represente une entree du menu, une des options
  * offertes a l'utilisateur.
@@ -15,6 +17,9 @@ import model.Company;
  * The Class Choice.
  */
 public abstract class Choice {
+
+	protected CompanyService companyService;
+	protected ComputerService computerService;
 
 	/**
 	 * Ask for computer id.
