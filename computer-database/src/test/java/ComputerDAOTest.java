@@ -74,15 +74,11 @@ public class ComputerDAOTest extends DBTestCase {
 
 	@Test
 	public void testDeleteByCompany() {
-		try {
-			assertNotNull(computerDAO.find(3));
-			assertNotNull(computerDAO.find(4));
-			computerDAO.deleteByCompany(2);
-			assertNull(computerDAO.find(3));
-			assertNull(computerDAO.find(4));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		assertNotNull(computerDAO.find(3));
+		assertNotNull(computerDAO.find(4));
+		computerDAO.deleteByCompany(2);
+		assertNull(computerDAO.find(3));
+		assertNull(computerDAO.find(4));
 	}
 
 	@Test

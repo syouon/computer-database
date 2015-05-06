@@ -1,6 +1,5 @@
 package dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import model.Computer;
@@ -28,7 +27,7 @@ public interface ComputerDAO {
 	 */
 	public boolean delete(long id);
 
-	public boolean deleteByCompany(long companyId) throws SQLException;
+	public boolean deleteByCompany(long companyId);
 
 	/**
 	 * Update.

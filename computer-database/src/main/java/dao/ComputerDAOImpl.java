@@ -19,34 +19,44 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import model.Company;
 import model.Computer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import exception.DAOException;
 
 @Repository("computerDAO")
 public class ComputerDAOImpl implements ComputerDAO {
 	private Logger logger;
 
-	@Autowired
-	private ConnectionFactory connection;
+	private ComputerMapper mapper;
+	private JdbcTemplate jdbc;
+
 	@Autowired
 	private CompanyDAO companyDAO;
 
 	private ComputerDAOImpl() {
 		logger = LoggerFactory.getLogger(this.getClass());
+		mapper = new ComputerMapper();
+	}
+
+	@Autowired
+	public void setDataSource(DataSource dataSource) {
+		jdbc = new JdbcTemplate(dataSource);
 	}
 
 	@Override
 	public long create(Computer computer) {
-		PreparedStatement statement = null;
-		ResultSet result = null;
-
 		LocalDate introductionDate = computer.getIntroductionDate();
 		LocalDate discontinuationDate = computer.getDiscontinuationDate();
 
@@ -62,86 +72,61 @@ public class ComputerDAOImpl implements ComputerDAO {
 			companyId = company.getId();
 		}
 
-		Connection conn = connection.openConnection();
-
-		try {
-			if (companyId == null) { // si company n'existe pas
-				statement = conn.prepareStatement("INSERT INTO "
-						+ COMPUTER_TABLE + "(" + COMPUTER_NAME + ","
-						+ COMPUTER_INTRODUCED + "," + COMPUTER_DISCONTINUED
-						+ ") VALUES (?,?,?);", Statement.RETURN_GENERATED_KEYS);
-			} else {
-				statement = conn.prepareStatement("INSERT INTO "
-						+ COMPUTER_TABLE + "(" + COMPUTER_NAME + ","
-						+ COMPUTER_INTRODUCED + "," + COMPUTER_DISCONTINUED
-						+ "," + COMPUTER_COMPANYID + ") VALUES (?,?,?,?);",
-						Statement.RETURN_GENERATED_KEYS);
-			}
-			statement.setString(1, computer.getName());
-			statement.setTimestamp(2, introduced);
-			statement.setTimestamp(3, discontinued);
-			if (companyId != null) {
-				statement.setLong(4, companyId);
-			}
-			statement.executeUpdate();
-			result = statement.getGeneratedKeys();
-
-			long lastId = -1;
-			if (result.next()) {
-				lastId = result.getLong(1);
-			}
-
-			return lastId;
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(null, result);
-			connection.closeResultSetAndStatement(statement, null);
-			// connection.closeConnection();
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		if (companyId == null) {
+			jdbc.update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(
+						Connection connection) throws SQLException {
+					PreparedStatement ps = connection.prepareStatement(
+							"INSERT INTO " + COMPUTER_TABLE + "("
+									+ COMPUTER_NAME + "," + COMPUTER_INTRODUCED
+									+ "," + COMPUTER_DISCONTINUED
+									+ ") VALUES (?,?,?)",
+							Statement.RETURN_GENERATED_KEYS);
+					ps.setString(1, computer.getName());
+					ps.setTimestamp(2, introduced);
+					ps.setTimestamp(3, discontinued);
+					return ps;
+				}
+			}, keyHolder);
+		} else {
+			final Long copyId = companyId;
+			jdbc.update(new PreparedStatementCreator() {
+				public PreparedStatement createPreparedStatement(
+						Connection connection) throws SQLException {
+					PreparedStatement ps = connection.prepareStatement(
+							"INSERT INTO " + COMPUTER_TABLE + "("
+									+ COMPUTER_NAME + "," + COMPUTER_INTRODUCED
+									+ "," + COMPUTER_DISCONTINUED + ","
+									+ COMPUTER_COMPANYID
+									+ ") VALUES (?,?,?,?);",
+							Statement.RETURN_GENERATED_KEYS);
+					ps.setString(1, computer.getName());
+					ps.setTimestamp(2, introduced);
+					ps.setTimestamp(3, discontinued);
+					ps.setLong(4, copyId);
+					return ps;
+				}
+			}, keyHolder);
 		}
+
+		return (long) keyHolder.getKey();
 	}
 
 	@Override
 	public boolean delete(long id) {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-
-		try {
-			statement = conn.prepareStatement("DELETE FROM " + COMPUTER_TABLE
-					+ " WHERE " + COMPUTER_ID + "=?;");
-			statement.setLong(1, id);
-			statement.executeUpdate();
-			return true;
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-
-		} finally {
-			connection.closeResultSetAndStatement(statement, null);
-			// connection.closeConnection();
-		}
+		jdbc.update("DELETE FROM " + COMPUTER_TABLE + " WHERE " + COMPUTER_ID
+				+ "=?", id);
+		logger.debug("Computer n°{} deleted", id);
+		return true;
 	}
 
 	@Override
-	public boolean deleteByCompany(long companyId) throws SQLException {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-
-		try {
-			statement = conn.prepareStatement("DELETE FROM " + COMPUTER_TABLE
-					+ " WHERE " + COMPUTER_COMPANYID + "=?;");
-			statement.setLong(1, companyId);
-
-			statement.executeUpdate();
-
-			return true;
-		} finally {
-			connection.closeResultSetAndStatement(statement, null);
-			// connection.closeConnection();
-		}
+	public boolean deleteByCompany(long companyId) throws DataAccessException {
+		jdbc.update("DELETE FROM " + COMPUTER_TABLE + " WHERE "
+				+ COMPUTER_COMPANYID + "=?", companyId);
+		logger.debug("Computer n°{} deleted", companyId);
+		return true;
 	}
 
 	@Override
@@ -151,338 +136,219 @@ public class ComputerDAOImpl implements ComputerDAO {
 	}
 
 	private boolean updateName(Computer computer) {
-		Connection conn = connection.openConnection();
-		PreparedStatement nameStatement = null;
-
-		try {
-			nameStatement = conn.prepareStatement("UPDATE " + COMPUTER_TABLE
-					+ " SET " + COMPUTER_NAME + "=? WHERE " + COMPUTER_ID
-					+ "=?;");
-			nameStatement.setString(1, computer.getName());
-			nameStatement.setLong(2, computer.getId());
-			nameStatement.executeUpdate();
-			logger.debug("Name updated");
-
-			return true;
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(nameStatement, null);
-			// connection.closeConnection();
-		}
+		jdbc.update("UPDATE " + COMPUTER_TABLE + " SET " + COMPUTER_NAME
+				+ "=? WHERE " + COMPUTER_ID + "=?", computer.getName(),
+				computer.getId());
+		logger.debug("Computer n°{}'s name is now {}", computer.getId(),
+				computer.getName());
+		return true;
 	}
 
 	private boolean updateDate(Computer computer) {
-		Connection conn = connection.openConnection();
-		PreparedStatement dateStatement = null;
+		Timestamp introduced = DateMapper.localDateToTimestamp(computer
+				.getIntroductionDate());
+		Timestamp discontinued = DateMapper.localDateToTimestamp(computer
+				.getDiscontinuationDate());
 
-		try {
-			// Mise a jour des dates
-			dateStatement = conn
-					.prepareStatement("UPDATE " + COMPUTER_TABLE + " SET "
-							+ COMPUTER_INTRODUCED + "=?, "
-							+ COMPUTER_DISCONTINUED + "=? WHERE " + COMPUTER_ID
-							+ "=?;");
-			dateStatement.setTimestamp(1, DateMapper
-					.localDateToTimestamp(computer.getIntroductionDate()));
-			dateStatement.setTimestamp(2, DateMapper
-					.localDateToTimestamp(computer.getDiscontinuationDate()));
-			dateStatement.setLong(3, computer.getId());
-			dateStatement.executeUpdate();
-			logger.debug("Dates updated");
-
-			return true;
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(dateStatement, null);
-			// connection.closeConnection();
-		}
+		jdbc.update("UPDATE " + COMPUTER_TABLE + " SET " + COMPUTER_INTRODUCED
+				+ "=?, " + COMPUTER_DISCONTINUED + "=? WHERE " + COMPUTER_ID
+				+ "=?", introduced, discontinued, computer.getId());
+		logger.debug("Computer {}'s dates updated", computer.getName());
+		return true;
 	}
 
 	private boolean updateCompany(Computer computer) {
-		Connection conn = null;
-		PreparedStatement companyStatement = null;
-
-		try {
-			if (computer.getCompany() != null) {
-				if (companyDAO.exists(computer.getCompany())) {
-					conn = connection.openConnection();
-					companyStatement = conn.prepareStatement("UPDATE "
-							+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
-							+ "=? WHERE " + COMPUTER_ID + "=?;");
-					companyStatement.setLong(1, computer.getCompany().getId());
-					companyStatement.setLong(2, computer.getId());
-					companyStatement.executeUpdate();
-					return true;
-				}
-
-				return false;
-			} else {
-				conn = connection.openConnection();
-				companyStatement = conn.prepareStatement("UPDATE "
-						+ COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
-						+ "=NULL WHERE " + COMPUTER_ID + "=?;");
-				companyStatement.setLong(1, computer.getId());
-				companyStatement.executeUpdate();
+		if (computer.getCompany() != null) {
+			if (companyDAO.exists(computer.getCompany())) {
+				jdbc.update(
+						"UPDATE " + COMPUTER_TABLE + " SET "
+								+ COMPUTER_COMPANYID + "=? WHERE "
+								+ COMPUTER_ID + "=?", computer.getCompany()
+								.getId(), computer.getId());
 				return true;
 			}
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			logger.debug("Company updated");
-			connection.closeResultSetAndStatement(companyStatement, null);
-			// connection.closeConnection();
+
+			return false;
+		} else {
+			jdbc.update(
+					"UPDATE " + COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
+							+ "=NULL WHERE " + COMPUTER_ID + "=?;",
+					computer.getId());
+			return true;
 		}
 	}
 
 	@Override
 	public Computer find(long id) {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
+		Object[] params = { id };
+		List<Computer> computers = jdbc.query("SELECT c." + COMPUTER_NAME
+				+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+				+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
+				+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
+				+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
+				+ " WHERE c." + COMPUTER_ID + "=?", params, mapper);
 
-		try {
-			statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
-					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-					+ " WHERE c." + COMPUTER_ID + "=?;");
-			statement.setLong(1, id);
-			result = statement.executeQuery();
-			return DatabaseMapper.toComputer(result);
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
+		if (computers.isEmpty()) {
+			logger.debug("Computer n°{} doesn't exist", id);
+			return null;
+		} else {
+			logger.debug("Computer n°{} exist", id);
+			return computers.get(0);
 		}
 	}
 
 	@Override
 	public List<Computer> findAll() {
-		Connection conn = connection.openConnection();
-		Statement statement = null;
-		ResultSet result = null;
+		List<Computer> computers = jdbc.query("SELECT " + COMPUTER_ID
+				+ " as c_id, " + COMPUTER_NAME + " as c_name, "
+				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+				+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE,
+				new RowMapper<Computer>() {
 
-		try {
-			statement = conn.createStatement();
-			result = statement.executeQuery("SELECT " + COMPUTER_ID
-					+ " as c_id, " + COMPUTER_NAME + " as c_name, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE + ";");
-			return DatabaseMapper.toComputerList(result, companyDAO);
+					@Override
+					public Computer mapRow(ResultSet result, int rowNum)
+							throws SQLException {
+						long id = result.getLong("c_id");
+						String name = result.getString("c_name");
+						LocalDate introduced = DateMapper
+								.timestampToLocalDate(result
+										.getTimestamp(COMPUTER_INTRODUCED));
+						LocalDate discontinued = DateMapper
+								.timestampToLocalDate(result
+										.getTimestamp(COMPUTER_DISCONTINUED));
+						long company_id = result.getLong(COMPUTER_COMPANYID);
+						Company company = companyDAO.find(company_id);
+						Computer computer = new Computer.Builder(name)
+								.setId(id).build();
+						computer.setIntroductionDate(introduced);
+						computer.setDiscontinuationDate(discontinued);
+						computer.setCompany(company);
+						return computer;
+					}
 
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
-		}
+				});
+		return computers;
 	}
 
 	@Override
 	public List<Computer> findAll(int start, int range) {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
+		Object[] params = { range, start };
+		List<Computer> computers = jdbc.query("SELECT " + COMPUTER_ID
+				+ " as c_id, " + COMPUTER_NAME + " as c_name, "
+				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+				+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE
+				+ " LIMIT ? OFFSET ?;", params, new RowMapper<Computer>() {
 
-		try {
-			statement = conn.prepareStatement("SELECT " + COMPUTER_ID
-					+ " as c_id, " + COMPUTER_NAME + " as c_name, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE
-					+ " LIMIT ? OFFSET ?;");
-			statement.setInt(1, range);
-			statement.setInt(2, start);
-			result = statement.executeQuery();
-			return DatabaseMapper.toComputerList(result, companyDAO);
+			@Override
+			public Computer mapRow(ResultSet result, int rowNum)
+					throws SQLException {
+				long id = result.getLong("c_id");
+				String name = result.getString("c_name");
+				LocalDate introduced = DateMapper.timestampToLocalDate(result
+						.getTimestamp(COMPUTER_INTRODUCED));
+				LocalDate discontinued = DateMapper.timestampToLocalDate(result
+						.getTimestamp(COMPUTER_DISCONTINUED));
+				long company_id = result.getLong(COMPUTER_COMPANYID);
+				Company company = companyDAO.find(company_id);
+				Computer computer = new Computer.Builder(name).setId(id)
+						.build();
+				computer.setIntroductionDate(introduced);
+				computer.setDiscontinuationDate(discontinued);
+				computer.setCompany(company);
+				return computer;
+			}
 
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
-		}
+		});
+		return computers;
 	}
 
 	@Override
 	public List<Computer> findAll(int start, int range, String orderBy,
 			boolean desc) {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
-
-		try {
-			if (desc) {
-				statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
-						+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-						+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED
-						+ ", " + COMPUTER_COMPANYID + ", co." + COMPANY_NAME
-						+ " FROM " + COMPUTER_TABLE + " c LEFT OUTER JOIN "
-						+ COMPANY_TABLE + " co ON c." + COMPUTER_COMPANYID
-						+ "=co." + COMPANY_ID + " ORDER BY " + orderBy
-						+ " DESC LIMIT ? OFFSET ?;");
-			} else {
-				statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
-						+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-						+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED
-						+ ", " + COMPUTER_COMPANYID + ", co." + COMPANY_NAME
-						+ " FROM " + COMPUTER_TABLE + " c LEFT OUTER JOIN "
-						+ COMPANY_TABLE + " co ON c." + COMPUTER_COMPANYID
-						+ "=co." + COMPANY_ID + " ORDER BY " + orderBy
-						+ " LIMIT ? OFFSET ?;");
-			}
-			statement.setInt(1, range);
-			statement.setInt(2, start);
-			result = statement.executeQuery();
-			return DatabaseMapper.toComputerList(result, companyDAO);
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
+		List<Computer> computers = null;
+		Object[] params = { range, start };
+		if (desc) {
+			computers = jdbc.query("SELECT c." + COMPUTER_NAME
+					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
+					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
+					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
+					+ " ORDER BY " + orderBy + " DESC LIMIT ? OFFSET ?",
+					params, mapper);
+		} else {
+			computers = jdbc.query("SELECT c." + COMPUTER_NAME
+					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
+					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
+					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
+					+ " ORDER BY " + orderBy + " LIMIT ? OFFSET ?;", params,
+					mapper);
 		}
+
+		return computers;
 	}
 
 	@Override
 	public List<Computer> findAll(String regex, int start, int range) {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
+		Object[] params = { "%" + regex + "%", "%" + regex + "%", range, start };
+		List<Computer> computers = jdbc.query("SELECT c." + COMPUTER_NAME
+				+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+				+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
+				+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
+				+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
+				+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
+				+ COMPANY_NAME + " LIKE ?) LIMIT ? OFFSET ?;", params, mapper);
 
-		try {
-			statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
+		return computers;
+	}
+
+	@Override
+	public List<Computer> findAll(String regex, int start, int range,
+			String orderBy, boolean desc) {
+		List<Computer> computers = null;
+		Object[] params = { "%" + regex + "%", "%" + regex + "%", range, start };
+		if (desc) {
+			computers = jdbc.query("SELECT c." + COMPUTER_NAME
 					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
 					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
 					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
 					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
 					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
 					+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
-					+ COMPANY_NAME + " LIKE ?) LIMIT ? OFFSET ?;");
-			statement.setString(1, "%" + regex + "%");
-			statement.setString(2, "%" + regex + "%");
-			statement.setInt(3, range);
-			statement.setInt(4, start);
-			result = statement.executeQuery();
-
-			return DatabaseMapper.toComputerList(result, companyDAO);
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
+					+ COMPANY_NAME + " LIKE ?) ORDER BY " + orderBy
+					+ " DESC LIMIT ? OFFSET ?;", params, mapper);
+		} else {
+			computers = jdbc.query("SELECT c." + COMPUTER_NAME
+					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
+					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
+					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
+					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
+					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
+					+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
+					+ COMPANY_NAME + " LIKE ?) ORDER BY " + orderBy
+					+ " LIMIT ? OFFSET ?;", params, mapper);
 		}
-	}
 
-	@Override
-	public List<Computer> findAll(String regex, int start, int range,
-			String orderBy, boolean desc) {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
-
-		try {
-			if (desc) {
-				statement = conn.prepareStatement("SELECT c." + COMPUTER_NAME
-						+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-						+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED
-						+ ", " + COMPUTER_COMPANYID + ", co." + COMPANY_NAME
-						+ " FROM " + COMPUTER_TABLE + " c LEFT OUTER JOIN "
-						+ COMPANY_TABLE + " co ON c." + COMPUTER_COMPANYID
-						+ "=co." + COMPANY_ID + " WHERE (c." + COMPUTER_NAME
-						+ " LIKE ? OR co." + COMPANY_NAME
-						+ " LIKE ?) ORDER BY " + orderBy
-						+ " DESC LIMIT ? OFFSET ?;");
-			} else {
-				statement = conn
-						.prepareStatement("SELECT c." + COMPUTER_NAME
-								+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-								+ COMPUTER_INTRODUCED + ", "
-								+ COMPUTER_DISCONTINUED + ", "
-								+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME
-								+ " FROM " + COMPUTER_TABLE
-								+ " c LEFT OUTER JOIN " + COMPANY_TABLE
-								+ " co ON c." + COMPUTER_COMPANYID + "=co."
-								+ COMPANY_ID + " WHERE (c." + COMPUTER_NAME
-								+ " LIKE ? OR co." + COMPANY_NAME
-								+ " LIKE ?) ORDER BY " + orderBy
-								+ " LIMIT ? OFFSET ?;");
-			}
-			statement.setString(1, "%" + regex + "%");
-			statement.setString(2, "%" + regex + "%");
-			statement.setInt(3, range);
-			statement.setInt(4, start);
-			result = statement.executeQuery();
-
-			return DatabaseMapper.toComputerList(result, companyDAO);
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
-		}
+		return computers;
 	}
 
 	@Override
 	public int count() {
-		Connection conn = connection.openConnection();
-		Statement statement = null;
-		ResultSet result = null;
-
-		try {
-			statement = conn.createStatement();
-			result = statement.executeQuery("SELECT COUNT(*) FROM "
-					+ COMPUTER_TABLE + ";");
-			result.next();
-			return result.getInt(1);
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
-		}
+		return jdbc.queryForObject("SELECT COUNT(*) FROM " + COMPUTER_TABLE,
+				Integer.class);
 	}
 
 	@Override
 	public int countSearchResult(String regex) {
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
-
-		try {
-			statement = conn.prepareStatement("SELECT COUNT(*) FROM "
-					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-					+ " co ON " + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-					+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
-					+ COMPANY_NAME + " LIKE ?);");
-			statement.setString(1, "%" + regex + "%");
-			statement.setString(2, "%" + regex + "%");
-			result = statement.executeQuery();
-			result.next();
-			return result.getInt(1);
-
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			throw new DAOException();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
-		}
+		Object[] params = { "%" + regex + "%", "%" + regex + "%" };
+		return jdbc.queryForObject("SELECT COUNT(*) FROM " + COMPUTER_TABLE
+				+ " c LEFT OUTER JOIN " + COMPANY_TABLE + " co ON "
+				+ COMPUTER_COMPANYID + "=co." + COMPANY_ID + " WHERE (c."
+				+ COMPUTER_NAME + " LIKE ? OR co." + COMPANY_NAME + " LIKE ?)",
+				Integer.class, params);
 	}
 }

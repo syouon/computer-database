@@ -93,13 +93,9 @@ public class CompanyDAOTest extends DBTestCase {
 
 	@Test
 	public void testDelete() {
-		try {
-			assertNotNull(companyDAO.find(3));
-			companyDAO.delete(3);
-			assertNull(companyDAO.find(3));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		assertNotNull(companyDAO.find(3));
+		companyDAO.delete(3);
+		assertNull(companyDAO.find(3));
 	}
 
 	@Override

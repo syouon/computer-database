@@ -1,6 +1,5 @@
 package service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import model.Company;
@@ -41,13 +40,8 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Transactional
 	public boolean deleteCompany(long id) {
-
-		try {
-			computerDAO.deleteByCompany(id);
-			companyDAO.delete(id);
-			return true;
-		} catch (SQLException e) {
-			throw new RuntimeException();
-		}
+		computerDAO.deleteByCompany(id);
+		companyDAO.delete(id);
+		return true;
 	}
 }
