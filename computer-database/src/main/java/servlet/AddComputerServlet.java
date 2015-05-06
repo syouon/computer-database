@@ -15,7 +15,6 @@ import model.Company;
 import model.Computer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import service.CompanyService;
@@ -25,7 +24,6 @@ import util.Utils;
 /**
  * Servlet implementation class AddComputerServlet
  */
-@Controller
 @WebServlet("/AddComputerServlet")
 public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

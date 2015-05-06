@@ -7,6 +7,7 @@ import model.Company;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dao.CompanyDAO;
 import dao.ComputerDAO;
@@ -21,10 +22,6 @@ public class CompanyServiceImpl implements CompanyService {
 	private ComputerDAO computerDAO;
 	@Autowired
 	private ConnectionFactory factory;
-
-	private CompanyServiceImpl() {
-		// dao = CompanyDAOImpl.getInstance();
-	}
 
 	public List<Company> listCompanies(int start, int range) {
 		return companyDAO.findAll(start, range);
@@ -42,20 +39,15 @@ public class CompanyServiceImpl implements CompanyService {
 		return companyDAO.exists(company);
 	}
 
+	@Transactional
 	public boolean deleteCompany(long id) {
 
 		try {
-			factory.startTransaction();
 			computerDAO.deleteByCompany(id);
 			companyDAO.delete(id);
-			factory.endTransaction();
-
 			return true;
 		} catch (SQLException e) {
-			factory.rollback();
-			return false;
-		} finally {
-			factory.closeConnection();
+			throw new RuntimeException();
 		}
 	}
 }

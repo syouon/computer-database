@@ -144,7 +144,7 @@ public class ComputerDAOTest extends DBTestCase {
 					statement.close();
 				}
 
-				connection.closeConnection();
+				// connection.closeConnection();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

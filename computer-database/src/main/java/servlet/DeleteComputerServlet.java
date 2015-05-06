@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import service.ComputerService;
@@ -19,7 +18,6 @@ import service.ComputerService;
  * Servlet implementation class DeleteComputerServlet
  */
 @WebServlet("/DeleteComputerServlet")
-@Controller
 public class DeleteComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	@Autowired

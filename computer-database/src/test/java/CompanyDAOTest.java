@@ -78,7 +78,7 @@ public class CompanyDAOTest extends DBTestCase {
 			e.printStackTrace();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 

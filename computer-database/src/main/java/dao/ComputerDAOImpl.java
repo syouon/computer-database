@@ -99,7 +99,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			connection.closeResultSetAndStatement(null, result);
 			connection.closeResultSetAndStatement(statement, null);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -121,7 +121,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 		} finally {
 			connection.closeResultSetAndStatement(statement, null);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -140,7 +140,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			return true;
 		} finally {
 			connection.closeResultSetAndStatement(statement, null);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -169,7 +169,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(nameStatement, null);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -198,7 +198,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(dateStatement, null);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -235,7 +235,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		} finally {
 			logger.debug("Company updated");
 			connection.closeResultSetAndStatement(companyStatement, null);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -262,7 +262,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -285,7 +285,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -311,7 +311,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -352,7 +352,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -383,7 +383,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -433,7 +433,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -455,7 +455,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -482,7 +482,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 }

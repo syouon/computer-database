@@ -76,7 +76,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -98,7 +98,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -130,7 +130,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 			throw new DAOException();
 		} finally {
 			connection.closeResultSetAndStatement(statement, result);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 
@@ -149,7 +149,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 			return true;
 		} finally {
 			connection.closeResultSetAndStatement(statement, null);
-			connection.closeConnection();
+			// connection.closeConnection();
 		}
 	}
 }

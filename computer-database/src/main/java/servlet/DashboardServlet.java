@@ -17,9 +17,9 @@ import mapper.DTOMapper;
 import model.Computer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import service.CompanyService;
 import service.ComputerService;
 import dto.ComputerDTO;
 
@@ -27,11 +27,12 @@ import dto.ComputerDTO;
  * Servlet implementation class DashboardServlet
  */
 @WebServlet("/DashboardServlet")
-@Controller
 public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	@Autowired
 	private ComputerService service;
+	@Autowired
+	private CompanyService companyService;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
