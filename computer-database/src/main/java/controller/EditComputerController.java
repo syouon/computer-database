@@ -1,22 +1,18 @@
-package servlet;
+package controller;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import mapper.DTOMapper;
 import model.Company;
 import model.Computer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import service.CompanyService;
 import service.ComputerService;
@@ -26,28 +22,18 @@ import dto.ComputerDTO;
 /**
  * Servlet implementation class EditComputerServlet
  */
-@WebServlet("/EditComputerServlet")
-public class EditComputerServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@Controller
+@RequestMapping(value = "/editComputer")
+public class EditComputerController {
 	@Autowired
 	private ComputerService computerService;
 	@Autowired
 	private CompanyService companyService;
 	private List<Company> companies;
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+	@RequestMapping(method = RequestMethod.GET)
+	public String doGet(HttpServletRequest request) {
 		companies = companyService.listCompanies();
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
 
 		long id = 0;
 		String idParam = request.getParameter("id");
@@ -64,17 +50,12 @@ public class EditComputerServlet extends HttpServlet {
 
 		request.setAttribute("companies", companies);
 
-		this.getServletContext()
-				.getRequestDispatcher("/WEB-INF/editComputer.jsp")
-				.forward(request, response);
+		return "editComputer";
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(method = RequestMethod.POST)
+	public String doPost(HttpServletRequest request) {
+
 		String newName = request.getParameter("name");
 		String newIntroduced = request.getParameter("introduced");
 		String newDiscontinued = request.getParameter("discontinued");
@@ -96,9 +77,7 @@ public class EditComputerServlet extends HttpServlet {
 
 			request.setAttribute("companies", companies);
 
-			this.getServletContext()
-					.getRequestDispatcher("/WEB-INF/editComputer.jsp")
-					.forward(request, response);
+			return "editComputer";
 		} else {
 			Computer newComputer = new Computer.Builder(newName).setId(id)
 					.build();
@@ -118,7 +97,7 @@ public class EditComputerServlet extends HttpServlet {
 			}
 
 			computerService.updateComputer(newComputer);
-			response.sendRedirect("DashboardServlet");
+			return "redirect:/";
 		}
 	}
 

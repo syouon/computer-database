@@ -1,23 +1,19 @@
-package servlet;
+package controller;
 
 import static util.Utils.normalizeOrderBy;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import mapper.DTOMapper;
 import model.Computer;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import service.CompanyService;
 import service.ComputerService;
@@ -26,26 +22,16 @@ import dto.ComputerDTO;
 /**
  * Servlet implementation class DashboardServlet
  */
-@WebServlet("/DashboardServlet")
-public class DashboardServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@Controller
+@RequestMapping(value = { "/dashboard", "/" })
+public class DashboardController {
 	@Autowired
 	private ComputerService service;
 	@Autowired
 	private CompanyService companyService;
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(method = RequestMethod.GET)
+	public String doGet(HttpServletRequest request) {
 
 		Page page = new Page();
 		String pageParam = request.getParameter("page");
@@ -73,6 +59,9 @@ public class DashboardServlet extends HttpServlet {
 		validateRange(range, page);
 		validateSearch(search, orderBy, page);
 
+		System.out.println("PAGE COMPUTERS LENGTH:"
+				+ page.getComputers().size());
+
 		int allComputerSize = 0;
 		if (search != null && !search.equals("")) {
 			allComputerSize = service.countSearchResult(search);
@@ -90,8 +79,8 @@ public class DashboardServlet extends HttpServlet {
 		request.setAttribute("computersNumber", allComputerSize);
 		request.setAttribute("pageNumber", allComputerSize / page.getRange());
 		request.setAttribute("computers", dtos);
-		this.getServletContext().getRequestDispatcher("/WEB-INF/dashboard.jsp")
-				.forward(request, response);
+
+		return "dashboard";
 	}
 
 	private void validatePage(String param, Page page) {

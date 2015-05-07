@@ -16,8 +16,8 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="DashboardServlet"> Application -
-				Computer Database </a>
+			<a class="navbar-brand" href="dashboard"> Application - Computer
+				Database </a>
 		</div>
 	</header>
 
@@ -30,8 +30,8 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm"
-						action="DashboardServlet?range=${page.range}&page=${page}"
-						method="GET" class="form-inline">
+						action="dashboard?range=${page.range}&page=${page}" method="GET"
+						class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
@@ -40,15 +40,14 @@
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer"
-						href="AddComputerServlet">Add Computer</a> <a
-						class="btn btn-default" id="editComputer" href="#"
+					<a class="btn btn-success" id="addComputer" href="addcomputer">Add
+						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
 						onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
 		</div>
 
-		<form id="deleteForm" action="DeleteComputerServlet" method="POST">
+		<form id="deleteForm" action="deleteComputer" method="POST">
 			<input type="hidden" name="selection" value="">
 		</form>
 
@@ -67,24 +66,21 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th><mlib:link target="DashboardServlet"
-								range="${page.range}" page="${page.page}" orderBy="name"
-								body="Computer name" desc="${page.desc}" change="true"
-								search="${page.search}" /></th>
-						<th><mlib:link target="DashboardServlet"
-								range="${page.range}" page="${page.page}" orderBy="introduced"
-								body="Introduced date" desc="${page.desc}" change="true"
-								search="${page.search}" /></th>
+						<th><mlib:link target="dashboard" range="${page.range}"
+								page="${page.page}" orderBy="name" body="Computer name"
+								desc="${page.desc}" change="true" search="${page.search}" /></th>
+						<th><mlib:link target="dashboard" range="${page.range}"
+								page="${page.page}" orderBy="introduced" body="Introduced date"
+								desc="${page.desc}" change="true" search="${page.search}" /></th>
 						<!-- Table header for Discontinued Date -->
-						<th><mlib:link target="DashboardServlet"
-								range="${page.range}" page="${page.page}" orderBy="discontinued"
+						<th><mlib:link target="dashboard" range="${page.range}"
+								page="${page.page}" orderBy="discontinued"
 								body="Discontinued date" desc="${page.desc}" change="true"
 								search="${page.search}" /></th>
 						<!-- Table header for Company -->
-						<th><mlib:link target="DashboardServlet"
-								range="${page.range}" page="${page.page}" orderBy="company"
-								body="Company" desc="${page.desc}" change="true"
-								search="${page.search}" /></th>
+						<th><mlib:link target="dashboard" range="${page.range}"
+								page="${page.page}" orderBy="company" body="Company"
+								desc="${page.desc}" change="true" search="${page.search}" /></th>
 
 					</tr>
 				</thead>
@@ -94,8 +90,7 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="${computer.id}"></td>
-							<td><a href="EditComputerServlet?id=${computer.id}"
-								onclick="">${computer.name}</a></td>
+							<td><a href="editComputer?id=${computer.id}" onclick="">${computer.name}</a></td>
 							<td>${computer.introduced}</td>
 							<td>${computer.discontinued}</td>
 							<td>${computer.companyName}</td>
@@ -117,21 +112,18 @@
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>10</button>"
-					range="10" page="1" search="${page.search}"
-					target="DashboardServlet" orderBy="${page.orderBy}"
-					desc="${page.desc}" />
+					range="10" page="1" search="${page.search}" target="dashboard"
+					orderBy="${page.orderBy}" desc="${page.desc}" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>50</button>"
-					range="50" page="1" search="${page.search}"
-					target="DashboardServlet" orderBy="${page.orderBy}"
-					desc="${page.desc}" />
+					range="50" page="1" search="${page.search}" target="dashboard"
+					orderBy="${page.orderBy}" desc="${page.desc}" />
 				<mlib:link
 					body="<button
 						type='button' class='btn btn-default'>100</button>"
-					range="100" page="1" search="${page.search}"
-					target="DashboardServlet" orderBy="${page.orderBy}"
-					desc="${page.desc}" />
+					range="100" page="1" search="${page.search}" target="dashboard"
+					orderBy="${page.orderBy}" desc="${page.desc}" />
 			</div>
 		</div>
 	</footer>
