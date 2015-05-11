@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import service.ComputerService;
 
-/**
- * Servlet implementation class DeleteComputerServlet
- */
 @Controller
 @RequestMapping(value = "/deleteComputer")
 public class DeleteComputerController {

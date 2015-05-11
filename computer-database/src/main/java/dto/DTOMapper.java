@@ -40,9 +40,18 @@ public class DTOMapper {
 
 	/* Assume que tous les champs du dto sont valides */
 	public static Computer toComputer(ComputerDTO dto) {
-		LocalDate introduced = LocalDate.parse(dto.getIntroduced());
-		LocalDate discontinued = LocalDate.parse(dto.getDiscontinued());
-		Company company = new Company(dto.getCompanyId(), dto.getCompanyName());
+		String dtoIntroduced = dto.getIntroduced();
+		String dtoDiscontinued = dto.getDiscontinued();
+		LocalDate introduced = dtoIntroduced.isEmpty() ? null : LocalDate
+				.parse(dtoIntroduced);
+		LocalDate discontinued = dtoDiscontinued.isEmpty() ? null : LocalDate
+				.parse(dtoDiscontinued);
+
+		Company company = null;
+		long companyId = dto.getCompanyId();
+		if (companyId > 0) {
+			company = new Company(companyId, dto.getCompanyName());
+		}
 
 		Computer computer = new Computer.Builder(dto.getName())
 				.setIntroduced(introduced).setDiscontinued(discontinued)

@@ -10,7 +10,7 @@ import exception.PropertiesNotFoundException;
 public class Utils {
 
 	public static boolean isWellFormedDate(String date) {
-		if (date.equals("")) {
+		if (date.isEmpty()) {
 			return true;
 		}
 

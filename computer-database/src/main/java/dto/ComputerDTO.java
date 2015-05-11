@@ -1,11 +1,26 @@
 package dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
+import util.LocalDateFormat;
+
 public class ComputerDTO {
 
+	@Min(0)
 	private long id;
+	@NotNull
+	@NotEmpty
 	private String name;
+	@NotNull
+	@LocalDateFormat
 	private String introduced;
+	@NotNull
+	@LocalDateFormat
 	private String discontinued;
+	@Min(0)
 	private long companyId;
 	private String companyName;
 

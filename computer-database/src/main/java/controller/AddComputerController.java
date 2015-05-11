@@ -2,11 +2,14 @@ package controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import model.Company;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +38,8 @@ public class AddComputerController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String doPost(@ModelAttribute ComputerDTO dto) {
+	public String doPost(@ModelAttribute @Valid ComputerDTO dto,
+			BindingResult result, ModelMap map) {
 
 		/*
 		 * String name = request.getParameter("name"); String introduced =
@@ -70,10 +74,16 @@ public class AddComputerController {
 		 * "addComputer"; }
 		 */
 
-		// TODO validation des champs avec spring
+		if (result.hasErrors()) {
+			map.addAttribute("companies", companies);
+			return "addComputer";
+		}
 
-		Company company = companyService.find(dto.getCompanyId());
-		dto.setCompanyName(company.getName());
+		long companyId = dto.getCompanyId();
+		Company company = companyService.find(companyId);
+		if (company != null) {
+			dto.setCompanyName(company.getName());
+		}
 		computerService.addComputer(DTOMapper.toComputer(dto));
 		return "redirect:/";
 	}
