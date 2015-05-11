@@ -5,19 +5,19 @@ import static util.Utils.normalizeOrderBy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import mapper.DTOMapper;
 import model.Computer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import service.CompanyService;
 import service.ComputerService;
 import dto.ComputerDTO;
+import dto.DTOMapper;
 
 /**
  * Servlet implementation class DashboardServlet
@@ -31,16 +31,16 @@ public class DashboardController {
 	private CompanyService companyService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String doGet(HttpServletRequest request) {
+	public String doGet(
+			@RequestParam(value = "page", required = false) String pageParam,
+			@RequestParam(value = "range", required = false) String range,
+			@RequestParam(value = "search", required = false) String search,
+			@RequestParam(value = "orderby", required = false) String orderBy,
+			@RequestParam(value = "desc", required = false) String descParam,
+			@RequestParam(value = "change", required = false) String change,
+			ModelMap map) {
 
 		Page page = new Page();
-		String pageParam = request.getParameter("page");
-		String range = request.getParameter("range");
-		String search = request.getParameter("search");
-		String orderBy = request.getParameter("orderby");
-		String descParam = request.getParameter("desc");
-		String change = request.getParameter("change");
-
 		page.setSearch(search);
 		page.setOrderBy(orderBy);
 
@@ -59,9 +59,6 @@ public class DashboardController {
 		validateRange(range, page);
 		validateSearch(search, orderBy, page);
 
-		System.out.println("PAGE COMPUTERS LENGTH:"
-				+ page.getComputers().size());
-
 		int allComputerSize = 0;
 		if (search != null && !search.equals("")) {
 			allComputerSize = service.countSearchResult(search);
@@ -75,10 +72,10 @@ public class DashboardController {
 			dtos.add(DTOMapper.toComputerDTO(c));
 		}
 
-		request.setAttribute("page", page);
-		request.setAttribute("computersNumber", allComputerSize);
-		request.setAttribute("pageNumber", allComputerSize / page.getRange());
-		request.setAttribute("computers", dtos);
+		map.addAttribute("page", page);
+		map.addAttribute("computersNumber", allComputerSize);
+		map.addAttribute("pageNumber", allComputerSize / page.getRange());
+		map.addAttribute("computers", dtos);
 
 		return "dashboard";
 	}
