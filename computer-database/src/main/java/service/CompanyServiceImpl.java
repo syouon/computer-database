@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dao.CompanyDAO;
 import dao.ComputerDAO;
-import dao.ConnectionFactory;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -19,8 +18,6 @@ public class CompanyServiceImpl implements CompanyService {
 	private CompanyDAO companyDAO;
 	@Autowired
 	private ComputerDAO computerDAO;
-	@Autowired
-	private ConnectionFactory factory;
 
 	public List<Company> listCompanies(int start, int range) {
 		return companyDAO.findAll(start, range);

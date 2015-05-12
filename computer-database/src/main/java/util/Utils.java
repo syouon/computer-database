@@ -44,7 +44,7 @@ public class Utils {
 				if (day > 29) {
 					return false;
 				}
-			} else {
+			} else { // sinon
 				if (day > 28) {
 					return false;
 				}

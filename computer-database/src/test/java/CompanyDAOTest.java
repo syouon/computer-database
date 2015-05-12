@@ -1,9 +1,5 @@
 import static dao.DatabaseNaming.COMPANY_TABLE;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -16,12 +12,12 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import util.Utils;
 import dao.CompanyDAO;
-import dao.ConnectionFactory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/applicationContext.xml" })
@@ -30,7 +26,7 @@ public class CompanyDAOTest extends DBTestCase {
 	@Autowired
 	private CompanyDAO companyDAO;
 	@Autowired
-	private ConnectionFactory connection;
+	private JdbcTemplate jdbc;
 
 	public CompanyDAOTest() {
 		Properties prop = Utils.loadProperties("database.properties");
@@ -58,28 +54,11 @@ public class CompanyDAOTest extends DBTestCase {
 	public void testFindAll() {
 		List<Company> company = companyDAO.findAll();
 
-		Connection conn = connection.openConnection();
-		PreparedStatement statement = null;
-		ResultSet result = null;
+		int lineNumber = jdbc.queryForObject("SELECT COUNT(*) FROM "
+				+ COMPANY_TABLE, Integer.class);
 
-		try {
-			statement = conn.prepareStatement("SELECT COUNT(*) FROM "
-					+ COMPANY_TABLE + ";");
-			result = statement.executeQuery();
-
-			int lineNumber = 0;
-			while (result.next()) {
-				lineNumber = result.getInt(1);
-			}
-
-			assertEquals("must return the same number of line", company.size(),
-					lineNumber);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			connection.closeResultSetAndStatement(statement, result);
-			// connection.closeConnection();
-		}
+		assertEquals("must return the same number of line", company.size(),
+				lineNumber);
 	}
 
 	@Test

@@ -19,8 +19,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import model.Company;
 import model.Computer;
 
@@ -31,6 +29,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -40,7 +40,12 @@ public class ComputerDAOImpl implements ComputerDAO {
 	private Logger logger;
 
 	private ComputerMapper mapper;
+
+	@Autowired
 	private JdbcTemplate jdbc;
+
+	@Autowired
+	private NamedParameterJdbcTemplate namedJdbc;
 
 	@Autowired
 	private CompanyDAO companyDAO;
@@ -50,13 +55,8 @@ public class ComputerDAOImpl implements ComputerDAO {
 		mapper = new ComputerMapper();
 	}
 
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		jdbc = new JdbcTemplate(dataSource);
-	}
-
 	@Override
-	public long create(Computer computer) {
+	public void create(Computer computer) {
 		LocalDate introductionDate = computer.getIntroductionDate();
 		LocalDate discontinuationDate = computer.getDiscontinuationDate();
 
@@ -72,16 +72,18 @@ public class ComputerDAOImpl implements ComputerDAO {
 			companyId = company.getId();
 		}
 
+		StringBuilder request = new StringBuilder("INSERT INTO ")
+				.append(COMPUTER_TABLE).append("(").append(COMPUTER_NAME)
+				.append(",").append(COMPUTER_INTRODUCED).append(",")
+				.append(COMPUTER_DISCONTINUED);
+
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		if (companyId == null) {
 			jdbc.update(new PreparedStatementCreator() {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
-					PreparedStatement ps = connection.prepareStatement(
-							"INSERT INTO " + COMPUTER_TABLE + "("
-									+ COMPUTER_NAME + "," + COMPUTER_INTRODUCED
-									+ "," + COMPUTER_DISCONTINUED
-									+ ") VALUES (?,?,?)",
+					PreparedStatement ps = connection.prepareStatement(request
+							.append(") VALUES (?,?,?)").toString(),
 							Statement.RETURN_GENERATED_KEYS);
 					ps.setString(1, computer.getName());
 					ps.setTimestamp(2, introduced);
@@ -95,11 +97,8 @@ public class ComputerDAOImpl implements ComputerDAO {
 				public PreparedStatement createPreparedStatement(
 						Connection connection) throws SQLException {
 					PreparedStatement ps = connection.prepareStatement(
-							"INSERT INTO " + COMPUTER_TABLE + "("
-									+ COMPUTER_NAME + "," + COMPUTER_INTRODUCED
-									+ "," + COMPUTER_DISCONTINUED + ","
-									+ COMPUTER_COMPANYID
-									+ ") VALUES (?,?,?,?);",
+							request.append(",").append(COMPUTER_COMPANYID)
+									.append(") VALUES (?,?,?,?)").toString(),
 							Statement.RETURN_GENERATED_KEYS);
 					ps.setString(1, computer.getName());
 					ps.setTimestamp(2, introduced);
@@ -110,7 +109,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 			}, keyHolder);
 		}
 
-		return (long) keyHolder.getKey();
+		computer.setId((long) keyHolder.getKey());
 	}
 
 	@Override
@@ -136,9 +135,10 @@ public class ComputerDAOImpl implements ComputerDAO {
 	}
 
 	private boolean updateName(Computer computer) {
-		jdbc.update("UPDATE " + COMPUTER_TABLE + " SET " + COMPUTER_NAME
-				+ "=? WHERE " + COMPUTER_ID + "=?", computer.getName(),
-				computer.getId());
+		StringBuilder request = new StringBuilder("UPDATE ")
+				.append(COMPUTER_TABLE).append(" SET ").append(COMPUTER_NAME)
+				.append("=? WHERE ").append(COMPUTER_ID).append("=?");
+		jdbc.update(request.toString(), computer.getName(), computer.getId());
 		logger.debug("Computer n°{}'s name is now {}", computer.getId(),
 				computer.getName());
 		return true;
@@ -150,29 +150,35 @@ public class ComputerDAOImpl implements ComputerDAO {
 		Timestamp discontinued = DateMapper.localDateToTimestamp(computer
 				.getDiscontinuationDate());
 
-		jdbc.update("UPDATE " + COMPUTER_TABLE + " SET " + COMPUTER_INTRODUCED
-				+ "=?, " + COMPUTER_DISCONTINUED + "=? WHERE " + COMPUTER_ID
-				+ "=?", introduced, discontinued, computer.getId());
+		StringBuilder request = new StringBuilder("UPDATE ")
+				.append(COMPUTER_TABLE).append(" SET ")
+				.append(COMPUTER_INTRODUCED).append("=?, ")
+				.append(COMPUTER_DISCONTINUED).append("=? WHERE ")
+				.append(COMPUTER_ID).append("=?");
+
+		jdbc.update(request.toString(), introduced, discontinued,
+				computer.getId());
 		logger.debug("Computer {}'s dates updated", computer.getName());
 		return true;
 	}
 
 	private boolean updateCompany(Computer computer) {
+		StringBuilder request = new StringBuilder("UPDATE ")
+				.append(COMPUTER_TABLE).append(" SET ")
+				.append(COMPUTER_COMPANYID);
+		StringBuilder requestEnd = new StringBuilder(" WHERE ").append(
+				COMPUTER_ID).append("=?");
+
 		if (computer.getCompany() != null) {
 			if (companyDAO.exists(computer.getCompany())) {
-				jdbc.update(
-						"UPDATE " + COMPUTER_TABLE + " SET "
-								+ COMPUTER_COMPANYID + "=? WHERE "
-								+ COMPUTER_ID + "=?", computer.getCompany()
-								.getId(), computer.getId());
+				jdbc.update(request.append("=?").append(requestEnd).toString(),
+						computer.getCompany().getId(), computer.getId());
 				return true;
 			}
 
 			return false;
 		} else {
-			jdbc.update(
-					"UPDATE " + COMPUTER_TABLE + " SET " + COMPUTER_COMPANYID
-							+ "=NULL WHERE " + COMPUTER_ID + "=?;",
+			jdbc.update(request.append("=NULL").append(requestEnd).toString(),
 					computer.getId());
 			return true;
 		}
@@ -180,14 +186,21 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 	@Override
 	public Computer find(long id) {
+		StringBuilder request = new StringBuilder("SELECT c.")
+				.append(COMPUTER_NAME).append(" as c_name, c.")
+				.append(COMPUTER_ID).append(" as c_id, ")
+				.append(COMPUTER_INTRODUCED).append(", ")
+				.append(COMPUTER_DISCONTINUED).append(", ")
+				.append(COMPUTER_COMPANYID).append(", co.")
+				.append(COMPANY_NAME).append(" FROM ").append(COMPUTER_TABLE)
+				.append(" c LEFT OUTER JOIN ").append(COMPANY_TABLE)
+				.append(" co ON c.").append(COMPUTER_COMPANYID).append("=co.")
+				.append(COMPANY_ID).append(" WHERE c.").append(COMPUTER_ID)
+				.append("=?");
+
 		Object[] params = { id };
-		List<Computer> computers = jdbc.query("SELECT c." + COMPUTER_NAME
-				+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-				+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-				+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-				+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-				+ " WHERE c." + COMPUTER_ID + "=?", params, mapper);
+		List<Computer> computers = jdbc.query(request.toString(), params,
+				mapper);
 
 		if (computers.isEmpty()) {
 			logger.debug("Computer n°{} doesn't exist", id);
@@ -200,10 +213,14 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 	@Override
 	public List<Computer> findAll() {
-		List<Computer> computers = jdbc.query("SELECT " + COMPUTER_ID
-				+ " as c_id, " + COMPUTER_NAME + " as c_name, "
-				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-				+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE,
+		StringBuilder request = new StringBuilder("SELECT ")
+				.append(COMPUTER_ID).append(" as c_id, ").append(COMPUTER_NAME)
+				.append(" as c_name, ").append(COMPUTER_INTRODUCED)
+				.append(", ").append(COMPUTER_DISCONTINUED).append(", ")
+				.append(COMPUTER_COMPANYID).append(" FROM ")
+				.append(COMPUTER_TABLE);
+
+		List<Computer> computers = jdbc.query(request.toString(),
 				new RowMapper<Computer>() {
 
 					@Override
@@ -233,59 +250,72 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 	@Override
 	public List<Computer> findAll(int start, int range) {
+		StringBuilder request = new StringBuilder("SELECT ")
+				.append(COMPUTER_ID).append(" as c_id, ").append(COMPUTER_NAME)
+				.append(" as c_name, ").append(COMPUTER_INTRODUCED)
+				.append(", ").append(COMPUTER_DISCONTINUED).append(", ")
+				.append(COMPUTER_COMPANYID).append(" FROM ")
+				.append(COMPUTER_TABLE).append(" LIMIT ? OFFSET ?");
+
 		Object[] params = { range, start };
-		List<Computer> computers = jdbc.query("SELECT " + COMPUTER_ID
-				+ " as c_id, " + COMPUTER_NAME + " as c_name, "
-				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-				+ COMPUTER_COMPANYID + " FROM " + COMPUTER_TABLE
-				+ " LIMIT ? OFFSET ?;", params, new RowMapper<Computer>() {
+		List<Computer> computers = jdbc.query(request.toString(), params,
+				new RowMapper<Computer>() {
 
-			@Override
-			public Computer mapRow(ResultSet result, int rowNum)
-					throws SQLException {
-				long id = result.getLong("c_id");
-				String name = result.getString("c_name");
-				LocalDate introduced = DateMapper.timestampToLocalDate(result
-						.getTimestamp(COMPUTER_INTRODUCED));
-				LocalDate discontinued = DateMapper.timestampToLocalDate(result
-						.getTimestamp(COMPUTER_DISCONTINUED));
-				long company_id = result.getLong(COMPUTER_COMPANYID);
-				Company company = companyDAO.find(company_id);
-				Computer computer = new Computer.Builder(name).setId(id)
-						.build();
-				computer.setIntroductionDate(introduced);
-				computer.setDiscontinuationDate(discontinued);
-				computer.setCompany(company);
-				return computer;
-			}
+					@Override
+					public Computer mapRow(ResultSet result, int rowNum)
+							throws SQLException {
+						long id = result.getLong("c_id");
+						String name = result.getString("c_name");
+						LocalDate introduced = DateMapper
+								.timestampToLocalDate(result
+										.getTimestamp(COMPUTER_INTRODUCED));
+						LocalDate discontinued = DateMapper
+								.timestampToLocalDate(result
+										.getTimestamp(COMPUTER_DISCONTINUED));
+						long company_id = result.getLong(COMPUTER_COMPANYID);
+						Company company = companyDAO.find(company_id);
+						Computer computer = new Computer.Builder(name)
+								.setId(id).build();
+						computer.setIntroductionDate(introduced);
+						computer.setDiscontinuationDate(discontinued);
+						computer.setCompany(company);
+						return computer;
+					}
 
-		});
+				});
 		return computers;
 	}
 
 	@Override
 	public List<Computer> findAll(int start, int range, String orderBy,
 			boolean desc) {
+		StringBuilder request = new StringBuilder("SELECT c.")
+				.append(COMPUTER_NAME).append(" as c_name, c.")
+				.append(COMPUTER_ID).append(" as c_id, ")
+				.append(COMPUTER_INTRODUCED).append(", ")
+				.append(COMPUTER_DISCONTINUED).append(", ")
+				.append(COMPUTER_COMPANYID).append(", co.")
+				.append(COMPANY_NAME).append(" FROM ").append(COMPUTER_TABLE)
+				.append(" c LEFT OUTER JOIN ").append(COMPANY_TABLE)
+				.append(" co ON c.").append(COMPUTER_COMPANYID).append("=co.")
+				.append(COMPANY_ID);
+
 		List<Computer> computers = null;
-		Object[] params = { range, start };
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("orderBy", orderBy);
+		params.addValue("range", range);
+		params.addValue("start", start);
+
 		if (desc) {
-			computers = jdbc.query("SELECT c." + COMPUTER_NAME
-					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-					+ " ORDER BY " + orderBy + " DESC LIMIT ? OFFSET ?",
-					params, mapper);
+			computers = namedJdbc
+					.query(request
+							.append(" ORDER BY :orderBy DESC LIMIT :range OFFSET :start")
+							.toString(), params, mapper);
 		} else {
-			computers = jdbc.query("SELECT c." + COMPUTER_NAME
-					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-					+ " ORDER BY " + orderBy + " LIMIT ? OFFSET ?;", params,
-					mapper);
+			computers = namedJdbc.query(
+					request.append(
+							" ORDER BY :orderBy LIMIT :range OFFSET :start")
+							.toString(), params, mapper);
 		}
 
 		return computers;
@@ -293,15 +323,25 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 	@Override
 	public List<Computer> findAll(String regex, int start, int range) {
-		Object[] params = { "%" + regex + "%", "%" + regex + "%", range, start };
-		List<Computer> computers = jdbc.query("SELECT c." + COMPUTER_NAME
-				+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-				+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-				+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-				+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-				+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-				+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
-				+ COMPANY_NAME + " LIKE ?) LIMIT ? OFFSET ?;", params, mapper);
+		StringBuilder request = new StringBuilder("SELECT c.")
+				.append(COMPUTER_NAME).append(" as c_name, c.")
+				.append(COMPUTER_ID).append(" as c_id, ")
+				.append(COMPUTER_INTRODUCED).append(", ")
+				.append(COMPUTER_DISCONTINUED).append(", ")
+				.append(COMPUTER_COMPANYID).append(", co.")
+				.append(COMPANY_NAME).append(" FROM ").append(COMPUTER_TABLE)
+				.append(" c LEFT OUTER JOIN ").append(COMPANY_TABLE)
+				.append(" co ON c.").append(COMPUTER_COMPANYID).append("=co.")
+				.append(COMPANY_ID).append(" WHERE (c.").append(COMPUTER_NAME)
+				.append(" LIKE :regex OR co.").append(COMPANY_NAME)
+				.append(" LIKE :regex) LIMIT :range OFFSET :start");
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("regex", "%" + regex + "%");
+		params.addValue("range", range);
+		params.addValue("start", start);
+		List<Computer> computers = namedJdbc.query(request.toString(), params,
+				mapper);
 
 		return computers;
 	}
@@ -309,28 +349,34 @@ public class ComputerDAOImpl implements ComputerDAO {
 	@Override
 	public List<Computer> findAll(String regex, int start, int range,
 			String orderBy, boolean desc) {
+		StringBuilder request = new StringBuilder("SELECT c.")
+				.append(COMPUTER_NAME).append(" as c_name, c.")
+				.append(COMPUTER_ID).append(" as c_id, ")
+				.append(COMPUTER_INTRODUCED).append(", ")
+				.append(COMPUTER_DISCONTINUED).append(", ")
+				.append(COMPUTER_COMPANYID).append(", co.")
+				.append(COMPANY_NAME).append(" FROM ").append(COMPUTER_TABLE)
+				.append(" c LEFT OUTER JOIN ").append(COMPANY_TABLE)
+				.append(" co ON c.").append(COMPUTER_COMPANYID).append("=co.")
+				.append(COMPANY_ID).append(" WHERE (c.").append(COMPUTER_NAME)
+				.append(" LIKE :regex OR co.").append(COMPANY_NAME);
+
 		List<Computer> computers = null;
-		Object[] params = { "%" + regex + "%", "%" + regex + "%", range, start };
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("regex", "%" + regex + "%");
+		params.addValue("range", range);
+		params.addValue("start", start);
+		params.addValue("orderBy", orderBy);
 		if (desc) {
-			computers = jdbc.query("SELECT c." + COMPUTER_NAME
-					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-					+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
-					+ COMPANY_NAME + " LIKE ?) ORDER BY " + orderBy
-					+ " DESC LIMIT ? OFFSET ?;", params, mapper);
+			computers = namedJdbc
+					.query(request
+							.append(" LIKE :regex) ORDER BY :orderBy DESC LIMIT :range OFFSET :start")
+							.toString(), params, mapper);
 		} else {
-			computers = jdbc.query("SELECT c." + COMPUTER_NAME
-					+ " as c_name, c." + COMPUTER_ID + " as c_id, "
-					+ COMPUTER_INTRODUCED + ", " + COMPUTER_DISCONTINUED + ", "
-					+ COMPUTER_COMPANYID + ", co." + COMPANY_NAME + " FROM "
-					+ COMPUTER_TABLE + " c LEFT OUTER JOIN " + COMPANY_TABLE
-					+ " co ON c." + COMPUTER_COMPANYID + "=co." + COMPANY_ID
-					+ " WHERE (c." + COMPUTER_NAME + " LIKE ? OR co."
-					+ COMPANY_NAME + " LIKE ?) ORDER BY " + orderBy
-					+ " LIMIT ? OFFSET ?;", params, mapper);
+			computers = namedJdbc
+					.query(request
+							.append(" LIKE :regex) ORDER BY :orderBy LIMIT :range OFFSET :start")
+							.toString(), params, mapper);
 		}
 
 		return computers;
@@ -344,11 +390,17 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 	@Override
 	public int countSearchResult(String regex) {
-		Object[] params = { "%" + regex + "%", "%" + regex + "%" };
-		return jdbc.queryForObject("SELECT COUNT(*) FROM " + COMPUTER_TABLE
-				+ " c LEFT OUTER JOIN " + COMPANY_TABLE + " co ON "
-				+ COMPUTER_COMPANYID + "=co." + COMPANY_ID + " WHERE (c."
-				+ COMPUTER_NAME + " LIKE ? OR co." + COMPANY_NAME + " LIKE ?)",
-				Integer.class, params);
+		StringBuilder request = new StringBuilder("SELECT COUNT(*) FROM ")
+				.append(COMPUTER_TABLE).append(" c LEFT OUTER JOIN ")
+				.append(COMPANY_TABLE).append(" co ON ")
+				.append(COMPUTER_COMPANYID).append("=co.").append(COMPANY_ID)
+				.append(" WHERE (c.").append(COMPUTER_NAME)
+				.append(" LIKE :regex OR co.").append(COMPANY_NAME)
+				.append(" LIKE :regex)");
+
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("regex", "%" + regex + "%");
+		return namedJdbc.queryForObject(request.toString(), params,
+				Integer.class);
 	}
 }

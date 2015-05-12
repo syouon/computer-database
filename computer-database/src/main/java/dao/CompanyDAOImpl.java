@@ -6,8 +6,6 @@ import static dao.DatabaseNaming.COMPANY_TABLE;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import model.Company;
 
 import org.slf4j.Logger;
@@ -22,16 +20,12 @@ public class CompanyDAOImpl implements CompanyDAO {
 	private Logger logger;
 
 	private CompanyMapper mapper;
+	@Autowired
 	private JdbcTemplate jdbc;
 
 	private CompanyDAOImpl() {
 		logger = LoggerFactory.getLogger(this.getClass());
 		mapper = new CompanyMapper();
-	}
-
-	@Autowired
-	public void setDataSource(DataSource dataSource) {
-		jdbc = new JdbcTemplate(dataSource);
 	}
 
 	@Override
@@ -50,10 +44,14 @@ public class CompanyDAOImpl implements CompanyDAO {
 
 	@Override
 	public List<Company> findAll(int start, int range) {
+		StringBuilder request = new StringBuilder("SELECT ")
+				.append(COMPANY_NAME).append(",").append(COMPANY_ID)
+				.append(" FROM ").append(COMPANY_TABLE).append(" ORDER BY ")
+				.append(COMPANY_NAME).append(" LIMIT ? OFFSET ?");
+
 		Object[] params = { range, start };
-		List<Company> companies = jdbc.query("SELECT " + COMPANY_NAME + ","
-				+ COMPANY_ID + " FROM " + COMPANY_TABLE + " ORDER BY "
-				+ COMPANY_NAME + " LIMIT ? OFFSET ?;", params, mapper);
+		List<Company> companies = jdbc
+				.query(request.toString(), params, mapper);
 		return companies;
 	}
 

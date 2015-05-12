@@ -10,13 +10,13 @@ import model.Computer;
 public interface ComputerDAO {
 
 	/**
-	 * Creates the.
+	 * Creates the computer. Fill the object with the generated id.
 	 *
 	 * @param computer
 	 *            the computer
 	 * @return true, if successful
 	 */
-	public long create(Computer computer);
+	public void create(Computer computer);
 
 	/**
 	 * Delete.

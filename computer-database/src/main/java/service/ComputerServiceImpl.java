@@ -42,7 +42,8 @@ public class ComputerServiceImpl implements ComputerService {
 	}
 
 	public long addComputer(Computer computer) {
-		return dao.create(computer);
+		dao.create(computer);
+		return computer.getId();
 	}
 
 	public boolean deleteComputer(long id) {
