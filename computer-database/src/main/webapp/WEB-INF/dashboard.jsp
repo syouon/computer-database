@@ -117,10 +117,11 @@
 		<div>
 			<a
 				href="dashboard?lang=fr&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
-				<spring:message code="french" />
+				<img src="images/fr_flag.png" alt="<spring:message code="french" />" />
 			</a> | <a
 				href="dashboard?lang=en&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
-				<spring:message code="english" />
+				<img src="images/en_flag.gif"
+				alt="<spring:message code="english" />" />
 			</a>
 		</div>
 		<div class="container text-center">

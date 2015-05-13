@@ -61,9 +61,9 @@ public class ComputerDAOImpl implements ComputerDAO {
 		LocalDate discontinuationDate = computer.getDiscontinuationDate();
 
 		Timestamp introduced = (introductionDate != null) ? (DateMapper
-				.localDateToTimestamp(introductionDate)) : null;
+				.toTimestamp(introductionDate)) : null;
 		Timestamp discontinued = (discontinuationDate != null) ? (DateMapper
-				.localDateToTimestamp(discontinuationDate)) : null;
+				.toTimestamp(discontinuationDate)) : null;
 
 		// Verification de l'existence de company
 		Company company = computer.getCompany();
@@ -145,9 +145,9 @@ public class ComputerDAOImpl implements ComputerDAO {
 	}
 
 	private boolean updateDate(Computer computer) {
-		Timestamp introduced = DateMapper.localDateToTimestamp(computer
+		Timestamp introduced = DateMapper.toTimestamp(computer
 				.getIntroductionDate());
-		Timestamp discontinued = DateMapper.localDateToTimestamp(computer
+		Timestamp discontinued = DateMapper.toTimestamp(computer
 				.getDiscontinuationDate());
 
 		StringBuilder request = new StringBuilder("UPDATE ")
@@ -229,10 +229,10 @@ public class ComputerDAOImpl implements ComputerDAO {
 						long id = result.getLong("c_id");
 						String name = result.getString("c_name");
 						LocalDate introduced = DateMapper
-								.timestampToLocalDate(result
+								.toLocalDate(result
 										.getTimestamp(COMPUTER_INTRODUCED));
 						LocalDate discontinued = DateMapper
-								.timestampToLocalDate(result
+								.toLocalDate(result
 										.getTimestamp(COMPUTER_DISCONTINUED));
 						long company_id = result.getLong(COMPUTER_COMPANYID);
 						Company company = companyDAO.find(company_id);
@@ -267,10 +267,10 @@ public class ComputerDAOImpl implements ComputerDAO {
 						long id = result.getLong("c_id");
 						String name = result.getString("c_name");
 						LocalDate introduced = DateMapper
-								.timestampToLocalDate(result
+								.toLocalDate(result
 										.getTimestamp(COMPUTER_INTRODUCED));
 						LocalDate discontinued = DateMapper
-								.timestampToLocalDate(result
+								.toLocalDate(result
 										.getTimestamp(COMPUTER_DISCONTINUED));
 						long company_id = result.getLong(COMPUTER_COMPANYID);
 						Company company = companyDAO.find(company_id);

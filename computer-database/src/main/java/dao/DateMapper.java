@@ -5,11 +5,11 @@ import java.time.LocalDate;
 
 public class DateMapper {
 
-	public static LocalDate timestampToLocalDate(Timestamp time) {
+	public static LocalDate toLocalDate(Timestamp time) {
 		return (time == null) ? null : time.toLocalDateTime().toLocalDate();
 	}
 
-	public static Timestamp localDateToTimestamp(LocalDate time) {
+	public static Timestamp toTimestamp(LocalDate time) {
 		return (time == null) ? null : Timestamp.valueOf(time.atStartOfDay());
 	}
 }

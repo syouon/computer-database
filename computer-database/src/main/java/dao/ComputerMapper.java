@@ -21,9 +21,9 @@ public class ComputerMapper implements RowMapper<Computer> {
 		Computer computer = null;
 		long id = result.getLong("c_id");
 		String name = result.getString("c_name");
-		LocalDate introduced = DateMapper.timestampToLocalDate(result
+		LocalDate introduced = DateMapper.toLocalDate(result
 				.getTimestamp(COMPUTER_INTRODUCED));
-		LocalDate discontinued = DateMapper.timestampToLocalDate(result
+		LocalDate discontinued = DateMapper.toLocalDate(result
 				.getTimestamp(COMPUTER_DISCONTINUED));
 		computer = new Computer.Builder(name).setId(id).build();
 
