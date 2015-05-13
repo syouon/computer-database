@@ -58,41 +58,6 @@ public class EditComputerController {
 	public String doPost(@ModelAttribute @Valid ComputerDTO dto,
 			BindingResult result, ModelMap map) {
 
-		/*
-		 * String newName = request.getParameter("name"); String newIntroduced =
-		 * request.getParameter("introduced"); String newDiscontinued =
-		 * request.getParameter("discontinued"); String newCompanyId =
-		 * request.getParameter("companyId"); String idParam =
-		 * request.getParameter("id"); long id = Long.parseLong(idParam);
-		 * 
-		 * if (newName.equals("") || !Utils.isWellFormedDate(newIntroduced) ||
-		 * !Utils.isWellFormedDate(newDiscontinued)) {
-		 * 
-		 * request.setAttribute("id", id);
-		 * 
-		 * Computer computer = computerService.showComputerDetails(id); if
-		 * (computer != null) { ComputerDTO dto =
-		 * DTOMapper.toComputerDTO(computer); request.setAttribute("computer",
-		 * dto); }
-		 * 
-		 * request.setAttribute("companies", companies);
-		 * 
-		 * return "editComputer"; } else { Computer newComputer = new
-		 * Computer.Builder(newName).setId(id) .build(); if
-		 * (!newIntroduced.equals("")) {
-		 * newComputer.setIntroductionDate(LocalDate.parse(newIntroduced)); }
-		 * 
-		 * if (!newDiscontinued.equals("")) {
-		 * newComputer.setDiscontinuationDate(LocalDate
-		 * .parse(newDiscontinued)); }
-		 * 
-		 * long companyId = Long.parseLong(newCompanyId); if (companyId != 0) {
-		 * Company newCompany = companyService.find(companyId);
-		 * newComputer.setCompany(newCompany); }
-		 * 
-		 * computerService.updateComputer(newComputer); return "redirect:/"; }
-		 */
-
 		if (result.hasErrors()) {
 			long id = dto.getId();
 			Computer computer = computerService.showComputerDetails(id);

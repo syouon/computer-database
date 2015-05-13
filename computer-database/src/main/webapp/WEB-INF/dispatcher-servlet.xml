@@ -13,36 +13,33 @@
 	<mvc:annotation-driven />
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
-		
+
 	<!-- Bean de resolution des vues jsp -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/" p:suffix=".jsp" />
 
 	<!-- Internationalisation -->
-	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-	    <property name="basename" value="classpath:messages" />
-	    <property name="defaultEncoding" value="UTF-8" />
-	</bean>
-	 
-	<!-- Intercepteur pour changement de langue -->
-	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-	    <property name="paramName" value="lang" />
-	</bean>
-	 
-	<!-- Sauvegarde de la locale dans un cookie -->
-	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
-	    <property name="defaultLocale" value="fr" />
-	</bean>
-	
-	<!--  -->
-	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-	    <property name="interceptors">
-	        <ref bean="localeChangeInterceptor" />
-	    </property>
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
 
-	<mvc:resources location="/" mapping="/**"/>
+	<!-- Intercepteurs pour changement de langue -->
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="lang" />
+		</bean>
+	</mvc:interceptors>
+
+	<!-- Sauvegarde de la locale dans un cookie -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="fr" />
+	</bean>
+
+	<mvc:resources location="/" mapping="/**" />
 	<context:component-scan base-package="controller" />
 
 </beans>

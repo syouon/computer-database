@@ -2,27 +2,16 @@ package util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Properties;
 
-import exception.BadOrderValueException;
+import org.springframework.context.i18n.LocaleContextHolder;
+
 import exception.PropertiesNotFoundException;
 
 public class Utils {
 
-	public static boolean isWellFormedDate(String date) {
-		if (date.isEmpty()) {
-			return true;
-		}
-
-		if (!date.matches("\\d{4}-\\d{2}-\\d{2}")) {
-			return false;
-		}
-
-		String[] tokens = date.split("-");
-		int year = Integer.parseInt(tokens[0]);
-		int month = Integer.parseInt(tokens[1]);
-		int day = Integer.parseInt(tokens[2]);
-
+	private static boolean isValidDate(int year, int month, int day) {
 		if (month > 12 || day > 31) {
 			return false;
 		}
@@ -54,6 +43,35 @@ public class Utils {
 		return true;
 	}
 
+	public static boolean isWellFormedDate(String date) {
+		if (date.isEmpty()) {
+			return true;
+		}
+
+		Locale locale = LocaleContextHolder.getLocale();
+		String english = new Locale("en").getLanguage();
+		String french = new Locale("fr").getLanguage();
+		if ((locale.getLanguage().equals(english) && !date
+				.matches("\\d{4}-\\d{2}-\\d{2}"))
+				|| (locale.getLanguage().equals(french) && !date
+						.matches("\\d{2}-\\d{2}-\\d{4}"))) {
+			return false;
+		}
+
+		String[] tokens = date.split("-");
+		int year, day;
+		int month = Integer.parseInt(tokens[1]);
+		if (locale.getLanguage().equals(french)) {
+			year = Integer.parseInt(tokens[2]);
+			day = Integer.parseInt(tokens[0]);
+		} else { // si locale en anglais
+			year = Integer.parseInt(tokens[0]);
+			day = Integer.parseInt(tokens[2]);
+		}
+
+		return isValidDate(year, month, day);
+	}
+
 	public static String normalizeOrderBy(String orderBy) {
 		switch (orderBy) {
 		case "introduced":
@@ -64,7 +82,7 @@ public class Utils {
 		case "company":
 			return "co.name";
 		default:
-			throw new BadOrderValueException();
+			return "c_id";
 		}
 	}
 

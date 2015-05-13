@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="mlib" tagdir="/WEB-INF/tags"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +26,7 @@
 		<div class="container">
 			<h1 id="homeTitle">
 				<c:out value="${computersNumber}" />
-				Computers found
+				<spring:message code="computers_found" />
 			</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
@@ -34,15 +35,18 @@
 						class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" /> <input
-							type="submit" id="searchsubmit" value="Filter by name"
+							class="form-control"
+							placeholder="<spring:message code="search_name" />" /> <input
+							type="submit" id="searchsubmit"
+							value="<spring:message code="filter_name" />"
 							class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addcomputer">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+					<a class="btn btn-success" id="addComputer" href="addcomputer"><spring:message
+							code="add_computer" /></a> <a class="btn btn-default"
+						id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message
+							code="delete" /></a>
 				</div>
 			</div>
 		</div>
@@ -67,20 +71,27 @@
 							</a>
 						</span></th>
 						<th><mlib:link target="dashboard" range="${page.range}"
-								page="${page.page}" orderBy="name" body="Computer name"
-								desc="${page.desc}" change="true" search="${page.search}" /></th>
+								page="${page.page}" orderBy="name" desc="${page.desc}"
+								change="true" search="${page.search}">
+								<spring:message code="computer_name" />
+							</mlib:link></th>
 						<th><mlib:link target="dashboard" range="${page.range}"
-								page="${page.page}" orderBy="introduced" body="Introduced date"
-								desc="${page.desc}" change="true" search="${page.search}" /></th>
+								page="${page.page}" orderBy="introduced" desc="${page.desc}"
+								change="true" search="${page.search}">
+								<spring:message code="introduced_date" />
+							</mlib:link></th>
 						<!-- Table header for Discontinued Date -->
 						<th><mlib:link target="dashboard" range="${page.range}"
-								page="${page.page}" orderBy="discontinued"
-								body="Discontinued date" desc="${page.desc}" change="true"
-								search="${page.search}" /></th>
+								page="${page.page}" orderBy="discontinued" desc="${page.desc}"
+								change="true" search="${page.search}">
+								<spring:message code="discontinued_date" />
+							</mlib:link></th>
 						<!-- Table header for Company -->
 						<th><mlib:link target="dashboard" range="${page.range}"
-								page="${page.page}" orderBy="company" body="Company"
-								desc="${page.desc}" change="true" search="${page.search}" /></th>
+								page="${page.page}" orderBy="company" desc="${page.desc}"
+								change="true" search="${page.search}">
+								<spring:message code="company" />
+							</mlib:link></th>
 
 					</tr>
 				</thead>
@@ -103,27 +114,33 @@
 
 	<!-- Choix de page -->
 	<footer class="navbar-fixed-bottom">
+		<div>
+			<a
+				href="dashboard?lang=fr&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
+				<spring:message code="french" />
+			</a> | <a
+				href="dashboard?lang=en&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
+				<spring:message code="english" />
+			</a>
+		</div>
 		<div class="container text-center">
 			<mlib:pagination page="${page.page}" currentRange="${page.range}"
 				pageNumber="${pageNumber}" orderBy="${page.orderBy}"
 				desc="${page.desc}" search="${page.search}" />
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<mlib:link
-					body="<button
-						type='button' class='btn btn-default'>10</button>"
-					range="10" page="1" search="${page.search}" target="dashboard"
-					orderBy="${page.orderBy}" desc="${page.desc}" />
-				<mlib:link
-					body="<button
-						type='button' class='btn btn-default'>50</button>"
-					range="50" page="1" search="${page.search}" target="dashboard"
-					orderBy="${page.orderBy}" desc="${page.desc}" />
-				<mlib:link
-					body="<button
-						type='button' class='btn btn-default'>100</button>"
-					range="100" page="1" search="${page.search}" target="dashboard"
-					orderBy="${page.orderBy}" desc="${page.desc}" />
+				<mlib:link range="10" page="1" search="${page.search}"
+					target="dashboard" orderBy="${page.orderBy}" desc="${page.desc}">
+					<button type='button' class='btn btn-default'>10</button>
+				</mlib:link>
+				<mlib:link range="50" page="1" search="${page.search}"
+					target="dashboard" orderBy="${page.orderBy}" desc="${page.desc}">
+					<button type='button' class='btn btn-default'>50</button>
+				</mlib:link>
+				<mlib:link range="100" page="1" search="${page.search}"
+					target="dashboard" orderBy="${page.orderBy}" desc="${page.desc}">
+					<button type='button' class='btn btn-default'>100</button>
+				</mlib:link>
 			</div>
 		</div>
 	</footer>

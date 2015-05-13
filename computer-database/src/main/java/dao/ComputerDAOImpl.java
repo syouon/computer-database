@@ -302,20 +302,19 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 		List<Computer> computers = null;
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("orderBy", orderBy);
 		params.addValue("range", range);
 		params.addValue("start", start);
 
 		if (desc) {
-			computers = namedJdbc
-					.query(request
-							.append(" ORDER BY :orderBy DESC LIMIT :range OFFSET :start")
+			computers = namedJdbc.query(
+					request.append(" ORDER BY ").append(orderBy)
+							.append(" DESC LIMIT :range OFFSET :start")
 							.toString(), params, mapper);
 		} else {
 			computers = namedJdbc.query(
-					request.append(
-							" ORDER BY :orderBy LIMIT :range OFFSET :start")
-							.toString(), params, mapper);
+					request.append(" ORDER BY ").append(orderBy)
+							.append(" LIMIT :range OFFSET :start").toString(),
+					params, mapper);
 		}
 
 		return computers;
@@ -366,17 +365,16 @@ public class ComputerDAOImpl implements ComputerDAO {
 		params.addValue("regex", "%" + regex + "%");
 		params.addValue("range", range);
 		params.addValue("start", start);
-		params.addValue("orderBy", orderBy);
 		if (desc) {
-			computers = namedJdbc
-					.query(request
-							.append(" LIKE :regex) ORDER BY :orderBy DESC LIMIT :range OFFSET :start")
+			computers = namedJdbc.query(
+					request.append(" LIKE :regex) ORDER BY ").append(orderBy)
+							.append(" DESC LIMIT :range OFFSET :start")
 							.toString(), params, mapper);
 		} else {
-			computers = namedJdbc
-					.query(request
-							.append(" LIKE :regex) ORDER BY :orderBy LIMIT :range OFFSET :start")
-							.toString(), params, mapper);
+			computers = namedJdbc.query(
+					request.append(" LIKE :regex) ORDER BY ").append(orderBy)
+							.append(" LIMIT :range OFFSET :start").toString(),
+					params, mapper);
 		}
 
 		return computers;

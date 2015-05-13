@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import service.CompanyService;
 import service.ComputerService;
 import dto.ComputerDTO;
 import dto.DTOMapper;
@@ -26,9 +25,7 @@ import dto.DTOMapper;
 @RequestMapping(value = { "/dashboard", "/" })
 public class DashboardController {
 	@Autowired
-	private ComputerService service;
-	@Autowired
-	private CompanyService companyService;
+	private ComputerService computerService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String doGet(
@@ -61,9 +58,9 @@ public class DashboardController {
 
 		int allComputerSize = 0;
 		if (search != null && !search.equals("")) {
-			allComputerSize = service.countSearchResult(search);
+			allComputerSize = computerService.countSearchResult(search);
 		} else {
-			allComputerSize = service.count();
+			allComputerSize = computerService.count();
 		}
 
 		// conversion des computers vers leur DTO
@@ -100,22 +97,23 @@ public class DashboardController {
 			Page page) {
 		if (searchParam != null && !searchParam.equals("")) {
 			if (orderByParam != null && !orderByParam.equals("")) {
-				page.setComputers(service.listComputers(searchParam,
+				page.setComputers(computerService.listComputers(searchParam,
 						(page.getPage() - 1) * page.getRange(),
 						page.getRange(), normalizeOrderBy(orderByParam),
 						page.isDesc()));
 			} else {
-				page.setComputers(service.listComputers(searchParam,
+				page.setComputers(computerService.listComputers(searchParam,
 						(page.getPage() - 1) * page.getRange(), page.getRange()));
 			}
 		} else {
 			if (orderByParam != null && !orderByParam.equals("")) {
-				page.setComputers(service.listComputers((page.getPage() - 1)
-						* page.getRange(), page.getRange(),
-						normalizeOrderBy(orderByParam), page.isDesc()));
+				page.setComputers(computerService.listComputers(
+						(page.getPage() - 1) * page.getRange(),
+						page.getRange(), normalizeOrderBy(orderByParam),
+						page.isDesc()));
 			} else {
-				page.setComputers(service.listComputers((page.getPage() - 1)
-						* page.getRange(), page.getRange()));
+				page.setComputers(computerService.listComputers(
+						(page.getPage() - 1) * page.getRange(), page.getRange()));
 			}
 		}
 	}
