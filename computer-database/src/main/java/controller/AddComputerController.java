@@ -34,6 +34,7 @@ public class AddComputerController {
 	public String doGet(ModelMap map) {
 		companies = companyService.listCompanies();
 		map.addAttribute("companies", companies);
+		map.addAttribute("computerDTO", new ComputerDTO());
 
 		return "addComputer";
 	}
@@ -42,7 +43,7 @@ public class AddComputerController {
 	public String doPost(@ModelAttribute @Valid ComputerDTO dto,
 			BindingResult result, ModelMap map) {
 
-		if (result.hasErrors() || dto.getName().trim().isEmpty()) {
+		if (result.hasErrors()) {
 			map.addAttribute("companies", companies);
 			return "addComputer";
 		}

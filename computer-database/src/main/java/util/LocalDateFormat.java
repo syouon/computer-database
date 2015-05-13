@@ -12,7 +12,8 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ComputerDTOValidator.class)
 public @interface LocalDateFormat {
-	String message() default "${LocalDateFormat}";
+
+	String message() default "{date_error}";
 
 	Class<?>[] groups() default {};
 

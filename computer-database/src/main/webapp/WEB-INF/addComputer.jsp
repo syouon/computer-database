@@ -3,6 +3,7 @@
 <%@ page import="dto.ComputerDTO, java.util.List"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,25 +31,26 @@
 					<h1>
 						<spring:message code="add_computer" />
 					</h1>
-					<form id="addForm" action="addcomputer" method="POST">
+					<sf:form action="addcomputer" method="POST"
+						modelAttribute="computerDTO">
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName"><spring:message
-										code="computer_name" /></label> <input name="name" type="text"
-									class="form-control" id="computerName"
-									placeholder="<spring:message code="computer_name" />">
+										code="computer_name" /></label>
+								<sf:input class="form-control" path="name" />
+								<sf:errors cssStyle="color: #ff0000" path="name" />
 							</div>
 							<div class="form-group">
 								<label for="introduced"><spring:message
-										code="introduced_date" /></label> <input name="introduced"
-									type="date" class="form-control" id="introduced"
-									placeholder="<spring:message code="introduced_date" />">
+										code="introduced_date" /></label>
+								<sf:input class="form-control" path="introduced" />
+								<sf:errors cssStyle="color: #ff0000" path="introduced" />
 							</div>
 							<div class="form-group">
 								<label for="discontinued"><spring:message
-										code="discontinued_date" /></label> <input name="discontinued"
-									type="date" class="form-control" id="discontinued"
-									placeholder="<spring:message code="discontinued_date" />">
+										code="discontinued_date" /></label>
+								<sf:input class="form-control" path="discontinued" />
+								<sf:errors cssStyle="color: #ff0000" path="discontinued" />
 							</div>
 							<div class="form-group">
 								<label for="companyId"><spring:message code="company" /></label>
@@ -61,12 +63,13 @@
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="<spring:message code="add" />" class="btn btn-primary">
+							<input type="submit" value="<spring:message code="add" />"
+								class="btn btn-primary">
 							<spring:message code="or" />
 							<a href="dashboard" class="btn btn-default"><spring:message
 									code="cancel" /></a>
 						</div>
-					</form>
+					</sf:form>
 				</div>
 			</div>
 		</div>

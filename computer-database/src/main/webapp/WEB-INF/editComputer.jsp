@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="mlib" tagdir="/WEB-INF/tags"%>
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,29 +32,30 @@
 						<spring:message code="edit_computer" />
 					</h1>
 
-					<form id="editForm" action="editComputer" method="POST">
+					<sf:form modelAttribute="computerDTO" action="editComputer"
+						method="POST">
 						<input type="hidden" value="${id}" name="id" />
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName"><spring:message
-										code="computer_name" /></label> <input type="text"
-									class="form-control" id="computerName" name="name"
-									placeholder="<spring:message code="computer_name" />"
-									value="${computer.name}">
+										code="computer_name" /></label>
+								<sf:input path="name" class="form-control" name="name"
+									value="${computer.name}" />
+								<sf:errors cssStyle="color: #ff0000" path="name" />
 							</div>
 							<div class="form-group">
 								<label for="introduced"><spring:message
-										code="introduced_date" /></label> <input type="date"
-									class="form-control" id="introduced" name="introduced"
-									placeholder="<spring:message code="introduced_date" />"
-									value="${computer.introduced}">
+										code="introduced_date" /></label>
+								<sf:input path="introduced" class="form-control"
+									name="introduced" value="${computer.introduced}" />
+								<sf:errors cssStyle="color: #ff0000" path="introduced" />
 							</div>
 							<div class="form-group">
 								<label for="discontinued"><spring:message
-										code="discontinued_date" /></label> <input type="date"
-									class="form-control" id="discontinued"
-									placeholder="<spring:message code="discontinued_date" />"
-									name="discontinued" value="${computer.discontinued}">
+										code="discontinued_date" /></label>
+								<sf:input path="discontinued" class="form-control"
+									name="discontinued" value="${computer.discontinued}" />
+								<sf:errors cssStyle="color: #ff0000" path="discontinued" />
 							</div>
 							<div class="form-group">
 								<label for="companyId"><spring:message code="company" /></label>
@@ -73,12 +75,13 @@
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="<spring:message code="edit" />" class="btn btn-primary">
+							<input type="submit" value="<spring:message code="edit" />"
+								class="btn btn-primary">
 							<spring:message code="or" />
 							<a href="dashboard" class="btn btn-default"><spring:message
 									code="cancel" /></a>
 						</div>
-					</form>
+					</sf:form>
 				</div>
 			</div>
 		</div>

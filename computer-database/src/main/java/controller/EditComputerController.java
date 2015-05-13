@@ -50,6 +50,7 @@ public class EditComputerController {
 		}
 
 		map.addAttribute("companies", companies);
+		map.addAttribute("computerDTO", new ComputerDTO());
 
 		return "editComputer";
 	}

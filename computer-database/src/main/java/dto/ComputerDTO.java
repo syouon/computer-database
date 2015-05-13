@@ -3,7 +3,7 @@ package dto;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import util.LocalDateFormat;
 
@@ -12,7 +12,7 @@ public class ComputerDTO {
 	@Min(0)
 	private long id;
 	@NotNull
-	@NotEmpty
+	@NotBlank
 	private String name;
 	@NotNull
 	@LocalDateFormat

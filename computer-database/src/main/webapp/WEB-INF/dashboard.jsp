@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="mlib" tagdir="/WEB-INF/tags"%>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,17 +114,19 @@
 
 	<!-- Choix de page -->
 	<footer class="navbar-fixed-bottom">
-		<div>
-			<a
-				href="dashboard?lang=fr&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
-				<img src="images/fr_flag.png" alt="<spring:message code="french" />" />
-			</a> | <a
-				href="dashboard?lang=en&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
-				<img src="images/en_flag.gif"
-				alt="<spring:message code="english" />" />
-			</a>
-		</div>
 		<div class="container text-center">
+			<div class="language pull-left">
+				<a
+					href="dashboard?lang=fr&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
+					<img src="images/fr_flag.png"
+					alt="<spring:message code="french" />" />
+				</a> <a
+					href="dashboard?lang=en&range=${page.range}&page=${page.page}&search=${page.search}&orderby=${page.orderBy}&desc=${page.desc}">
+					<img src="images/en_flag.gif"
+					alt="<spring:message code="english" />" />
+				</a>
+			</div>
+
 			<mlib:pagination page="${page.page}" currentRange="${page.range}"
 				pageNumber="${pageNumber}" orderBy="${page.orderBy}"
 				desc="${page.desc}" search="${page.search}" />
