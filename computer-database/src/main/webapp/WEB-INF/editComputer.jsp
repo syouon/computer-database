@@ -43,21 +43,21 @@
 							<div class="form-group">
 								<label for="computerName"><spring:message
 										code="computer_name" /></label>
-								<sf:input path="name" class="form-control"
+								<sf:input path="name" class="form-control" value="${computer.name}"
 									placeholder="${cname}" />
 								<sf:errors cssStyle="color: #ff0000" path="name" />
 							</div>
 							<div class="form-group">
 								<label for="introduced"><spring:message
 										code="introduced_date" /></label>
-								<sf:input path="introduced" class="form-control"
+								<sf:input path="introduced" class="form-control" value="${computer.introduced}"
 									placeholder="${date}" />
 								<sf:errors cssStyle="color: #ff0000" path="introduced" />
 							</div>
 							<div class="form-group">
 								<label for="discontinued"><spring:message
 										code="discontinued_date" /></label>
-								<sf:input path="discontinued" class="form-control"
+								<sf:input path="discontinued" class="form-control" value="${computer.discontinued}"
 									placeholder="${date}" />
 								<sf:errors cssStyle="color: #ff0000" path="discontinued" />
 							</div>
