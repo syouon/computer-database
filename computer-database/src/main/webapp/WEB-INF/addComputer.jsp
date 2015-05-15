@@ -24,6 +24,9 @@
 		</div>
 	</header>
 
+	<spring:message code="date_error" var="date" />
+	<spring:message code="computer_name" var="cname" />
+
 	<section id="main">
 		<div class="container">
 			<div class="row">
@@ -37,19 +40,19 @@
 							<div class="form-group">
 								<label for="computerName"><spring:message
 										code="computer_name" /></label>
-								<sf:input class="form-control" path="name" />
+								<sf:input class="form-control" path="name" placeholder="${cname}" />
 								<sf:errors cssStyle="color: #ff0000" path="name" />
 							</div>
 							<div class="form-group">
 								<label for="introduced"><spring:message
 										code="introduced_date" /></label>
-								<sf:input class="form-control" path="introduced" />
+								<sf:input class="form-control" path="introduced" placeholder="${date}" />
 								<sf:errors cssStyle="color: #ff0000" path="introduced" />
 							</div>
 							<div class="form-group">
 								<label for="discontinued"><spring:message
 										code="discontinued_date" /></label>
-								<sf:input class="form-control" path="discontinued" />
+								<sf:input class="form-control" path="discontinued" placeholder="${date}" />
 								<sf:errors cssStyle="color: #ff0000" path="discontinued" />
 							</div>
 							<div class="form-group">
