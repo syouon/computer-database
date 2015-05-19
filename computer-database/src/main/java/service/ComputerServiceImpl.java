@@ -5,6 +5,9 @@ import java.util.List;
 import model.Computer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import dao.ComputerDAO;
@@ -17,20 +20,36 @@ public class ComputerServiceImpl implements ComputerService {
 
 	public List<Computer> listComputers(String regex, int start, int range,
 			String orderBy, boolean desc) {
-		return dao.findAll(regex, start, range, orderBy, desc);
+
+		Sort sort = null;
+		if (desc) {
+			sort = new Sort(Sort.Direction.DESC, orderBy);
+		} else {
+			sort = new Sort(Sort.Direction.ASC, orderBy);
+		}
+		return dao.findByNameContaining(regex, new PageRequest(start, range,
+				sort));
 	}
 
 	public List<Computer> listComputers(String regex, int start, int range) {
-		return dao.findAll(regex, start, range);
+		return dao.findByNameContaining(regex, new PageRequest(start, range));
 	}
 
 	public List<Computer> listComputers(int start, int range, String orderBy,
 			boolean desc) {
-		return dao.findAll(start, range, orderBy, desc);
+
+		Sort sort = null;
+		if (desc) {
+			sort = new Sort(Sort.Direction.DESC, orderBy);
+		} else {
+			sort = new Sort(Sort.Direction.ASC, orderBy);
+		}
+		return dao.findAll(new PageRequest(start, range, sort)).getContent();
 	}
 
 	public List<Computer> listComputers(int start, int range) {
-		return dao.findAll(start, range);
+		Page<Computer> page = dao.findAll(new PageRequest(start, range));
+		return page.getContent();
 	}
 
 	public List<Computer> listComputers() {
@@ -38,27 +57,27 @@ public class ComputerServiceImpl implements ComputerService {
 	}
 
 	public Computer showComputerDetails(long id) {
-		return dao.find(id);
+		return dao.findOne(id);
 	}
 
 	public long addComputer(Computer computer) {
-		dao.create(computer);
+		computer = dao.save(computer);
 		return computer.getId();
 	}
 
-	public boolean deleteComputer(long id) {
-		return dao.delete(id);
+	public void deleteComputer(long id) {
+		dao.delete(id);
 	}
 
-	public boolean updateComputer(Computer computer) {
-		return dao.update(computer);
+	public void updateComputer(Computer computer) {
+		dao.saveAndFlush(computer);
 	}
 
 	public int count() {
-		return dao.count();
+		return (int) dao.count();
 	}
 
 	public int countSearchResult(String regex) {
-		return dao.countSearchResult(regex);
+		return dao.countByNameContaining(regex);
 	}
 }

@@ -1,5 +1,8 @@
 package main;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import ui.AddComputerChoice;
 import ui.DeleteCompanyChoice;
 import ui.DeleteComputerChoice;
@@ -11,6 +14,13 @@ import ui.ShowDetailsChoice;
 import ui.UpdateComputerChoice;
 
 public class Main {
+
+	private static ApplicationContext context = new ClassPathXmlApplicationContext(
+			"applicationContext.xml");
+
+	public static ApplicationContext getContext() {
+		return context;
+	}
 
 	public static void main(String[] args) {
 

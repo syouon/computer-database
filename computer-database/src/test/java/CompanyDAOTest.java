@@ -46,7 +46,7 @@ public class CompanyDAOTest extends DBTestCase {
 	public void testFind() {
 		List<Company> companies = companyDAO.findAll();
 
-		Company company = companyDAO.find(companies.get(0).getId());
+		Company company = companyDAO.findOne(companies.get(0).getId());
 		assertEquals("Should be equal", company, companies.get(0));
 	}
 
@@ -65,16 +65,17 @@ public class CompanyDAOTest extends DBTestCase {
 	public void testExists() {
 		Company company = new Company("Apple");
 		Company falseCompany = new Company("InexistantCorp");
-		assertTrue("Apple should exist ", companyDAO.exists(company));
-		assertFalse("InexistantCorp should not exist",
-				companyDAO.exists(falseCompany));
+		assertNotNull("Apple should exist ",
+				companyDAO.findByName(company.getName()));
+		assertNull("InexistantCorp should not exist",
+				companyDAO.findByName(falseCompany.getName()));
 	}
 
 	@Test
 	public void testDelete() {
-		assertNotNull(companyDAO.find(3));
-		companyDAO.delete(3);
-		assertNull(companyDAO.find(3));
+		assertNotNull(companyDAO.findOne(3L));
+		companyDAO.delete(3L);
+		assertNull(companyDAO.findOne(3L));
 	}
 
 	@Override

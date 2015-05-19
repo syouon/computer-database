@@ -46,7 +46,7 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testCreate() {
 		Computer computer = new Computer("ComputerTest");
-		computerDAO.create(computer);
+		computerDAO.save(computer);
 
 		List<Computer> newComputers = computerDAO.findAll();
 
@@ -58,35 +58,35 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testDelete() {
 		Computer computer = new Computer("ComputerTest");
-		computerDAO.create(computer);
+		computerDAO.save(computer);
 
 		// Suppression de l'element ajoute
 		computerDAO.delete(computer.getId());
 
 		assertNull("ComputerTest should not exist",
-				computerDAO.find(computer.getId()));
+				computerDAO.findOne(computer.getId()));
 	}
 
 	@Test
 	public void testDeleteByCompany() {
-		assertNotNull(computerDAO.find(3));
-		assertNotNull(computerDAO.find(4));
-		computerDAO.deleteByCompany(2);
-		assertNull(computerDAO.find(3));
-		assertNull(computerDAO.find(4));
+		assertNotNull(computerDAO.findOne(3L));
+		assertNotNull(computerDAO.findOne(4L));
+		computerDAO.deleteByCompanyId(2);
+		assertNull(computerDAO.findOne(3L));
+		assertNull(computerDAO.findOne(4L));
 	}
 
 	@Test
 	public void testUpdate() {
 		Computer computer = new Computer("ComputerTest");
-		computerDAO.create(computer);
+		computer = computerDAO.save(computer);
 
 		Computer updatedComputer = new Computer(computer.getId(),
 				"ComputerTest");
-		updatedComputer.setIntroductionDate(LocalDate.now());
+		updatedComputer.setIntroduced(LocalDate.now());
 
-		computerDAO.update(updatedComputer);
-		Computer newComputer = computerDAO.find(updatedComputer.getId());
+		computerDAO.save(updatedComputer);
+		Computer newComputer = computerDAO.findOne(updatedComputer.getId());
 
 		assertTrue("Should not be equal", !computer.equals(newComputer));
 	}
@@ -94,7 +94,7 @@ public class ComputerDAOTest extends DBTestCase {
 	@Test
 	public void testFind() {
 		Computer computer = new Computer("ComputerTest");
-		computerDAO.create(computer);
+		computerDAO.save(computer);
 
 		List<Computer> computers = computerDAO.findAll();
 

@@ -1,15 +1,35 @@
 package model;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * The Class Company.
  */
-public class Company {
+@Entity
+@Table(name = "company")
+public class Company implements Serializable {
+
+	private static final long serialVersionUID = -1078030201694376297L;
 
 	/** The id. */
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private long id;
 
 	/** The name. */
+	@Column(name = "name")
 	private String name;
+
+	public Company() {
+	}
 
 	/**
 	 * Instantiates a new company.
@@ -72,11 +92,6 @@ public class Company {
 		this.name = name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString() {
 		return "n°" + id + ") " + name;
 	}

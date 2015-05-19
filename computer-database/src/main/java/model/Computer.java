@@ -1,25 +1,53 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import dao.DateMapper;
 
 /**
  * The Class Computer.
  */
-public class Computer {
+@Entity
+@Table(name = "computer")
+public class Computer implements Serializable {
+
+	private static final long serialVersionUID = -4121770083587704914L;
 
 	/** The id. */
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private long id;
 
 	/** The name. */
+	@Column(name = "name")
 	private String name;
 
 	/** The introduction date. */
-	private LocalDate introductionDate;
+	@Column(name = "introduced")
+	@Convert(converter = DateMapper.class)
+	private LocalDate introduced;
 
 	/** The discontinuation date. */
-	private LocalDate discontinuationDate;
+	@Column(name = "discontinued")
+	@Convert(converter = DateMapper.class)
+	private LocalDate discontinued;
 
 	/** The manufacturer. */
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "company_id")
 	private Company company;
 
 	public Computer() {
@@ -71,8 +99,8 @@ public class Computer {
 	 *
 	 * @return the introduction date
 	 */
-	public LocalDate getIntroductionDate() {
-		return introductionDate;
+	public LocalDate getIntroduced() {
+		return introduced;
 	}
 
 	/**
@@ -80,8 +108,8 @@ public class Computer {
 	 *
 	 * @return the discontinuation date
 	 */
-	public LocalDate getDiscontinuationDate() {
-		return discontinuationDate;
+	public LocalDate getDiscontinued() {
+		return discontinued;
 	}
 
 	/**
@@ -97,14 +125,18 @@ public class Computer {
 		this.id = id;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * Sets the introduction date.
 	 *
 	 * @param introduced
 	 *            the new introduction date
 	 */
-	public void setIntroductionDate(LocalDate introduced) {
-		introductionDate = introduced;
+	public void setIntroduced(LocalDate introduced) {
+		this.introduced = introduced;
 	}
 
 	/**
@@ -113,8 +145,8 @@ public class Computer {
 	 * @param discontinued
 	 *            the new discontinuation date
 	 */
-	public void setDiscontinuationDate(LocalDate discontinued) {
-		discontinuationDate = discontinued;
+	public void setDiscontinued(LocalDate discontinued) {
+		this.discontinued = discontinued;
 	}
 
 	/**
@@ -135,12 +167,12 @@ public class Computer {
 	public String toString() {
 		String display = "n°" + id + ") " + name;
 
-		if (introductionDate != null) {
-			display += ", introduced in " + introductionDate;
+		if (introduced != null) {
+			display += ", introduced in " + introduced;
 		}
 
-		if (discontinuationDate != null) {
-			display += ", discontinued in " + discontinuationDate;
+		if (discontinued != null) {
+			display += ", discontinued in " + discontinued;
 		}
 
 		if (company != null) {
@@ -164,17 +196,17 @@ public class Computer {
 				return false;
 		} else if (!company.equals(other.company))
 			return false;
-		if (discontinuationDate == null) {
-			if (other.discontinuationDate != null)
+		if (discontinued == null) {
+			if (other.discontinued != null)
 				return false;
-		} else if (!discontinuationDate.equals(other.discontinuationDate))
+		} else if (!discontinued.equals(other.discontinued))
 			return false;
 		if (id != other.id)
 			return false;
-		if (introductionDate == null) {
-			if (other.introductionDate != null)
+		if (introduced == null) {
+			if (other.introduced != null)
 				return false;
-		} else if (!introductionDate.equals(other.introductionDate))
+		} else if (!introduced.equals(other.introduced))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -203,12 +235,12 @@ public class Computer {
 		}
 
 		public Builder setIntroduced(LocalDate date) {
-			computer.introductionDate = date;
+			computer.introduced = date;
 			return this;
 		}
 
 		public Builder setDiscontinued(LocalDate date) {
-			computer.discontinuationDate = date;
+			computer.discontinued = date;
 			return this;
 		}
 

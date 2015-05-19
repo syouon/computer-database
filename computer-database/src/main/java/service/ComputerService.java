@@ -18,13 +18,13 @@ public interface ComputerService {
 
 	public List<Computer> listComputers();
 
-	public Computer showComputerDetails(long id);
-
 	public long addComputer(Computer computer);
 
-	public boolean deleteComputer(long id);
+	public Computer showComputerDetails(long id);
 
-	public boolean updateComputer(Computer computer);
+	public void deleteComputer(long id);
+
+	public void updateComputer(Computer computer);
 
 	public int count();
 

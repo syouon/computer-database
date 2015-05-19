@@ -24,19 +24,19 @@ public class ComputerTest {
 	@Test
 	public void testGetIntroductionDate() {
 		Computer computer = new Computer("ComputerTest");
-		assertNull(computer.getIntroductionDate());
+		assertNull(computer.getIntroduced());
 
-		computer.setIntroductionDate(LocalDate.parse("2015-04-01"));
-		assertEquals(computer.getIntroductionDate().toString(), "2015-04-01");
+		computer.setIntroduced(LocalDate.parse("2015-04-01"));
+		assertEquals(computer.getIntroduced().toString(), "2015-04-01");
 	}
 
 	@Test
 	public void testGetDiscontinuationDate() {
 		Computer computer = new Computer("ComputerTest");
-		assertNull(computer.getDiscontinuationDate());
+		assertNull(computer.getDiscontinued());
 
-		computer.setDiscontinuationDate(LocalDate.parse("2015-04-01"));
-		assertEquals(computer.getDiscontinuationDate().toString(), "2015-04-01");
+		computer.setDiscontinued(LocalDate.parse("2015-04-01"));
+		assertEquals(computer.getDiscontinued().toString(), "2015-04-01");
 	}
 
 	@Test
@@ -54,15 +54,15 @@ public class ComputerTest {
 	@Test
 	public void testSetIntroductionDate() {
 		Computer computer = new Computer("ComputerTest");
-		computer.setIntroductionDate(LocalDate.parse("2015-04-01"));
-		assertEquals(computer.getIntroductionDate().toString(), "2015-04-01");
+		computer.setIntroduced(LocalDate.parse("2015-04-01"));
+		assertEquals(computer.getIntroduced().toString(), "2015-04-01");
 	}
 
 	@Test
 	public void testSetDiscontinuationDate() {
 		Computer computer = new Computer("ComputerTest");
-		computer.setDiscontinuationDate(LocalDate.parse("2015-04-01"));
-		assertEquals(computer.getDiscontinuationDate().toString(), "2015-04-01");
+		computer.setDiscontinued(LocalDate.parse("2015-04-01"));
+		assertEquals(computer.getDiscontinued().toString(), "2015-04-01");
 	}
 
 	@Test
@@ -83,11 +83,11 @@ public class ComputerTest {
 		Computer computer = new Computer("ComputerTest");
 		assertEquals(computer.toString(), "n°0) ComputerTest");
 
-		computer.setIntroductionDate(LocalDate.parse("2015-04-01"));
+		computer.setIntroduced(LocalDate.parse("2015-04-01"));
 		assertEquals(computer.toString(),
 				"n°0) ComputerTest, introduced in 2015-04-01");
 
-		computer.setDiscontinuationDate(LocalDate.parse("2015-04-01"));
+		computer.setDiscontinued(LocalDate.parse("2015-04-01"));
 		assertEquals(computer.toString(),
 				"n°0) ComputerTest, introduced in 2015-04-01, discontinued in 2015-04-01");
 
@@ -108,9 +108,9 @@ public class ComputerTest {
 		Computer computer = new Computer("ComputerTest1");
 		assertEquals(computer, computer1);
 
-		computer.setIntroductionDate(LocalDate.parse("2015-04-01"));
+		computer.setIntroduced(LocalDate.parse("2015-04-01"));
 		assertNotEquals(computer, computer1);
-		computer1.setIntroductionDate(LocalDate.parse("2015-04-01"));
+		computer1.setIntroduced(LocalDate.parse("2015-04-01"));
 		assertEquals(computer, computer1);
 
 		Company company = new Company("CompanyTest");

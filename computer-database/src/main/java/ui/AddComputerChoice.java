@@ -9,12 +9,7 @@ import model.Computer;
  * The Class AddComputerChoice.
  */
 public class AddComputerChoice extends Choice {
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ui.Choice#execute()
-	 */
+
 	@Override
 	public void execute() {
 		String name = askForComputerName();
@@ -23,11 +18,11 @@ public class AddComputerChoice extends Choice {
 		Company company = askForCompany();
 
 		Computer computer = new Computer(name);
-		computer.setIntroductionDate(introduced);
-		computer.setDiscontinuationDate(discontinued);
+		computer.setIntroduced(introduced);
+		computer.setDiscontinued(discontinued);
 		computer.setCompany(company);
 
-		computerService.addComputer(computer);
+		// computerService.addComputer(computer);
 	}
 
 	/**
@@ -40,11 +35,6 @@ public class AddComputerChoice extends Choice {
 		return Menu.getScanner().nextLine();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "add a computer";

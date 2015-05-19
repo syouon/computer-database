@@ -22,16 +22,14 @@ public class UpdateComputerChoice extends Choice {
 		Company company = askForCompany();
 
 		Computer computer = new Computer.Builder("").setId(id).build();
-		computer.setIntroductionDate(introduced);
-		computer.setDiscontinuationDate(discontinued);
+		computer.setIntroduced(introduced);
+		computer.setDiscontinued(discontinued);
 
-		if (company != null && dao.exists(company)) {
+		if (company != null && (dao.findByName(company.getName()) != null)) {
 			computer.setCompany(company);
 		}
 
-		if (!computerService.updateComputer(computer)) {
-			System.out.println("Update failed");
-		}
+		computerService.updateComputer(computer);
 	}
 
 	public String toString() {

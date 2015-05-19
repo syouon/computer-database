@@ -5,10 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
+import main.Main;
 import model.Company;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import service.CompanyService;
 import service.CompanyServiceImpl;
@@ -28,8 +28,7 @@ public abstract class Choice {
 	protected ComputerService computerService;
 
 	public Choice() {
-		ApplicationContext context = new ClassPathXmlApplicationContext(
-				"applicationContext.xml");
+		ApplicationContext context = Main.getContext();
 		companyService = context.getBean(CompanyServiceImpl.class);
 		computerService = context.getBean(ComputerServiceImpl.class);
 	}

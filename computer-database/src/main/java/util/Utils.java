@@ -76,13 +76,12 @@ public class Utils {
 		switch (orderBy) {
 		case "introduced":
 		case "discontinued":
-			return orderBy;
 		case "name":
-			return "c." + orderBy;
+			return orderBy;
 		case "company":
-			return "co.name";
+			return "company.name";
 		default:
-			return "c_id";
+			return "id";
 		}
 	}
 

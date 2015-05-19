@@ -1,26 +1,10 @@
 package dao;
 
-import java.util.List;
-
 import model.Company;
 
-/**
- * The Interface CompanyDAO.
- */
-public interface CompanyDAO {
+import org.springframework.data.jpa.repository.JpaRepository;
 
-	public Company find(long id);
+public interface CompanyDAO extends JpaRepository<Company, Long> {
 
-	/**
-	 * Find all.
-	 * 
-	 * @return the list
-	 */
-	public List<Company> findAll(int start, int range);
-
-	public List<Company> findAll();
-
-	public boolean exists(Company company);
-
-	public boolean delete(long id);
+	public Company findByName(String name);
 }

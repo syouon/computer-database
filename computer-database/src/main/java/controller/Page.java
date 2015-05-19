@@ -44,7 +44,7 @@ public class Page {
 	public void setDesc(boolean desc) {
 		this.desc = desc;
 	}
-	
+
 	public void reverseDesc() {
 		desc = !desc;
 	}

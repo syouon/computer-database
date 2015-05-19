@@ -1,7 +1,8 @@
 package ui;
 
+import main.Main;
+
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import service.CompanyService;
 import service.CompanyServiceImpl;
@@ -19,8 +20,7 @@ public abstract class Pager {
 		entitiesNumber = 10;
 		start = 0;
 
-		ApplicationContext context = new ClassPathXmlApplicationContext(
-				"applicationContext.xml");
+		ApplicationContext context = Main.getContext();
 		companyService = context.getBean(CompanyServiceImpl.class);
 		computerService = context.getBean(ComputerServiceImpl.class);
 	}

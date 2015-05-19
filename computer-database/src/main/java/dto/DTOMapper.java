@@ -22,8 +22,8 @@ public class DTOMapper {
 		dto.setId(computer.getId());
 		dto.setName(computer.getName());
 
-		LocalDate introduced = computer.getIntroductionDate();
-		LocalDate discontinued = computer.getDiscontinuationDate();
+		LocalDate introduced = computer.getIntroduced();
+		LocalDate discontinued = computer.getDiscontinued();
 		Company company = computer.getCompany();
 
 		Locale locale = LocaleContextHolder.getLocale();

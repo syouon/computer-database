@@ -4,68 +4,17 @@ import java.util.List;
 
 import model.Computer;
 
-/**
- * The Interface ComputerDAO.
- */
-public interface ComputerDAO {
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-	/**
-	 * Creates the computer. Fill the object with the generated id.
-	 *
-	 * @param computer
-	 *            the computer
-	 * @return true, if successful
-	 */
-	public void create(Computer computer);
+public interface ComputerDAO extends JpaRepository<Computer, Long> {
 
-	/**
-	 * Delete.
-	 *
-	 * @param computer
-	 *            the computer
-	 * @return true, if successful
-	 */
-	public boolean delete(long id);
+	@Query("select count(c) from Computer c where c.name like %?1% or c.company.name like %?1%")
+	public int countByNameContaining(String name);
 
-	public boolean deleteByCompany(long companyId);
+	public void deleteByCompanyId(long companyId);
 
-	/**
-	 * Update.
-	 *
-	 * @param computer
-	 *            the computer
-	 * @return true, if successful
-	 */
-	public boolean update(Computer computer);
-
-	/**
-	 * Find.
-	 *
-	 * @param id
-	 *            the id
-	 * @return the computer
-	 */
-	public Computer find(long id);
-
-	/**
-	 * Find all.
-	 *
-	 * @return the list
-	 */
-
-	public List<Computer> findAll();
-
-	public List<Computer> findAll(int start, int range);
-
-	public List<Computer> findAll(String regex, int start, int range);
-
-	public List<Computer> findAll(int start, int range, String orderBy,
-			boolean desc);
-
-	public List<Computer> findAll(String regex, int start, int range,
-			String orderBy, boolean desc);
-
-	public int count();
-
-	public int countSearchResult(String regex);
+	@Query("select c from Computer c where c.name like %?1% or c.company.name like %?1%")
+	public List<Computer> findByNameContaining(String regex, Pageable page);
 }

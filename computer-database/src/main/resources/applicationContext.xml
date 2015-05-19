@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http:/www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd
     http://www.springframework.org/schema/tx
 	http://www.springframework.org/schema/tx/spring-tx.xsd
-	http://www.springframework.org/schema/aop
-	http://www.springframework.org/schema/aop/spring-aop.xsd">
+	http://www.springframework.org/schema/data/jpa
+     http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-	<context:component-scan base-package="dao" />
+	<jpa:repositories base-package="dao" />
 	<context:component-scan base-package="service" />
 	<context:component-scan base-package="controller" />
 
 	<import resource="classpath:datasource.xml" />
 
 	<!-- Gestionnaire de Transaction -->
-	<tx:annotation-driven transaction-manager="txManager" />
-	<bean id="txManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
 		<property name="dataSource" ref="datasource" />
 	</bean>
 
-	<!-- Bean pour les requetes a la bdd -->
-	<bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<constructor-arg ref="datasource" />
+	<!-- Bean utilise pour spring data jpa, gerant les entites -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="datasource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="packagesToScan" value="model" />
 	</bean>
 
+	<!-- Bean pour les requetes a la bdd -->
+	<!-- <bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"> -->
+	<!-- <constructor-arg ref="datasource" /> -->
+	<!-- </bean> -->
+
 	<!-- Bean pour les requetes a la bdd avec parametres nommés -->
-	<bean name="namedJdbcTemplate"
-		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-		<constructor-arg ref="datasource" />
-	</bean>
+	<!-- <bean name="namedJdbcTemplate" -->
+	<!-- class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate"> -->
+	<!-- <constructor-arg ref="datasource" /> -->
+	<!-- </bean> -->
 
 </beans>

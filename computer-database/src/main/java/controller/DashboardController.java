@@ -95,25 +95,23 @@ public class DashboardController {
 
 	private void validateSearch(String searchParam, String orderByParam,
 			Page page) {
-		if (searchParam != null && !searchParam.equals("")) {
+		if (searchParam != null && !searchParam.isEmpty()) {
 			if (orderByParam != null && !orderByParam.equals("")) {
 				page.setComputers(computerService.listComputers(searchParam,
-						(page.getPage() - 1) * page.getRange(),
-						page.getRange(), normalizeOrderBy(orderByParam),
-						page.isDesc()));
+						page.getPage() - 1, page.getRange(),
+						normalizeOrderBy(orderByParam), page.isDesc()));
 			} else {
 				page.setComputers(computerService.listComputers(searchParam,
-						(page.getPage() - 1) * page.getRange(), page.getRange()));
+						page.getPage() - 1, page.getRange()));
 			}
 		} else {
 			if (orderByParam != null && !orderByParam.equals("")) {
 				page.setComputers(computerService.listComputers(
-						(page.getPage() - 1) * page.getRange(),
-						page.getRange(), normalizeOrderBy(orderByParam),
-						page.isDesc()));
+						page.getPage() - 1, page.getRange(),
+						normalizeOrderBy(orderByParam), page.isDesc()));
 			} else {
 				page.setComputers(computerService.listComputers(
-						(page.getPage() - 1) * page.getRange(), page.getRange()));
+						page.getPage() - 1, page.getRange()));
 			}
 		}
 	}

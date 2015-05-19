@@ -5,6 +5,8 @@ import java.util.List;
 import model.Company;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,8 @@ public class CompanyServiceImpl implements CompanyService {
 	private ComputerDAO computerDAO;
 
 	public List<Company> listCompanies(int start, int range) {
-		return companyDAO.findAll(start, range);
+		Page<Company> page = companyDAO.findAll(new PageRequest(start, range));
+		return page.getContent();
 	}
 
 	public List<Company> listCompanies() {
@@ -28,16 +31,16 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	public Company find(long id) {
-		return companyDAO.find(id);
+		return companyDAO.findOne(id);
 	}
 
 	public boolean exists(Company company) {
-		return companyDAO.exists(company);
+		return (companyDAO.findByName(company.getName()) != null);
 	}
 
 	@Transactional
 	public boolean deleteCompany(long id) {
-		computerDAO.deleteByCompany(id);
+		computerDAO.deleteByCompanyId(id);
 		companyDAO.delete(id);
 		return true;
 	}
