@@ -11,19 +11,6 @@
 	http://www.springframework.org/schema/data/jpa
      http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-	<jpa:repositories base-package="com.excilys.dao" />
-	<context:component-scan base-package="com.excilys.service" />
-	<context:component-scan base-package="com.excilys.controller" />
-
-	<import resource="classpath:datasource.xml" />
-
-	<!-- Gestionnaire de Transaction -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-		<property name="dataSource" ref="datasource" />
-	</bean>
-
 	<!-- Bean utilise pour spring data jpa, gerant les entites -->
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
