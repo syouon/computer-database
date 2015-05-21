@@ -20,6 +20,15 @@
 			<a class="navbar-brand" href="dashboard"> Application - Computer
 				Database </a>
 		</div>
+		<c:if test="${pageContext.request.userPrincipal.name != null}">
+			<div class="pull-right">
+				<c:url value="/logout" var="logoutUrl" />
+				<form action="${logoutUrl}" method="post">
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" /> <input type="submit" value="logout" />
+				</form>
+			</div>
+		</c:if>
 	</header>
 
 	<section id="main">

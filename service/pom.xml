@@ -27,5 +27,11 @@
 			<artifactId>persistence</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
+		<!-- Framework dependencies -->
+		<!-- Spring Security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+		</dependency>
 	</dependencies>
 </project>
