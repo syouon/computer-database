@@ -29,7 +29,7 @@
 	</security:http>
 
 	<!-- Methode d'authentification -->
-	<bean name="userService" class="com.excilys.service.UserServiceImpl" />
+	<bean id="userService" name="userService" class="com.excilys.service.UserServiceImpl" />
 	<security:authentication-manager>
 		<security:authentication-provider
 			user-service-ref="userService" />
@@ -41,7 +41,6 @@
 		<property name="userDetailsService" ref="userService" />
 		<property name="authenticationEntryPoint" ref="digestEntryPoint" />
 	</bean>
-
 	<bean id="digestEntryPoint"
 		class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
 		<property name="realmName" value="Contacts Realm via Digest Authentication" />
