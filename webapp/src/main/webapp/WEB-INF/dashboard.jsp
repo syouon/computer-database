@@ -23,9 +23,10 @@
 		<c:if test="${pageContext.request.userPrincipal.name != null}">
 			<div class="pull-right">
 				<c:url value="/logout" var="logoutUrl" />
+				<%-- 				<spring:message code="${logout}" var="logoutLabel" /> --%>
 				<form action="${logoutUrl}" method="post">
 					<input type="hidden" name="${_csrf.parameterName}"
-						value="${_csrf.token}" /> <input type="submit" value="logout" />
+						value="${_csrf.token}" /> <input type="submit" value="Logout" />
 				</form>
 			</div>
 		</c:if>

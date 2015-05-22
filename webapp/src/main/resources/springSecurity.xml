@@ -12,7 +12,7 @@
 
 		<!-- Logout -->
 		<security:logout logout-success-url="/" logout-url="/logout" />
-		<security:csrf />
+		<security:csrf disabled="true" />
 
 		<!-- Droits d'acces aux pages -->
 		<security:intercept-url pattern="/deleteComputer"
