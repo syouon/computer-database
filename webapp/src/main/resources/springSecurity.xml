@@ -8,10 +8,12 @@
           http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<!-- Spring Security -->
-	<security:http use-expressions="false" auto-config='true'>
+	<security:http use-expressions="false" auto-config='true'
+		create-session="never">
 
 		<!-- Logout -->
-		<security:logout logout-success-url="/" logout-url="/logout" />
+		<security:logout logout-success-url="/" logout-url="/logout"
+			delete-cookies="JSESSIONID" />
 		<security:csrf disabled="true" />
 
 		<!-- Droits d'acces aux pages -->

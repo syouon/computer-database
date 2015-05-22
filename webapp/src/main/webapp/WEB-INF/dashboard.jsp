@@ -19,17 +19,17 @@
 		<div class="container">
 			<a class="navbar-brand" href="dashboard"> Application - Computer
 				Database </a>
-		</div>
-		<c:if test="${pageContext.request.userPrincipal.name != null}">
-			<div class="pull-right">
+			<c:if test="${pageContext.request.userPrincipal.name != null}">
 				<c:url value="/logout" var="logoutUrl" />
 				<%-- 				<spring:message code="${logout}" var="logoutLabel" /> --%>
-				<form action="${logoutUrl}" method="post">
+				<form action="${logoutUrl}" method="post" class="pull-right">
 					<input type="hidden" name="${_csrf.parameterName}"
-						value="${_csrf.token}" /> <input type="submit" value="Logout" />
+						value="${_csrf.token}" /> <span class="navbar-brand">
+						Logged as <c:out value="${pageContext.request.userPrincipal.name}" />
+					</span> <input type="submit" value="Logout" />
 				</form>
-			</div>
-		</c:if>
+			</c:if>
+		</div>
 	</header>
 
 	<section id="main">
