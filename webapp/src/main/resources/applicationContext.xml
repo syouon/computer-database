@@ -6,8 +6,8 @@
 	http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<import resource="classpath:coreContext.xml" />
 	<import resource="classpath:persistenceContext.xml" />
 	<import resource="classpath:serviceContext.xml" />
-	<import resource="classpath:coreContext.xml" />
 
 </beans>

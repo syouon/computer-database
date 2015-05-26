@@ -12,6 +12,8 @@ public interface CompanyService {
 
 	public Company find(long id);
 
+	public Company find(String name);
+
 	public boolean exists(Company company);
 
 	public boolean deleteCompany(long id);

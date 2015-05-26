@@ -34,6 +34,10 @@ public class CompanyServiceImpl implements CompanyService {
 		return companyDAO.findOne(id);
 	}
 
+	public Company find(String name) {
+		return companyDAO.findByName(name);
+	}
+
 	public boolean exists(Company company) {
 		return (companyDAO.findByName(company.getName()) != null);
 	}

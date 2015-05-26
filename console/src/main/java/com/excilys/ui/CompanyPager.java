@@ -10,7 +10,7 @@ public class CompanyPager extends Pager {
 
 	public CompanyPager() {
 		super();
-		entities = companyService.listCompanies(start,
+		entities = companyService.listCompanies(page,
 				entitiesNumber);
 	}
 
@@ -23,7 +23,7 @@ public class CompanyPager extends Pager {
 	
 	@Override
 	public void refresh() {
-		entities = companyService.listCompanies(start,
+		entities = companyService.listCompanies(page,
 				entitiesNumber);
 	}
 

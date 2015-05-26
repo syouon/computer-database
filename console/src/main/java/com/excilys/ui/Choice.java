@@ -53,6 +53,16 @@ public abstract class Choice {
 	}
 
 	/**
+	 * Ask for computer name.
+	 * 
+	 * @return the string
+	 */
+	protected String askForComputerName() {
+		System.out.print("> Choose a computer name: ");
+		return Menu.getScanner().nextLine();
+	}
+
+	/**
 	 * Ask for company.
 	 * 
 	 * @return the company
@@ -64,7 +74,8 @@ public abstract class Choice {
 			return null;
 		}
 
-		return new Company(input);
+		Company company = companyService.find(input);
+		return company;
 	}
 
 	/**
@@ -85,8 +96,7 @@ public abstract class Choice {
 				return LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (DateTimeParseException e) {
-				System.out
-						.println("Bad format (should be YYYY-MM-DDTHH:mm:ss)");
+				System.out.println("Bad format (should be YYYY-MM-DD)");
 				continue;
 			}
 		}
@@ -110,8 +120,7 @@ public abstract class Choice {
 				return LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
 
 			} catch (DateTimeParseException e) {
-				System.out
-						.println("Bad format (should be YYYY-MM-DDTHH:mm:ss)");
+				System.out.println("Bad format (should be YYYY-MM-DD)");
 				continue;
 			}
 		}

@@ -7,13 +7,13 @@ import com.excilys.service.*;
 public abstract class Pager {
 
 	protected int entitiesNumber;
-	protected int start;
+	protected int page;
 	protected CompanyService companyService;
 	protected ComputerService computerService;
 
 	public Pager() {
 		entitiesNumber = 10;
-		start = 0;
+		page = 0;
 
 		ApplicationContext context = Main.getContext();
 		companyService = context.getBean(CompanyService.class);
@@ -21,14 +21,14 @@ public abstract class Pager {
 	}
 
 	public void next() {
-		start += entitiesNumber;
+		page++;
 		refresh();
 	}
 
 	public void previous() {
-		start -= entitiesNumber;
-		if (start < 0) {
-			start = 0;
+		page--;
+		if (page < 0) {
+			page = 0;
 		}
 		refresh();
 	}

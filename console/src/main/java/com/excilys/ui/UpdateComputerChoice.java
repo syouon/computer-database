@@ -17,13 +17,14 @@ public class UpdateComputerChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
+		String newName = askForComputerName();
 		LocalDate introduced = askForIntroductionDate();
 		LocalDate discontinued = askForDiscontinuationDate();
 		Company company = askForCompany();
 
-		Computer computer = new Computer.Builder("").setId(id).build();
-		computer.setIntroduced(introduced);
-		computer.setDiscontinued(discontinued);
+		Computer computer = new Computer.Builder(newName).setId(id)
+				.setIntroduced(introduced).setDiscontinued(discontinued)
+				.build();
 
 		if (company != null && (dao.findByName(company.getName()) != null)) {
 			computer.setCompany(company);

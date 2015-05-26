@@ -22,17 +22,7 @@ public class AddComputerChoice extends Choice {
 		computer.setDiscontinued(discontinued);
 		computer.setCompany(company);
 
-		// computerService.addComputer(computer);
-	}
-
-	/**
-	 * Ask for computer name.
-	 * 
-	 * @return the string
-	 */
-	private String askForComputerName() {
-		System.out.print("> Choose a computer name: ");
-		return Menu.getScanner().nextLine();
+		computerService.addComputer(computer);
 	}
 
 	@Override
