@@ -8,4 +8,14 @@
 
 	<import resource="classpath:datasource.xml" />
 	<jpa:repositories base-package="com.excilys.dao" />
+
+	<!-- Bean utilise pour spring data jpa, gerant les entites -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="datasource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="packagesToScan" value="com.excilys.model" />
+	</bean>
 </beans>

@@ -9,7 +9,7 @@
 
 	<!-- Spring Security -->
 	<security:http use-expressions="false" auto-config='true'
-		create-session="never" entry-point-ref="digestEntryPoint">
+		create-session="never">
 
 		<!-- Logout -->
 		<security:logout logout-success-url="/" logout-url="/logout"
@@ -17,15 +17,15 @@
 		<security:csrf disabled="true" />
 
 		<!-- Droits d'acces aux pages -->
-		<security:intercept-url pattern="/deleteComputer"
+		<security:intercept-url pattern="/deleteComputer/**"
 			access="ROLE_ADMIN" />
-		<security:intercept-url pattern="/addcomputer"
-			access="ROLE_USER, ROLE_ADMIN" />
-		<security:intercept-url pattern="/editcomputer"
+		<security:intercept-url pattern="/addcomputer/**"
+			access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/editcomputer/**"
 			access="ROLE_ADMIN" />
 
-		<security:custom-filter ref="digestFilter"
-			after="BASIC_AUTH_FILTER" />
+		<!-- <security:custom-filter ref="digestFilter" -->
+		<!-- after="BASIC_AUTH_FILTER" /> -->
 	</security:http>
 
 	<!-- Methode d'authentification -->
@@ -36,14 +36,15 @@
 	</security:authentication-manager>
 
 	<!-- Digest Http -->
-	<bean id="digestFilter"
-		class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
-		<property name="userDetailsService" ref="userService" />
-		<property name="authenticationEntryPoint" ref="digestEntryPoint" />
-	</bean>
-	<bean id="digestEntryPoint"
-		class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
-		<property name="realmName" value="Contacts Realm via Digest Authentication" />
-		<property name="key" value="acegi" />
-	</bean>
+	<!-- <bean id="digestFilter" -->
+	<!-- class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter"> -->
+	<!-- <property name="userDetailsService" ref="userService" /> -->
+	<!-- <property name="authenticationEntryPoint" ref="digestEntryPoint" /> -->
+	<!-- </bean> -->
+	<!-- <bean id="digestEntryPoint" -->
+	<!-- class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint"> -->
+	<!-- <property name="realmName" value="Contacts Realm via Digest Authentication" 
+		/> -->
+	<!-- <property name="key" value="acegi" /> -->
+	<!-- </bean> -->
 </beans>

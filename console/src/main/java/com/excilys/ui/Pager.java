@@ -16,8 +16,8 @@ public abstract class Pager {
 		start = 0;
 
 		ApplicationContext context = Main.getContext();
-		companyService = context.getBean(CompanyServiceImpl.class);
-		computerService = context.getBean(ComputerServiceImpl.class);
+		companyService = context.getBean(CompanyService.class);
+		computerService = context.getBean(ComputerService.class);
 	}
 
 	public void next() {
