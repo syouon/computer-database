@@ -10,8 +10,7 @@ public class CompanyPager extends Pager {
 
 	public CompanyPager() {
 		super();
-		entities = companyService.listCompanies(page,
-				entitiesNumber);
+		entities = webservice.listCompanies(page);
 	}
 
 	@Override
@@ -20,11 +19,10 @@ public class CompanyPager extends Pager {
 			super.next();
 		}
 	}
-	
+
 	@Override
 	public void refresh() {
-		entities = companyService.listCompanies(page,
-				entitiesNumber);
+		entities = webservice.listCompanies(page);
 	}
 
 	@Override

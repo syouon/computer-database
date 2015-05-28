@@ -1,23 +1,16 @@
 package com.excilys.ui;
 
-import org.springframework.context.ApplicationContext;
-
-import com.excilys.service.*;
-
 public abstract class Pager {
 
 	protected int entitiesNumber;
 	protected int page;
-	protected CompanyService companyService;
-	protected ComputerService computerService;
+	protected RestWebService webservice;
 
 	public Pager() {
 		entitiesNumber = 10;
-		page = 0;
+		page = 1;
 
-		ApplicationContext context = Main.getContext();
-		companyService = context.getBean(CompanyService.class);
-		computerService = context.getBean(ComputerService.class);
+		webservice = new RestWebService();
 	}
 
 	public void next() {
@@ -27,8 +20,8 @@ public abstract class Pager {
 
 	public void previous() {
 		page--;
-		if (page < 0) {
-			page = 0;
+		if (page < 1) {
+			page = 1;
 		}
 		refresh();
 	}

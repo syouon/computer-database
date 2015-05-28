@@ -9,6 +9,6 @@
 	<import resource="classpath:coreContext.xml" />
 	<import resource="classpath:persistenceContext.xml" />
 	<import resource="classpath:serviceContext.xml" />
-	<import resource="classpath:webServiceContext.xml" />
+	<context:annotation-config />
 
 </beans>

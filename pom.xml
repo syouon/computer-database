@@ -23,6 +23,7 @@
 		<spring-context.version>4.1.6.RELEASE</spring-context.version>
 		<spring-data.version>1.8.0.RELEASE</spring-data.version>
 		<spring-security.version>4.0.1.RELEASE</spring-security.version>
+		<jackson.version>2.5.3</jackson.version>
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<mysql-connector.version>5.1.35</mysql-connector.version>
 		<slf4j.version>1.7.12</slf4j.version>
@@ -54,6 +55,7 @@
 		<module>service</module>
 		<module>binding</module>
 		<module>webapp</module>
+		<module>webservice</module>
 	</modules>
 
 	<dependencyManagement>
@@ -118,6 +120,12 @@
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-jpa</artifactId>
 				<version>${spring-data.version}</version>
+			</dependency>
+			<!-- Parsing JSON -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
 			</dependency>
 			<!-- BoneCP -->
 			<dependency>

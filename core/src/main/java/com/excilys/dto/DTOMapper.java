@@ -61,21 +61,32 @@ public class DTOMapper {
 
 		// Si les string de date sont en francais, on les convertit en anglais
 		Locale locale = LocaleContextHolder.getLocale();
-		if (locale.getLanguage().equals(new Locale("fr").getLanguage())) {
-			if (!dtoIntroduced.isEmpty()) {
-				dtoIntroduced = englishFormatter.format(frenchFormatter
-						.parse(dtoIntroduced));
+
+		LocalDate introduced = null;
+		if (dtoIntroduced != null) {
+			if (locale.getLanguage().equals(new Locale("fr").getLanguage())) {
+				if (!dtoIntroduced.isEmpty()) {
+					dtoIntroduced = englishFormatter.format(frenchFormatter
+							.parse(dtoIntroduced));
+				}
 			}
-			if (!dtoDiscontinued.isEmpty()) {
-				dtoDiscontinued = englishFormatter.format(frenchFormatter
-						.parse(dtoDiscontinued));
-			}
+
+			introduced = dtoIntroduced.isEmpty() ? null : LocalDate
+					.parse(dtoIntroduced);
 		}
 
-		LocalDate introduced = dtoIntroduced.isEmpty() ? null : LocalDate
-				.parse(dtoIntroduced);
-		LocalDate discontinued = dtoDiscontinued.isEmpty() ? null : LocalDate
-				.parse(dtoDiscontinued);
+		LocalDate discontinued = null;
+		if (dtoDiscontinued != null) {
+			if (locale.getLanguage().equals(new Locale("fr").getLanguage())) {
+				if (!dtoDiscontinued.isEmpty()) {
+					dtoDiscontinued = englishFormatter.format(frenchFormatter
+							.parse(dtoDiscontinued));
+				}
+			}
+
+			discontinued = dtoDiscontinued.isEmpty() ? null : LocalDate
+					.parse(dtoDiscontinued);
+		}
 
 		Company company = null;
 		long companyId = dto.getCompanyId();
@@ -84,8 +95,8 @@ public class DTOMapper {
 		}
 
 		Computer computer = new Computer.Builder(dto.getName())
-				.setIntroduced(introduced).setDiscontinued(discontinued)
-				.setCompany(company).build();
+				.setId(dto.getId()).setIntroduced(introduced)
+				.setDiscontinued(discontinued).setCompany(company).build();
 
 		return computer;
 	}

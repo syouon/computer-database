@@ -10,7 +10,7 @@ public class ComputerPager extends Pager {
 
 	public ComputerPager() {
 		super();
-		entities = computerService.listComputers(page, entitiesNumber);
+		entities = webservice.listComputers(page);
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class ComputerPager extends Pager {
 
 	@Override
 	public void refresh() {
-		entities = computerService.listComputers(page, entitiesNumber);
+		entities = webservice.listComputers(page);
 	}
 
 	@Override
