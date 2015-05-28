@@ -22,11 +22,13 @@ public abstract class Choice {
 
 	protected CompanyService companyService;
 	protected ComputerService computerService;
+	protected RestWebService webservice;
 
 	public Choice() {
 		ApplicationContext context = Main.getContext();
 		companyService = context.getBean(CompanyService.class);
 		computerService = context.getBean(ComputerService.class);
+		webservice = new RestWebService();
 	}
 
 	/**

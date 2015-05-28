@@ -22,7 +22,7 @@ public class AddComputerChoice extends Choice {
 		computer.setDiscontinued(discontinued);
 		computer.setCompany(company);
 
-		computerService.addComputer(computer);
+		webservice.addComputer(computer);
 	}
 
 	@Override
