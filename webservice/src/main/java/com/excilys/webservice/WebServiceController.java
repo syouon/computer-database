@@ -75,4 +75,12 @@ public class WebServiceController {
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/update", method = RequestMethod.PUT)
+	public ResponseEntity<ComputerDTO> updateComputer(
+			@RequestBody ComputerDTO dto) {
+		Computer computer = DTOMapper.toComputer(dto);
+		computerService.updateComputer(computer);
+		return new ResponseEntity<ComputerDTO>(HttpStatus.OK);
+	}
+
 }

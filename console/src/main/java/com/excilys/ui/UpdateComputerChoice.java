@@ -5,14 +5,7 @@ import java.time.LocalDate;
 import com.excilys.model.Company;
 import com.excilys.model.Computer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.excilys.dao.CompanyDAO;
-
 public class UpdateComputerChoice extends Choice {
-
-	@Autowired
-	private CompanyDAO dao;
 
 	@Override
 	public void execute() {
@@ -26,11 +19,11 @@ public class UpdateComputerChoice extends Choice {
 				.setIntroduced(introduced).setDiscontinued(discontinued)
 				.build();
 
-		if (company != null && (dao.findByName(company.getName()) != null)) {
+		if (company != null && (companyService.find(company.getName()) != null)) {
 			computer.setCompany(company);
 		}
 
-		computerService.updateComputer(computer);
+		webservice.updateComputer(computer);
 	}
 
 	public String toString() {

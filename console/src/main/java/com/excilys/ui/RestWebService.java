@@ -43,4 +43,8 @@ public class RestWebService {
 		template.postForObject(URL + "create",
 				DTOMapper.toComputerDTO(computer), ComputerDTO.class);
 	}
+
+	public void updateComputer(Computer computer) {
+		template.put(URL + "update", DTOMapper.toComputerDTO(computer));
+	}
 }
