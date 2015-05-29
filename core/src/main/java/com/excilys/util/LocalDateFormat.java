@@ -8,6 +8,13 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+/**
+ * Custom annotation for LocalDate validation with ComputerDTOValidator class.
+ * reference:
+ * http://codetutr.com/2013/05/29/custom-spring-mvc-validation-annotations
+ * 
+ * @see com.excilys.util.ComputerDTOValidator
+ */
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ComputerDTOValidator.class)

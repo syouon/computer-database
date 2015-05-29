@@ -21,9 +21,7 @@ import com.excilys.service.ComputerService;
 import com.excilys.dto.ComputerDTO;
 import com.excilys.dto.DTOMapper;
 
-/**
- * Servlet implementation class EditComputerServlet
- */
+/** EditComputerController is called when url "/editComputer" is requested */
 @Controller
 @RequestMapping(value = "/editComputer")
 public class EditComputerController {
@@ -55,6 +53,10 @@ public class EditComputerController {
 		return "editComputer";
 	}
 
+	/*
+	 * @ModelAttribute annotation maps directly parameters sent in post to a
+	 * ComputerDTO
+	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String doPost(@ModelAttribute @Valid ComputerDTO dto,
 			BindingResult result, ModelMap map) {

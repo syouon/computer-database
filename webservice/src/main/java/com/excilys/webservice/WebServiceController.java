@@ -20,6 +20,7 @@ import com.excilys.model.Computer;
 import com.excilys.service.CompanyService;
 import com.excilys.service.ComputerService;
 
+/** Retrieves all web services */
 @RestController
 public class WebServiceController {
 

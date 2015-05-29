@@ -9,8 +9,22 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.excilys.exception.PropertiesNotFoundException;
 
+/**
+ * The Class Utils provides several utilities methods.
+ */
 public class Utils {
 
+	/**
+	 * Checks if a date is valid.
+	 *
+	 * @param year
+	 *            the year
+	 * @param month
+	 *            the month
+	 * @param day
+	 *            the day
+	 * @return true, if the date is valid
+	 */
 	private static boolean isValidDate(int year, int month, int day) {
 		if (month > 12 || day > 31) {
 			return false;
@@ -43,6 +57,13 @@ public class Utils {
 		return true;
 	}
 
+	/**
+	 * Checks if the date is well formed.
+	 *
+	 * @param date
+	 *            the date
+	 * @return true, if the date is well formed
+	 */
 	public static boolean isWellFormedDate(String date) {
 		if (date.isEmpty()) {
 			return true;
@@ -72,6 +93,14 @@ public class Utils {
 		return isValidDate(year, month, day);
 	}
 
+	/**
+	 * Normalize orderby parameter for DashboardController.
+	 *
+	 * @see com.excilys.controller.DashboardController
+	 * @param orderBy
+	 *            the orderby parameter
+	 * @return the normalized orderby parameter
+	 */
 	public static String normalizeOrderBy(String orderBy) {
 		switch (orderBy) {
 		case "introduced":
@@ -85,6 +114,14 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Load a properties file.
+	 *
+	 * @param file
+	 *            the file
+	 * @return a Properties java object
+	 * @see java.util.Properties
+	 */
 	public static Properties loadProperties(String file) {
 		Properties prop = new Properties();
 		InputStream input = null;
@@ -98,9 +135,12 @@ public class Utils {
 			return prop;
 		} catch (IOException e) {
 			throw new PropertiesNotFoundException();
-		} /*
-		 * finally { try { input.close(); } catch (IOException e) { throw new
-		 * PropertiesNotFoundException(); } }
-		 */
+		} finally {
+			try {
+				input.close();
+			} catch (IOException e) {
+				throw new PropertiesNotFoundException();
+			}
+		}
 	}
 }

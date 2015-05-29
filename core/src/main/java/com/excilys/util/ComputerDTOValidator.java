@@ -3,6 +3,9 @@ package com.excilys.util;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * The Class ComputerDTOValidator. Valid the date of a ComputerDTO.
+ */
 public class ComputerDTOValidator implements
 		ConstraintValidator<LocalDateFormat, String> {
 

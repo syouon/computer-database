@@ -11,10 +11,6 @@
 	<artifactId>console</artifactId>
 	<name>console</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<dependencies>
 		<!-- Modules dependencies -->
 		<dependency>
@@ -28,10 +24,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Framework dependencies -->
+		<!-- JSON Parsing (Used by Spring) -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
+		<!-- Connection pool mannager -->
 		<dependency>
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>

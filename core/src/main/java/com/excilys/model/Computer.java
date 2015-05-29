@@ -16,36 +16,28 @@ import javax.persistence.Table;
 
 import com.excilys.mapper.DateMapper;
 
-/**
- * The Class Computer.
- */
 @Entity
 @Table(name = "computer")
 public class Computer implements Serializable {
 
 	private static final long serialVersionUID = -4121770083587704914L;
 
-	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private long id;
 
-	/** The name. */
 	@Column(name = "name")
 	private String name;
 
-	/** The introduction date. */
 	@Column(name = "introduced")
 	@Convert(converter = DateMapper.class)
 	private LocalDate introduced;
 
-	/** The discontinuation date. */
 	@Column(name = "discontinued")
 	@Convert(converter = DateMapper.class)
 	private LocalDate discontinued;
 
-	/** The manufacturer. */
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "company_id")
 	private Company company;
@@ -53,70 +45,31 @@ public class Computer implements Serializable {
 	public Computer() {
 	}
 
-	/**
-	 * Instantiates a new computer.
-	 *
-	 * @param name
-	 *            the name
-	 */
 	public Computer(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * Instantiates a new computer.
-	 *
-	 * @param id
-	 *            the id
-	 * @param name
-	 *            the name
-	 */
 	public Computer(long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
 	public long getId() {
 		return id;
 	}
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Gets the introduction date.
-	 *
-	 * @return the introduction date
-	 */
 	public LocalDate getIntroduced() {
 		return introduced;
 	}
 
-	/**
-	 * Gets the discontinuation date.
-	 *
-	 * @return the discontinuation date
-	 */
 	public LocalDate getDiscontinued() {
 		return discontinued;
 	}
 
-	/**
-	 * Gets the manufacturer.
-	 *
-	 * @return the manufacturer
-	 */
 	public Company getCompany() {
 		return company;
 	}
@@ -129,41 +82,18 @@ public class Computer implements Serializable {
 		this.name = name;
 	}
 
-	/**
-	 * Sets the introduction date.
-	 *
-	 * @param introduced
-	 *            the new introduction date
-	 */
 	public void setIntroduced(LocalDate introduced) {
 		this.introduced = introduced;
 	}
 
-	/**
-	 * Sets the discontinuation date.
-	 *
-	 * @param discontinued
-	 *            the new discontinuation date
-	 */
 	public void setDiscontinued(LocalDate discontinued) {
 		this.discontinued = discontinued;
 	}
 
-	/**
-	 * Sets the manufacturer.
-	 *
-	 * @param manufacturer
-	 *            the new manufacturer
-	 */
 	public void setCompany(Company company) {
 		this.company = company;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString() {
 		String display = "n°" + id + ") " + name;
 
@@ -216,6 +146,7 @@ public class Computer implements Serializable {
 		return true;
 	}
 
+	/** Builder makes easier Computer construction */
 	public static class Builder {
 
 		private Computer computer;

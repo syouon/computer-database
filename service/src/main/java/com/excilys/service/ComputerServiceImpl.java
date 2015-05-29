@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.dao.ComputerDAO;
 
+/**
+ * The Class ComputerServiceImpl. Provides methods to retrieve computer
+ * information.
+ */
 @Service
 public class ComputerServiceImpl implements ComputerService {
 

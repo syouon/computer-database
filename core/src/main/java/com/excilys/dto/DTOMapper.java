@@ -9,14 +9,19 @@ import com.excilys.model.Computer;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 
-/* Fait le lien entre le modele objet et
- * les resultats obtenus par une requete
- */
 /**
- * The Class Mapper.
+ * The Class Mapper. Provides static conversion methods between Computer and
+ * ComputerDTO.
  */
 public class DTOMapper {
 
+	/**
+	 * Converts a computer to a dto.
+	 *
+	 * @param computer
+	 *            the computer to convert
+	 * @return the computer dto
+	 */
 	public static ComputerDTO toComputerDTO(Computer computer) {
 		ComputerDTO dto = new ComputerDTO();
 		dto.setId(computer.getId());
@@ -26,11 +31,12 @@ public class DTOMapper {
 		LocalDate discontinued = computer.getDiscontinued();
 		Company company = computer.getCompany();
 
+		// Gets the current locale
 		Locale locale = LocaleContextHolder.getLocale();
 		DateTimeFormatter formatter = null;
 		if (locale.getLanguage().equals(new Locale("en").getLanguage())) {
 			formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", locale);
-		} else { // Locale fr
+		} else { // if Locale is fr
 			formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", locale);
 		}
 
@@ -50,7 +56,13 @@ public class DTOMapper {
 		return dto;
 	}
 
-	/* Assume que tous les champs du dto sont valides */
+	/**
+	 * Converts a computer dto to a computer.
+	 *
+	 * @param dto
+	 *            the dto to convert
+	 * @return the computer
+	 */
 	public static Computer toComputer(ComputerDTO dto) {
 		String dtoIntroduced = dto.getIntroduced();
 		String dtoDiscontinued = dto.getDiscontinued();
@@ -59,11 +71,11 @@ public class DTOMapper {
 		DateTimeFormatter frenchFormatter = DateTimeFormatter
 				.ofPattern("dd-MM-yyyy");
 
-		// Si les string de date sont en francais, on les convertit en anglais
 		Locale locale = LocaleContextHolder.getLocale();
 
 		LocalDate introduced = null;
 		if (dtoIntroduced != null) {
+			// if in french format, we convert it in english format
 			if (locale.getLanguage().equals(new Locale("fr").getLanguage())) {
 				if (!dtoIntroduced.isEmpty()) {
 					dtoIntroduced = englishFormatter.format(frenchFormatter
@@ -77,6 +89,7 @@ public class DTOMapper {
 
 		LocalDate discontinued = null;
 		if (dtoDiscontinued != null) {
+			// if in french format, we convert it in english format
 			if (locale.getLanguage().equals(new Locale("fr").getLanguage())) {
 				if (!dtoDiscontinued.isEmpty()) {
 					dtoDiscontinued = englishFormatter.format(frenchFormatter

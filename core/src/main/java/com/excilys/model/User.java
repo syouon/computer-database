@@ -18,6 +18,7 @@ public class User implements Serializable {
 	@Id
 	private String username;
 	private String password;
+	// Is the user activated or disabled
 	private boolean enabled;
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "username")

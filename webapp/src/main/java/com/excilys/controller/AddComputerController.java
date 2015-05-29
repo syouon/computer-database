@@ -20,6 +20,7 @@ import com.excilys.service.ComputerService;
 import com.excilys.dto.ComputerDTO;
 import com.excilys.dto.DTOMapper;
 
+/** AddComputerController is called when url "/addcomputer" is requested */
 @Controller
 @RequestMapping(value = "/addcomputer")
 public class AddComputerController {
@@ -27,7 +28,6 @@ public class AddComputerController {
 	private CompanyService companyService;
 	@Autowired
 	private ComputerService computerService;
-
 	private List<Company> companies;
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -39,6 +39,10 @@ public class AddComputerController {
 		return "addComputer";
 	}
 
+	/*
+	 * @ModelAttribute annotation maps directly parameters sent in post to a
+	 * ComputerDTO
+	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String doPost(@ModelAttribute @Valid ComputerDTO dto,
 			BindingResult result, ModelMap map) {

@@ -1,7 +1,7 @@
 package com.excilys.ui;
 
 /**
- * The Class DeleteComputerChoice.
+ * The Class DeleteComputerChoice. Deleting a computer option in the menu.
  */
 public class DeleteComputerChoice extends Choice {
 

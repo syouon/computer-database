@@ -1,7 +1,7 @@
 package com.excilys.ui;
 
 /**
- * The Class ListCompaniesChoice.
+ * The Class ListCompaniesChoice. Company listing option in the menu.
  */
 public class ListCompaniesChoice extends Choice {
 
@@ -9,6 +9,7 @@ public class ListCompaniesChoice extends Choice {
 	public void execute() {
 		Pager pager = new CompanyPager();
 		pager.print();
+		// wait for action like previous or next page
 		pager.waitForAction();
 	}
 

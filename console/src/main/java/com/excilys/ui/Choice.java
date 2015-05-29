@@ -11,12 +11,10 @@ import org.springframework.context.ApplicationContext;
 
 import com.excilys.service.*;
 
-/* Un choix represente une entree du menu, une des options
- * offertes a l'utilisateur.
- * A un choix est associe son service correspondant.
- */
 /**
- * The Class Choice.
+ * The Class Choice. Represents an Option in the Command-Line Interface. Each
+ * choice is associated with services. Provides methods to get user input in
+ * command-line.
  */
 public abstract class Choice {
 
@@ -24,15 +22,16 @@ public abstract class Choice {
 	protected RestWebService webservice;
 
 	public Choice() {
+		// Get Spring context to initialize company service
 		ApplicationContext context = Main.getContext();
 		companyService = context.getBean(CompanyService.class);
 		webservice = RestWebService.INSTANCE;
 	}
 
 	/**
-	 * Ask for computer id.
+	 * Ask for computer id in command-line.
 	 * 
-	 * @return the long
+	 * @return the computer id
 	 */
 	protected long askForComputerId() {
 		long id = -1;
@@ -40,6 +39,7 @@ public abstract class Choice {
 		while (true) {
 			System.out.print("> Choose a computer id: ");
 			String input = Menu.getScanner().nextLine();
+			// Verify if input is a number
 			boolean match = Pattern.matches("\\d*", input);
 			if (match) {
 				id = Long.parseLong(input);
@@ -53,9 +53,9 @@ public abstract class Choice {
 	}
 
 	/**
-	 * Ask for computer name.
+	 * Ask for computer name in command-line.
 	 * 
-	 * @return the string
+	 * @return the name
 	 */
 	protected String askForComputerName() {
 		System.out.print("> Choose a computer name: ");
@@ -63,14 +63,14 @@ public abstract class Choice {
 	}
 
 	/**
-	 * Ask for company.
+	 * Ask for company in command-line.
 	 * 
 	 * @return the company
 	 */
 	protected Company askForCompany() {
 		System.out.print("> Choose a company name: ");
 		String input = Menu.getScanner().nextLine();
-		if (input.equals("")) {
+		if (input.equals("")) { // Company name is optionnal
 			return null;
 		}
 
@@ -79,7 +79,7 @@ public abstract class Choice {
 	}
 
 	/**
-	 * Ask for introduction date.
+	 * Ask for introduction date in command-line.
 	 * 
 	 * @return the date
 	 */
@@ -89,7 +89,7 @@ public abstract class Choice {
 			System.out.print("> Introduced in: ");
 			try {
 				String input = Menu.getScanner().nextLine();
-				if (input.equals("")) {
+				if (input.equals("")) { // Introduction date is optionnal
 					return null;
 				}
 
@@ -103,7 +103,7 @@ public abstract class Choice {
 	}
 
 	/**
-	 * Ask for discontinuation date.
+	 * Ask for discontinuation date in command-line.
 	 * 
 	 * @return the date
 	 */
@@ -113,7 +113,7 @@ public abstract class Choice {
 			System.out.print("> Discontinued in: ");
 			try {
 				String input = Menu.getScanner().nextLine();
-				if (input.equals("")) {
+				if (input.equals("")) { // Discontinuation date is optionnal
 					return null;
 				}
 
@@ -127,7 +127,7 @@ public abstract class Choice {
 	}
 
 	/**
-	 * Execute.
+	 * Execute action associated with this choice.
 	 */
 	public abstract void execute();
 }

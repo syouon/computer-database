@@ -6,26 +6,22 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * The Class Menu.
+ * The Class Menu. Represents all the menu's options.
  */
 public class Menu {
 
-	/** The choices. */
 	private List<Choice> choices;
 
-	/** The scanner. */
+	// To read user's input in command-line
 	private static Scanner scanner;
 
-	/**
-	 * Instantiates a new menu.
-	 */
 	public Menu() {
 		choices = new ArrayList<>();
 		scanner = new Scanner(System.in);
 	}
 
 	/**
-	 * Gets the scanner.
+	 * Gets the scanner to read user's input.
 	 * 
 	 * @return the scanner
 	 */
@@ -34,10 +30,10 @@ public class Menu {
 	}
 
 	/**
-	 * Adds the choice.
+	 * Adds a choice to the menu.
 	 * 
 	 * @param choice
-	 *            the choice
+	 *            the choice to add
 	 */
 	public void addChoice(Choice choice) {
 		choices.add(choice);
@@ -64,7 +60,7 @@ public class Menu {
 			System.out.print("> ");
 			String input = scanner.nextLine();
 			boolean match = Pattern.matches("\\d*", input);
-
+			// if input is a number
 			if (match) {
 				choice = Integer.parseInt(input);
 				if (choice >= 0 && choice < choices.size()) {
@@ -79,7 +75,7 @@ public class Menu {
 	}
 
 	/**
-	 * Menu loop.
+	 * Run the menu
 	 */
 	public void loop() {
 		Choice choice = null;

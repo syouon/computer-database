@@ -1,7 +1,7 @@
 package com.excilys.ui;
 
 /**
- * The Class ListComputersChoice.
+ * The Class ListComputersChoice. Computer listing option in the menu.
  */
 public class ListComputersChoice extends Choice {
 
@@ -9,6 +9,7 @@ public class ListComputersChoice extends Choice {
 	public void execute() {
 		Pager pager = new ComputerPager();
 		pager.print();
+		// wait for action like previous or next page
 		pager.waitForAction();
 	}
 

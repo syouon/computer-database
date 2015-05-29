@@ -18,9 +18,7 @@ import com.excilys.service.ComputerService;
 import com.excilys.dto.ComputerDTO;
 import com.excilys.dto.DTOMapper;
 
-/**
- * Servlet implementation class DashboardServlet
- */
+/** DashboardController is called when url "/dahsboard" or "/" is requested */
 @Controller
 @RequestMapping(value = { "/dashboard", "/" })
 public class DashboardController {

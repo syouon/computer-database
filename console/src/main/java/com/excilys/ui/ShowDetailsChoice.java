@@ -1,7 +1,8 @@
 package com.excilys.ui;
 
 /**
- * The Class ShowDetailsChoice.
+ * The Class ShowDetailsChoice. Showing in details a computer option in the
+ * menu.
  */
 public class ShowDetailsChoice extends Choice {
 

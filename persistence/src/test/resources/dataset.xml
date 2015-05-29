@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Test database content -->
 <dataset>
 	<company id="1" name="Syou-On Corp" />
 	<company id="2" name="Apple" />

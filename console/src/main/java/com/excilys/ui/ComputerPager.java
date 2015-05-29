@@ -4,17 +4,20 @@ import java.util.List;
 
 import com.excilys.model.Computer;
 
+/**
+ * The Class ComputerPager. Provides Pagination for computer listing.
+ */
 public class ComputerPager extends Pager {
 
 	private List<Computer> entities;
 
 	public ComputerPager() {
-		super();
 		entities = webservice.listComputers(page);
 	}
 
 	@Override
 	public void next() {
+		// Go to next page only if not at the end of pages
 		if (entities.size() == entitiesNumber) {
 			super.next();
 		}

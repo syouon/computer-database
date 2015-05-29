@@ -9,6 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 import com.excilys.model.Computer;
 
+/**
+ * Spring Data JPA JpaRepository interface provides some basic methods to manage
+ * a database
+ */
 public interface ComputerDAO extends JpaRepository<Computer, Long> {
 
 	@Query("select count(c) from Computer c left join c.company co where c.name like %:name% or co.name like %:name%")

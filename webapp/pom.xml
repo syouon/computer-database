@@ -18,10 +18,6 @@
 		<finalName>webapp</finalName>
 	</build>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
 	<dependencies>
 		<!-- Modules dependencies -->
 		<dependency>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.excilys.model.Computer;
 
+/** A Page retrieves all information that has to be sent to the server */
 public class Page {
 
 	private int page;

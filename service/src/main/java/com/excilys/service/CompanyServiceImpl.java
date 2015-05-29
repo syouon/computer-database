@@ -13,11 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.excilys.dao.CompanyDAO;
 import com.excilys.dao.ComputerDAO;
 
+/**
+ * The Class CompanyServiceImpl. Provides methods to retrieve company
+ * information.
+ */
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	private CompanyDAO companyDAO;
+
 	@Autowired
 	private ComputerDAO computerDAO;
 

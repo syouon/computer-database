@@ -6,6 +6,12 @@ import java.time.LocalDate;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+/**
+ * The Class DateMapper. Provide conversion methods between Java 8 LocalDate and
+ * Timestamp. This class is automatically used by Computer model.
+ * 
+ * @see com.excilys.model.Computer
+ */
 @Converter(autoApply = false)
 public class DateMapper implements AttributeConverter<LocalDate, Timestamp> {
 

@@ -7,21 +7,29 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.excilys.util.LocalDateFormat;
 
+/*
+ * Data Transfer Object of a computer. Used to send Computer object to the server. 
+ */
 public class ComputerDTO {
 
 	@Min(0)
 	private long id;
+
 	@NotNull
 	@NotBlank
 	private String name;
+
 	@NotNull
 	@LocalDateFormat
 	private String introduced;
+
 	@NotNull
 	@LocalDateFormat
 	private String discontinued;
+
 	@Min(0)
 	private long companyId;
+
 	private String companyName;
 
 	public long getId() {
@@ -79,5 +87,4 @@ public class ComputerDTO {
 				+ ", companyId=" + companyId + ", companyName=" + companyName
 				+ "]";
 	}
-
 }

@@ -6,17 +6,21 @@ import com.excilys.model.Company;
 import com.excilys.model.Computer;
 
 /**
- * The Class AddComputerChoice.
+ * The Class AddComputerChoice. Adding a computer option in the menu.
+ * 
+ * @see com.excilys.ui.Choice
  */
 public class AddComputerChoice extends Choice {
 
 	@Override
 	public void execute() {
+		// Retrieve information in command-line
 		String name = askForComputerName();
 		LocalDate introduced = askForIntroductionDate();
 		LocalDate discontinued = askForDiscontinuationDate();
 		Company company = askForCompany();
 
+		// Set the computer to add
 		Computer computer = new Computer(name);
 		computer.setIntroduced(introduced);
 		computer.setDiscontinued(discontinued);

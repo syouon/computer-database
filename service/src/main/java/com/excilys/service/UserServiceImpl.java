@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import com.excilys.dao.UserDAO;
 import com.excilys.model.Authority;
 
+/**
+ * Manage User for spring security. The code is extracted from mkyong site:
+ * http://www.mkyong.com/spring-security/spring-security-hibernate-annotation-example
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -31,7 +35,6 @@ public class UserServiceImpl implements UserService {
 				.getAuthorities());
 
 		return buildUserForAuthentication(user, authorities);
-
 	}
 
 	private User buildUserForAuthentication(com.excilys.model.User user,

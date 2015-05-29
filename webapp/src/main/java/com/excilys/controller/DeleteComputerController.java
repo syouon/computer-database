@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.excilys.service.ComputerService;
 
+/** DeleteComputerController is called when url "/deleteComputer" is requested */
 @Controller
 @RequestMapping(value = "/deleteComputer")
 public class DeleteComputerController {

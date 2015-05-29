@@ -127,7 +127,7 @@
 				<artifactId>jackson-databind</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
-			<!-- BoneCP -->
+			<!-- BoneCP Connection pool manager-->
 			<dependency>
 				<groupId>com.jolbox</groupId>
 				<artifactId>bonecp</artifactId>

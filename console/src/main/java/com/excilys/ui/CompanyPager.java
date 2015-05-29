@@ -4,17 +4,20 @@ import java.util.List;
 
 import com.excilys.model.Company;
 
+/**
+ * The Class CompanyPager. Provides Pagination for company listing.
+ */
 public class CompanyPager extends Pager {
 
 	private List<Company> entities;
 
 	public CompanyPager() {
-		super();
 		entities = webservice.listCompanies(page);
 	}
 
 	@Override
 	public void next() {
+		// Go to next page only if not at the end of pages
 		if (entities.size() == entitiesNumber) {
 			super.next();
 		}
@@ -31,5 +34,4 @@ public class CompanyPager extends Pager {
 			System.out.println(company);
 		}
 	}
-
 }
