@@ -8,7 +8,7 @@ public class DeleteComputerChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		computerService.deleteComputer(id);
+		webservice.deleteComputer(id);
 	}
 
 	@Override

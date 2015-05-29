@@ -8,7 +8,7 @@ public class ShowDetailsChoice extends Choice {
 	@Override
 	public void execute() {
 		long id = askForComputerId();
-		System.out.println(computerService.showComputerDetails(id));
+		System.out.println(webservice.find(id));
 	}
 
 	@Override

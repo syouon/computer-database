@@ -9,8 +9,7 @@ public abstract class Pager {
 	public Pager() {
 		entitiesNumber = 10;
 		page = 1;
-
-		webservice = new RestWebService();
+		webservice = RestWebService.INSTANCE;
 	}
 
 	public void next() {

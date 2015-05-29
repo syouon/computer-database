@@ -11,12 +11,13 @@ import com.excilys.dto.DTOMapper;
 import com.excilys.model.Company;
 import com.excilys.model.Computer;
 
-public class RestWebService {
+public enum RestWebService {
+	INSTANCE;
 
 	private RestTemplate template;
 	private static final String URL = "http://localhost:8080/webservice/";
 
-	public RestWebService() {
+	private RestWebService() {
 		template = new RestTemplate();
 	}
 
@@ -39,6 +40,15 @@ public class RestWebService {
 		return Arrays.asList(companies);
 	}
 
+	public Computer find(long id) {
+		ComputerDTO dto = template.getForObject(URL + "computer/" + id,
+				ComputerDTO.class);
+		if (dto == null) {
+			return null;
+		}
+		return DTOMapper.toComputer(dto);
+	}
+
 	public void addComputer(Computer computer) {
 		template.postForObject(URL + "create",
 				DTOMapper.toComputerDTO(computer), ComputerDTO.class);
@@ -46,5 +56,13 @@ public class RestWebService {
 
 	public void updateComputer(Computer computer) {
 		template.put(URL + "update", DTOMapper.toComputerDTO(computer));
+	}
+
+	public void deleteComputer(long id) {
+		template.delete(URL + "deletecomputer/" + id);
+	}
+
+	public void deleteCompany(long id) {
+		template.delete(URL + "deletecompany/" + id);
 	}
 }
