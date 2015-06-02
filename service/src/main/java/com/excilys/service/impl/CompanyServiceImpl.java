@@ -1,8 +1,6 @@
-package com.excilys.service;
+package com.excilys.service.impl;
 
 import java.util.List;
-
-import com.excilys.model.Company;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.dao.CompanyDAO;
 import com.excilys.dao.ComputerDAO;
+import com.excilys.model.Company;
+import com.excilys.service.CompanyService;
 
 /**
  * The Class CompanyServiceImpl. Provides methods to retrieve company

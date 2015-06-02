@@ -25,7 +25,8 @@
 	</security:http>
 
 	<!-- Methode d'authentification -->
-	<bean id="userService" name="userService" class="com.excilys.service.UserServiceImpl" />
+	<bean id="userService" name="userService"
+		class="com.excilys.service.impl.UserServiceImpl" />
 	<security:authentication-manager>
 		<security:authentication-provider
 			user-service-ref="userService" />

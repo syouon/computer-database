@@ -1,4 +1,4 @@
-package com.excilys.service;
+package com.excilys.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 
 import com.excilys.dao.UserDAO;
 import com.excilys.model.Authority;
+import com.excilys.service.UserService;
 
 /**
  * Manage User for spring security. The code is extracted from mkyong site:
- * http://www.mkyong.com/spring-security/spring-security-hibernate-annotation-example
+ * http://www.mkyong.com/spring-security/spring-security-hibernate-annotation-
+ * example
  */
 @Service
 public class UserServiceImpl implements UserService {

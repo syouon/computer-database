@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/data/jpa
     http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
+	<!-- Chargement d'un fichier properties pour la datasource -->
+	<context:property-placeholder location="classpath:database.properties" />
+
 	<import resource="classpath:datasource.xml" />
+	<!-- Scan le package dao pour fournir une implementation aux interfaces 
+		DAO de Spring Data JPA -->
 	<jpa:repositories base-package="com.excilys.dao" />
 
 	<!-- Bean utilise pour spring data jpa, gerant les entites -->
