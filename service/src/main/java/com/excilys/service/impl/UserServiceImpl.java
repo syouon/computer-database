@@ -1,60 +1,48 @@
-package com.excilys.service.impl;
+package com.excilys.dao.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.excilys.dao.UserDAO;
+import com.excilys.dao.UserService;
+import com.excilys.model.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import com.excilys.dao.UserDAO;
-import com.excilys.model.Authority;
-import com.excilys.service.UserService;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Manage User for spring security. The code is extracted from mkyong site:
- * http://www.mkyong.com/spring-security/spring-security-hibernate-annotation-
- * example
+ * Created by syouon on 01/08/15.
  */
-@Service
+@Repository
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserDAO dao;
+    @Autowired
+    private UserDAO dao;
 
-	@Override
-	public UserDetails loadUserByUsername(final String username)
-			throws UsernameNotFoundException {
+    @Override
+    public UserDetails loadUserByUsername(final String username)
+            throws UsernameNotFoundException {
 
-		com.excilys.model.User user = dao.findByUsername(username);
-		List<GrantedAuthority> authorities = buildUserAuthority(user
-				.getAuthorities());
+        com.excilys.model.User user = dao.findByUsername(username);
+        List<GrantedAuthority> authorities = buildUserAuthority(user
+                .getAuthorities());
 
-		return buildUserForAuthentication(user, authorities);
-	}
+        return buildUserForAuthentication(user, authorities);
+    }
 
-	private User buildUserForAuthentication(com.excilys.model.User user,
-			List<GrantedAuthority> authorities) {
-		return new User(user.getUsername(), user.getPassword(),
-				user.isEnabled(), true, true, true, authorities);
-	}
+    private User buildUserForAuthentication(com.excilys.model.User user,
+                                            List<GrantedAuthority> authorities) {
+        return new User(user.getUsername(), user.getPassword(),
+                user.isEnabled(), true, true, true, authorities);
+    }
 
-	private List<GrantedAuthority> buildUserAuthority(List<Authority> userRoles) {
-		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-
-		for (Authority userRole : userRoles) {
-			setAuths.add(new SimpleGrantedAuthority(userRole.getRole()));
-		}
-
-		List<GrantedAuthority> Result = new ArrayList<GrantedAuthority>(
-				setAuths);
-
-		return Result;
-	}
+    private List<GrantedAuthority> buildUserAuthority(List<Authority> userRoles) {
+        return userRoles.stream().map(authority ->
+                new SimpleGrantedAuthority(authority.getRole())).collect(Collectors.toList());
+    }
 }
